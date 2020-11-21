@@ -7,25 +7,7 @@ public class LocationInput : MonoBehaviour
 {
     public Camera MapCamera;
     public Tilemap TerrainTilemap;
-    public MapMeta MapMetaController;
-
-    // TEMPORARY: Stored player mob so we can move them around
-    public MapMob PlayerMob;
-
-    void Update()
-    {
-        // TEMPORARY: When we click on a tile, teleport our unit there
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector3Int? worldpoint = GetHoveredTilePosition();
-
-            if (worldpoint.HasValue)
-            {
-                PlayerMob.SetPosition(worldpoint.Value);
-                MapMetaController.ShowUnitMovementRange(PlayerMob);
-            }
-        }
-    }
+    public MapMeta MapMetaController;    
 
     public Vector3Int? GetHoveredTilePosition()
     {

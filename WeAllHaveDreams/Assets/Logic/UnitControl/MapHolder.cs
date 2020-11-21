@@ -9,7 +9,7 @@ public class MapHolder : MonoBehaviour
 
     public Tilemap LoadedMap;
 
-    void Start()
+    void Awake()
     {
         activeMap = GameMap.InitializeMapFromTilemap(LoadedMap);
     }
