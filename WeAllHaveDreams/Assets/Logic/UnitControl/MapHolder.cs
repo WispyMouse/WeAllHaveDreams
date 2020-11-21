@@ -9,19 +9,12 @@ public class MapHolder : MonoBehaviour
 
     public Tilemap LoadedMap;
 
+    public MobHolder MobHolderController;
+
     void Awake()
     {
         activeMap = GameMap.InitializeMapFromTilemap(LoadedMap);
-        activeMap.LoadAllMobsFromScene();
     }
 
-    public void MoveUnit(MapMob toMove, Vector3Int to)
-    {
-        activeMap.ClearUnitAtPosition(toMove.Position);
-        activeMap.SetUnitAtPosition(toMove, to);
-        DebugTextLog.AddTextToLog($"Unit <unitnamehere> moved to {{{to.x}, {to.y}, {to.z}}}");
-    }
-
-    public IEnumerable<Vector3Int> PotentialMoves(MapMob moving) => activeMap.PotentialMoves(moving);
-    public MapMob MobOnPoint(Vector3Int point) => activeMap.MobOnPoint(point);
+    public IEnumerable<Vector3Int> PotentialMoves(MapMob moving) => activeMap.PotentialMoves(moving, MobHolderController);
 }

@@ -201,6 +201,7 @@ MonoBehaviour:
   LocationInputController: {fileID: 198427619}
   MapMetaController: {fileID: 198427620}
   MapHolderController: {fileID: 2100281716}
+  MobHolderController: {fileID: 0}
 --- !u!114 &198427622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1861,6 +1862,50 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &685172870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 685172871}
+  - component: {fileID: 685172872}
+  m_Layer: 0
+  m_Name: Factories
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &685172871
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 685172870}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1539530201}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &685172872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 685172870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81500623b7e05bb4da4d17dc6d024824, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ReminderPF: {fileID: 3067243966292015861, guid: 136e7a1c0b314e744a19cbfdc6e62f36, type: 3}
 --- !u!1001 &768757384
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2385,6 +2430,7 @@ Transform:
   m_Children:
   - {fileID: 198427618}
   - {fileID: 948460470}
+  - {fileID: 685172871}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2520,6 +2566,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LoadedMap: {fileID: 630442907}
+  MobHolderController: {fileID: 0}
 --- !u!1001 &3350195962672334227
 PrefabInstance:
   m_ObjectHideFlags: 0

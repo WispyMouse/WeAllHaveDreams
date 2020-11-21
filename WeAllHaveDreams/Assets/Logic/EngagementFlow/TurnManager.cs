@@ -10,6 +10,8 @@ public class TurnManager : SingletonBase<TurnManager>
 
     public static PlayerSide CurrentPlayer => Singleton.playerSides[Singleton.playerIndex];
 
+    public MobHolder MobHolderController;
+
     private void Start()
     {
         // TEMPORARY: Hardcode the sides
@@ -27,6 +29,11 @@ public class TurnManager : SingletonBase<TurnManager>
         playerIndex = index;
         DebugTextLog.AddTextToLog($"START OF TURN: {CurrentPlayer.Name}, engage!");
 
+        foreach (MapMob curMob in Singleton.MobHolderController.MobsOnTeam(CurrentPlayer.PlayerSideIndex))
+        {
+            curMob.RefreshForStartOfTurn();
+        }
+
         if (CurrentPlayer.HumanControlled)
         {
             DebugTextLog.AddTextToLog("Press 'enter' to pass the turn.");
@@ -41,6 +48,11 @@ public class TurnManager : SingletonBase<TurnManager>
 
     public static void PassTurnToNextPlayer()
     {
+        foreach (MapMob curMob in Singleton.MobHolderController.MobsOnTeam(CurrentPlayer.PlayerSideIndex))
+        {
+            curMob.ClearForEndOfTurn();
+        }
+
         IEnumerable<int> laterSides = Singleton.playerSides.Keys.Where(side => side > Singleton.playerIndex);
 
         if (laterSides.Any())

@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles the Human Player's input to the game during the main game phase.
+/// TODO NOTES: Lots of this is REALLY PLACEHOLDER. The logic patterns used here are not sustainable.
+/// Still, they allow me to blaze through some basic control flow.
+/// </summary>
 public class PlayerInputPhaseController : MonoBehaviour
 {
     public LocationInput LocationInputController;
     public MapMeta MapMetaController;
     public MapHolder MapHolderController;
+    public MobHolder MobHolderController;
 
     MapMob selectedMob;
 
@@ -23,9 +29,6 @@ public class PlayerInputPhaseController : MonoBehaviour
 
     void HandleClick()
     {
-        // TEMPORARY: If we click on a tile with a unit, select that unit
-        // If we click on a tile without a unit, and we have a unit selected, move the unit there
-        // If we right click while we have a selected unit, clear the selection
         if (Input.GetMouseButtonDown(0))
         {
             Vector3Int? worldpoint = LocationInputController.GetHoveredTilePosition();
@@ -36,24 +39,13 @@ public class PlayerInputPhaseController : MonoBehaviour
                 return;
             }
 
-            MapMob mobAtPoint = MapHolderController.MobOnPoint(worldpoint.Value);
-
-            if (mobAtPoint != null)
+            if (selectedMob == null)
             {
-                if (mobAtPoint.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex)
-                {
-                    selectedMob = mobAtPoint;
-                    MapMetaController.ShowUnitMovementRange(selectedMob);
-                }
-                
-                return;
+                HandleClickWithoutSelectedMob(worldpoint.Value);
             }
-
-            if (selectedMob != null && MapMetaController.TileIsInActiveMovementRange(worldpoint.Value))
+            else
             {
-                MapHolderController.MoveUnit(selectedMob, worldpoint.Value);
-                MapMetaController.ClearMetas();
-                return;
+                HandleClickWithSelectedMob(worldpoint.Value);
             }
         }
         else if (Input.GetMouseButtonDown(1))
@@ -63,6 +55,37 @@ public class PlayerInputPhaseController : MonoBehaviour
                 MapMetaController.ClearMetas();
             }
         }
+    }
+
+    void HandleClickWithoutSelectedMob(Vector3Int position)
+    {
+        MapMob mobAtPoint = MobHolderController.MobOnPoint(position);
+
+        if (mobAtPoint != null)
+        {
+            if (mobAtPoint.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex
+                && mobAtPoint.CanMove)
+            {
+                selectedMob = mobAtPoint;
+                MapMetaController.ShowUnitMovementRange(selectedMob);
+            }
+
+            return;
+        }
+    }
+
+    void HandleClickWithSelectedMob(Vector3Int position)
+    {
+        if (MobHolderController.MobOnPoint(position))
+        {
+            return;
+        }
+
+        selectedMob.CanMove = false;
+        selectedMob.HideReminder(nameof(selectedMob.CanMove));
+        MobHolderController.MoveUnit(selectedMob, position);
+        MapMetaController.ClearMetas();
+        selectedMob = null;
     }
 
     void HandleKeyboard()

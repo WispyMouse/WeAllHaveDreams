@@ -47,3 +47,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Units
+    uniqueID: 78406283
+    locked: 0
+  - name: Reminders
+    uniqueID: 412266679
+    locked: 0

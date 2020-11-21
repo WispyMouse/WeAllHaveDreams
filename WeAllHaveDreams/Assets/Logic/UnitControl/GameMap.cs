@@ -7,7 +7,6 @@ using UnityEngine.Tilemaps;
 public class GameMap
 {
     Dictionary<Vector3Int, IEnumerable<Vector3Int>> Neighbors { get; set; }
-    Dictionary<Vector3Int, MapMob> MobsOnMap { get; set; }
 
     public static GameMap InitializeMapFromTilemap(Tilemap tileMap)
     {
@@ -64,7 +63,7 @@ public class GameMap
         };
     }
 
-    public IEnumerable<Vector3Int> PotentialMoves(MapMob movingMob)
+    public IEnumerable<Vector3Int> PotentialMoves(MapMob movingMob, MobHolder mobHolderController)
     {
         Vector3Int startingTile = movingMob.Position;
 
@@ -88,6 +87,11 @@ public class GameMap
             foreach (Vector3Int neighbor in Neighbors[thisTile.Key])
             {
                 int totalCost = thisTile.Value + 1; // TEMPORARY: This will eventually consider the movement cost of the tile we're moving on to
+
+                if (!CanMoveInTo(movingMob, thisTile.Key, neighbor, mobHolderController))
+                {
+                    continue;
+                }
 
                 // If we've already considered this tile, and it was more efficient last time, ignore this attempt
                 // If we haven't considered this tile, then add it
@@ -115,47 +119,15 @@ public class GameMap
         return possibleVisits.Keys;
     }
 
-    public void LoadAllMobsFromScene()
+    bool CanMoveInTo(MapMob moving, Vector3Int from, Vector3Int to, MobHolder mobHolder)
     {
-        MobsOnMap = new Dictionary<Vector3Int, MapMob>();
+        MapMob mobOnPoint;
 
-        foreach (MapMob curMob in GameObject.FindObjectsOfType<MapMob>())
+        if ((mobOnPoint = mobHolder.MobOnPoint(to)) != null && mobOnPoint.PlayerSideIndex != moving.PlayerSideIndex)
         {
-            curMob.SettleIntoGrid();
-
-            if (MobsOnMap.ContainsKey(curMob.Position))
-            {
-                Debug.LogWarning($"Multiple mobs are on the same position: {{{curMob.Position.x}, {curMob.Position.y}, {curMob.Position.z}}}");
-            }
-
-            MobsOnMap.Add(curMob.Position, curMob);
-        }
-    }
-
-    public MapMob MobOnPoint(Vector3Int position)
-    {
-        if (MobsOnMap.ContainsKey(position))
-        {
-            return MobsOnMap[position];
+            return false;
         }
 
-        return null;
-    }
-
-    public void ClearUnitAtPosition(Vector3Int position)
-    {
-        MobsOnMap.Remove(position);
-    }
-
-    public void SetUnitAtPosition(MapMob toMove, Vector3Int to)
-    {
-        if (MobsOnMap.ContainsKey(to))
-        {
-            Debug.LogWarning($"A unit is trying to move to an occuppied tile at {{{to.x}, {to.y}, {to.z}}}");
-            return;
-        }
-
-        MobsOnMap.Add(to, toMove);
-        toMove.SetPosition(to);
+        return true;
     }
 }
