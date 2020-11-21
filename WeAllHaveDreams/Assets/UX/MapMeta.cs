@@ -14,8 +14,7 @@ public class MapMeta : MonoBehaviour
 
     public void ShowUnitMovementRange(MapMob toShow)
     {
-        MetaMap.ClearAllTiles();
-        ActiveMovementTiles = new HashSet<Vector3Int>();
+        ClearMetas();
 
         foreach (Vector3Int tile in MapHolderController.PotentialMoves(toShow))
         {
@@ -28,5 +27,11 @@ public class MapMeta : MonoBehaviour
     {
         return ActiveMovementTiles != null
             && ActiveMovementTiles.Contains(position);
+    }
+
+    public void ClearMetas()
+    {
+        MetaMap.ClearAllTiles();
+        ActiveMovementTiles = new HashSet<Vector3Int>();
     }
 }

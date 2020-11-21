@@ -7,7 +7,6 @@ public class LocationInput : MonoBehaviour
 {
     public Camera MapCamera;
     public Tilemap TerrainTilemap;
-    public MapMeta MapMetaController;    
 
     public Vector3Int? GetHoveredTilePosition()
     {

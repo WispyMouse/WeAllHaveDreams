@@ -6,26 +6,46 @@ public class PlayerInputPhaseController : MonoBehaviour
 {
     public LocationInput LocationInputController;
     public MapMeta MapMetaController;
+    public MapHolder MapHolderController;
 
-    // TEMPORARY: Stored player mob so we can move them around
-    public MapMob PlayerMob;
-
-    private void Start()
-    {
-        MapMetaController.ShowUnitMovementRange(PlayerMob);
-    }
+    MapMob selectedMob;
 
     void Update()
     {
-        // TEMPORARY: When we click on a tile, teleport our unit there
+        // TEMPORARY: If we click on a tile with a unit, select that unit
+        // If we click on a tile without a unit, and we have a unit selected, move the unit there
+        // If we right click while we have a selected unit, clear the selection
         if (Input.GetMouseButtonDown(0))
         {
             Vector3Int? worldpoint = LocationInputController.GetHoveredTilePosition();
 
-            if (worldpoint.HasValue && MapMetaController.TileIsInActiveMovementRange(worldpoint.Value))
+            // We didn't click on a position, so do nothing
+            if (!worldpoint.HasValue)
             {
-                PlayerMob.SetPosition(worldpoint.Value);
-                MapMetaController.ShowUnitMovementRange(PlayerMob);
+                return;
+            }
+
+            MapMob mobAtPoint = MapHolderController.MobOnPoint(worldpoint.Value);
+
+            if (mobAtPoint != null)
+            {
+                selectedMob = mobAtPoint;
+                MapMetaController.ShowUnitMovementRange(selectedMob);
+                return;
+            }
+
+            if (selectedMob != null && MapMetaController.TileIsInActiveMovementRange(worldpoint.Value))
+            {
+                MapHolderController.MoveUnit(selectedMob, worldpoint.Value);
+                MapMetaController.ClearMetas();
+                return;
+            }
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            if (selectedMob != null)
+            {
+                MapMetaController.ClearMetas();
             }
         }
     }

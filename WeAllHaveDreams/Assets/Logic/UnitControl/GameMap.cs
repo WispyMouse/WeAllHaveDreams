@@ -7,6 +7,7 @@ using UnityEngine.Tilemaps;
 public class GameMap
 {
     Dictionary<Vector3Int, IEnumerable<Vector3Int>> Neighbors { get; set; }
+    Dictionary<Vector3Int, MapMob> MobsOnMap { get; set; }
 
     public static GameMap InitializeMapFromTilemap(Tilemap tileMap)
     {
@@ -112,5 +113,49 @@ public class GameMap
         }
 
         return possibleVisits.Keys;
+    }
+
+    public void LoadAllMobsFromScene()
+    {
+        MobsOnMap = new Dictionary<Vector3Int, MapMob>();
+
+        foreach (MapMob curMob in GameObject.FindObjectsOfType<MapMob>())
+        {
+            curMob.SettleIntoGrid();
+
+            if (MobsOnMap.ContainsKey(curMob.Position))
+            {
+                Debug.LogWarning($"Multiple mobs are on the same position: {{{curMob.Position.x}, {curMob.Position.y}, {curMob.Position.z}}}");
+            }
+
+            MobsOnMap.Add(curMob.Position, curMob);
+        }
+    }
+
+    public MapMob MobOnPoint(Vector3Int position)
+    {
+        if (MobsOnMap.ContainsKey(position))
+        {
+            return MobsOnMap[position];
+        }
+
+        return null;
+    }
+
+    public void ClearUnitAtPosition(Vector3Int position)
+    {
+        MobsOnMap.Remove(position);
+    }
+
+    public void SetUnitAtPosition(MapMob toMove, Vector3Int to)
+    {
+        if (MobsOnMap.ContainsKey(to))
+        {
+            Debug.LogWarning($"A unit is trying to move to an occuppied tile at {{{to.x}, {to.y}, {to.z}}}");
+            return;
+        }
+
+        MobsOnMap.Add(to, toMove);
+        toMove.SetPosition(to);
     }
 }
