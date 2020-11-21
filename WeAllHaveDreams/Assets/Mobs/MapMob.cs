@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class MapMob : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public Vector3Int Position { get; set; }
+    public int MoveRange => 3; // TEMPORARY: Just a static move value
+
+    private void Start()
     {
-        
+        Vector3Int nearestStartPosition = new Vector3Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y), Mathf.RoundToInt(transform.position.z));
+        SetPosition(nearestStartPosition);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetPosition(Vector3Int toPosition)
     {
-        
+        Position = toPosition;
     }
 }

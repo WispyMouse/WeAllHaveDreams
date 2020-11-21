@@ -41,6 +41,9 @@ TagManager:
   - name: Map
     uniqueID: 3404115789
     locked: 0
+  - name: MetaMap
+    uniqueID: 1018178127
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

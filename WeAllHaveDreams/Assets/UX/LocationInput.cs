@@ -20,7 +20,7 @@ public class LocationInput : MonoBehaviour
 
             if (worldpoint.HasValue)
             {
-                PlayerMob.transform.position = new Vector3(worldpoint.Value.x, worldpoint.Value.y, worldpoint.Value.z);
+                PlayerMob.transform.position = new Vector3(worldpoint.Value.x, worldpoint.Value.y, worldpoint.Value.z); 
             }
         }
     }
