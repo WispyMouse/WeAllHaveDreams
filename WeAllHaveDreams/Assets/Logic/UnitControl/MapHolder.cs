@@ -19,6 +19,7 @@ public class MapHolder : MonoBehaviour
     {
         activeMap.ClearUnitAtPosition(toMove.Position);
         activeMap.SetUnitAtPosition(toMove, to);
+        DebugTextLog.AddTextToLog($"Unit <unitnamehere> moved to {{{to.x}, {to.y}, {to.z}}}");
     }
 
     public IEnumerable<Vector3Int> PotentialMoves(MapMob moving) => activeMap.PotentialMoves(moving);

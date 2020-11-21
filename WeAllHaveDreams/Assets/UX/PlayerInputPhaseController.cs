@@ -12,6 +12,17 @@ public class PlayerInputPhaseController : MonoBehaviour
 
     void Update()
     {
+        if (!TurnManager.CurrentPlayer.HumanControlled)
+        {
+            return;
+        }
+
+        HandleClick();
+        HandleKeyboard();
+    }
+
+    void HandleClick()
+    {
         // TEMPORARY: If we click on a tile with a unit, select that unit
         // If we click on a tile without a unit, and we have a unit selected, move the unit there
         // If we right click while we have a selected unit, clear the selection
@@ -29,8 +40,12 @@ public class PlayerInputPhaseController : MonoBehaviour
 
             if (mobAtPoint != null)
             {
-                selectedMob = mobAtPoint;
-                MapMetaController.ShowUnitMovementRange(selectedMob);
+                if (mobAtPoint.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex)
+                {
+                    selectedMob = mobAtPoint;
+                    MapMetaController.ShowUnitMovementRange(selectedMob);
+                }
+                
                 return;
             }
 
@@ -47,6 +62,14 @@ public class PlayerInputPhaseController : MonoBehaviour
             {
                 MapMetaController.ClearMetas();
             }
+        }
+    }
+
+    void HandleKeyboard()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            TurnManager.PassTurnToNextPlayer();
         }
     }
 }
