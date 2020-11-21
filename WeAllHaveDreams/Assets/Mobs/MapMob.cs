@@ -16,5 +16,6 @@ public class MapMob : MonoBehaviour
     public void SetPosition(Vector3Int toPosition)
     {
         Position = toPosition;
+        transform.position = toPosition;
     }
 }

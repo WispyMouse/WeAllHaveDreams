@@ -1,18 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class MapMeta : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Tilemap MetaMap;
+    public MapHolder MapHolderController;
 
-    // Update is called once per frame
-    void Update()
+    public Tile MovementTile;
+
+    public void ShowUnitMovementRange(MapMob toShow)
     {
-        
+        MetaMap.ClearAllTiles();
+
+        foreach (Vector3Int tile in MapHolderController.PotentialMoves(toShow))
+        {
+            MetaMap.SetTile(tile, MovementTile);
+        }
     }
 }

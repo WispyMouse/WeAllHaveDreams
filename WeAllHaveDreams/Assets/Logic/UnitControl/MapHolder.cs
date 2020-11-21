@@ -13,4 +13,6 @@ public class MapHolder : MonoBehaviour
     {
         activeMap = GameMap.InitializeMapFromTilemap(LoadedMap);
     }
+
+    public IEnumerable<Vector3Int> PotentialMoves(MapMob moving) => activeMap.PotentialMoves(moving);
 }

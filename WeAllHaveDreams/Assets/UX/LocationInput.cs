@@ -7,6 +7,7 @@ public class LocationInput : MonoBehaviour
 {
     public Camera MapCamera;
     public Tilemap TerrainTilemap;
+    public MapMeta MapMetaController;
 
     // TEMPORARY: Stored player mob so we can move them around
     public MapMob PlayerMob;
@@ -20,7 +21,8 @@ public class LocationInput : MonoBehaviour
 
             if (worldpoint.HasValue)
             {
-                PlayerMob.transform.position = new Vector3(worldpoint.Value.x, worldpoint.Value.y, worldpoint.Value.z); 
+                PlayerMob.SetPosition(worldpoint.Value);
+                MapMetaController.ShowUnitMovementRange(PlayerMob);
             }
         }
     }

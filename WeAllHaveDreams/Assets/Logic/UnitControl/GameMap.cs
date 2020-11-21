@@ -95,11 +95,18 @@ public class GameMap
                     if (possibleVisits[neighbor] > totalCost)
                     {
                         possibleVisits[neighbor] = totalCost;
+
+                        // reconsider this as a frontier if it isn't already
+                        if (!frontier.ContainsKey(neighbor))
+                        {
+                            frontier.Add(neighbor, totalCost);
+                        }
                     }
                 }
                 else
                 {
                     possibleVisits.Add(neighbor, totalCost);
+                    frontier.Add(neighbor, totalCost);
                 }
             }
         }

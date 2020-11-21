@@ -169,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MapCamera: {fileID: 519420031}
   TerrainTilemap: {fileID: 630442907}
+  MapMetaController: {fileID: 198427620}
   PlayerMob: {fileID: 3350195962672334228}
 --- !u!114 &198427620
 MonoBehaviour:
@@ -182,6 +183,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64a593cab0685a943b17a54ba0779ae9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MetaMap: {fileID: 285715986}
+  MapHolderController: {fileID: 2100281716}
+  MovementTile: {fileID: 11400000, guid: 514d6ee1508a5174487333bd167db7f4, type: 2}
 --- !u!1 &285715983
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,8 +255,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1018178127
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -457,8 +461,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -890851507
+  m_SortingLayer: -2
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
