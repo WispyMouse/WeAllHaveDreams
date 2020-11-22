@@ -14,7 +14,15 @@ public class PlayerInputPhaseController : MonoBehaviour
     public MapHolder MapHolderController;
     public MobHolder MobHolderController;
 
-    MapMob selectedMob;
+    public InputGameplayPhase StartingPhase;
+    InputGameplayPhase currentPhase { get; set; }
+    InputGameplayPhase nextPhase { get; set; }
+
+    private void Start()
+    {
+        currentPhase = StartingPhase;
+        currentPhase.EnterPhase();
+    }
 
     void Update()
     {
@@ -23,11 +31,44 @@ public class PlayerInputPhaseController : MonoBehaviour
             return;
         }
 
-        HandleClick();
-        HandleKeyboard();
+        bool refresh = false;
+
+        if (currentPhase.WaitingForInput)
+        {
+            refresh = HandleInput();
+        }
+        else if (currentPhase.NextPhasePending)
+        {
+            nextPhase = currentPhase.GetNextPhase();
+            refresh = true;
+        }
+
+        if (refresh)
+        {
+            if (currentPhase != nextPhase)
+            {
+                currentPhase.EndPhase();
+                currentPhase = nextPhase;
+                currentPhase.EnterPhase();
+
+                DebugTextLog.AddTextToLog($"Moving to phase: {currentPhase.GetType().Name}");
+            }
+            else
+            {
+                currentPhase.UpdateAfterInput();
+                DebugTextLog.AddTextToLog($"Refreshing phase: {currentPhase.GetType().Name}");
+            }
+        }
     }
 
-    void HandleClick()
+    bool HandleInput()
+    {
+        bool inputHandled = HandleClick();
+        inputHandled |= HandleKeyboard();
+        return inputHandled;
+    }
+
+    bool HandleClick()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -36,63 +77,52 @@ public class PlayerInputPhaseController : MonoBehaviour
             // We didn't click on a position, so do nothing
             if (!worldpoint.HasValue)
             {
-                return;
+                return false;
             }
 
-            if (selectedMob == null)
+            MapMob mobAtPoint = MobHolderController.MobOnPoint(worldpoint.Value);
+
+            if (mobAtPoint)
             {
-                HandleClickWithoutSelectedMob(worldpoint.Value);
+                nextPhase = currentPhase.UnitClicked(mobAtPoint);
             }
             else
             {
-                HandleClickWithSelectedMob(worldpoint.Value);
+                nextPhase = currentPhase.TileClicked(worldpoint.Value);
             }
+
+            return true;
         }
         else if (Input.GetMouseButtonDown(1))
         {
-            if (selectedMob != null)
-            {
-                MapMetaController.ClearMetas();
-            }
-        }
-    }
-
-    void HandleClickWithoutSelectedMob(Vector3Int position)
-    {
-        MapMob mobAtPoint = MobHolderController.MobOnPoint(position);
-
-        if (mobAtPoint != null)
-        {
-            if (mobAtPoint.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex
-                && mobAtPoint.CanMove)
-            {
-                selectedMob = mobAtPoint;
-                MapMetaController.ShowUnitMovementRange(selectedMob);
-            }
-
-            return;
-        }
-    }
-
-    void HandleClickWithSelectedMob(Vector3Int position)
-    {
-        if (MobHolderController.MobOnPoint(position))
-        {
-            return;
+            nextPhase = StartingPhase;
+            return true;
         }
 
-        selectedMob.CanMove = false;
-        selectedMob.HideReminder(nameof(selectedMob.CanMove));
-        MobHolderController.MoveUnit(selectedMob, position);
-        MapMetaController.ClearMetas();
-        selectedMob = null;
+        return false;
     }
 
-    void HandleKeyboard()
+    bool HandleKeyboard()
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
             TurnManager.PassTurnToNextPlayer();
+            return true;
         }
+
+        return false;
+    }
+
+    public void ResetPhases()
+    {
+        if (currentPhase != null)
+        {
+            currentPhase.EndPhase();
+        }
+
+        currentPhase = StartingPhase;
+        currentPhase.EnterPhase();
+        nextPhase = currentPhase;
+        DebugTextLog.AddTextToLog($"Resetting phase: {currentPhase.GetType().Name}");
     }
 }

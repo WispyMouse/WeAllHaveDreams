@@ -11,6 +11,7 @@ public class TurnManager : SingletonBase<TurnManager>
     public static PlayerSide CurrentPlayer => Singleton.playerSides[Singleton.playerIndex];
 
     public MobHolder MobHolderController;
+    public PlayerInputPhaseController PlayerInputPhaseControllerInstance;
 
     private void Start()
     {
@@ -37,6 +38,7 @@ public class TurnManager : SingletonBase<TurnManager>
         if (CurrentPlayer.HumanControlled)
         {
             DebugTextLog.AddTextToLog("Press 'enter' to pass the turn.");
+            PlayerInputPhaseControllerInstance.ResetPhases();
         }
         else
         {
