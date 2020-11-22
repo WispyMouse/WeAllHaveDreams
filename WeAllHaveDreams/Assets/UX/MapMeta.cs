@@ -26,6 +26,24 @@ public class MapMeta : MonoBehaviour
         }
     }
 
+    public void ShowUnitAttackRange(MapMob toShow, bool overrideExisting = true)
+    {
+        if (overrideExisting || ActiveAttackTiles == null)
+        {
+            ActiveAttackTiles = new HashSet<Vector3Int>();
+        }
+
+        foreach (Vector3Int possibleAttackTile in MapHolderController.PotentialAttacks(toShow, toShow.Position))
+        {
+            ActiveAttackTiles.Add(possibleAttackTile);
+        }
+
+        foreach (Vector3Int attackTile in ActiveAttackTiles)
+        {
+            MetaMap.SetTile(attackTile, AttackTile);
+        }
+    }
+
     public void ShowUnitAttackRangePastMovementRange(MapMob toShow)
     {
         ActiveAttackTiles = new HashSet<Vector3Int>();

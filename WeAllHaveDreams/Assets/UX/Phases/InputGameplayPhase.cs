@@ -18,6 +18,12 @@ public abstract class InputGameplayPhase : MonoBehaviour
         return this;
     }
 
+    public virtual bool TryHandleKeyPress(out InputGameplayPhase nextPhase)
+    {
+        nextPhase = this;
+        return false;
+    }
+
     public virtual void EndPhase()
     {
 

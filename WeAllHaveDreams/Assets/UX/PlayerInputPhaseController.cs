@@ -110,6 +110,15 @@ public class PlayerInputPhaseController : MonoBehaviour
             return true;
         }
 
+        if (Input.anyKeyDown)
+        {
+            if (currentPhase.TryHandleKeyPress(out InputGameplayPhase nextPhaseAfterKeyPress))
+            {
+                nextPhase = nextPhaseAfterKeyPress;
+                return true;
+            }
+        }
+
         return false;
     }
 

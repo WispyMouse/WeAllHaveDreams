@@ -7,6 +7,8 @@ public class UnitMovementPhase : InputGameplayPhase
 {
     public InputResolutionPhase InputResolutionPhaseInstance;
     public NeutralPhase NeutralPhaseInstance;
+    public UnitAttackPhase UnitAttackPhaseInstance;
+
     public MapMeta MapMetaInstance;
     public MapHolder MapHolderInstance;
 
@@ -31,6 +33,7 @@ public class UnitMovementPhase : InputGameplayPhase
         if (selectedUnit.CanAttack)
         {
             MapMetaInstance.ShowUnitAttackRangePastMovementRange(selectedUnit);
+            DebugTextLog.AddTextToLog("Press 'A' to enter Attack Only mode");
         }
     }
 
@@ -108,5 +111,44 @@ public class UnitMovementPhase : InputGameplayPhase
         {
             return InputResolutionPhaseInstance.ResolveThis(new AttackWithMobInput(selectedUnit, mob, closestSpot), NeutralPhaseInstance);
         }
+    }
+
+    public override bool WaitingForInput
+    {
+        get
+        {
+            return !NextPhasePending;
+        }
+    }
+
+    public override bool NextPhasePending
+    {
+        get
+        {
+            return !selectedUnit.CanMove;
+        }
+    }
+
+    public override InputGameplayPhase GetNextPhase()
+    {
+        if (selectedUnit.CanAttack)
+        {
+            return UnitAttackPhaseInstance.UnitSelected(selectedUnit);
+        }
+
+        return NeutralPhaseInstance;
+    }
+
+    public override bool TryHandleKeyPress(out InputGameplayPhase nextPhase)
+    {
+        nextPhase = this;
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            nextPhase = UnitAttackPhaseInstance.UnitSelected(selectedUnit);
+            return true;
+        }
+
+        return false;
     }
 }

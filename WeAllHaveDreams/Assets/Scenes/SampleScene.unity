@@ -371,7 +371,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 2, y: -2}
-  m_SizeDelta: {x: 600, y: 200}
+  m_SizeDelta: {x: 600, y: 160}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &338639970
 MonoBehaviour:
@@ -2042,6 +2042,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputResolutionPhaseInstance: {fileID: 902307289}
   NeutralPhaseInstance: {fileID: 902307292}
+  UnitAttackPhaseInstance: {fileID: 902307291}
   MapMetaInstance: {fileID: 198427620}
   MapHolderInstance: {fileID: 2100281716}
 --- !u!114 &902307291
@@ -2056,6 +2057,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef64f2a175652f14f8f52aa5fa876cbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MapMetaInstance: {fileID: 198427620}
+  MapHolderInstance: {fileID: 2100281716}
+  UnitMovementPhaseInstance: {fileID: 902307290}
+  InputResolutionPhaseInstance: {fileID: 902307289}
 --- !u!114 &902307292
 MonoBehaviour:
   m_ObjectHideFlags: 0

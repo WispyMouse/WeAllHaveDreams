@@ -145,7 +145,7 @@ public class GameMap
             var thisTile = frontier.First();
             frontier.Remove(thisTile.Key);
 
-            // If we've already expended all our movement, stop moving
+            // If we've already expended all our range, stop ranging (lol)
             if (thisTile.Value >= attacking.AttackRange)
             {
                 continue;
@@ -177,6 +177,9 @@ public class GameMap
                 }
             }
         }
+
+        // Remove the starting position from the list
+        possibleAttacks.Remove(from);
 
         return possibleAttacks.Keys;
     }
