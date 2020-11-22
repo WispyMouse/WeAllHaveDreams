@@ -8,8 +8,10 @@ public class MapMob : MonoBehaviour
 
     public Vector3Int Position { get; set; }
     public int MoveRange => 3; // TEMPORARY: Just a static move value
+    public int AttackRange => 1; // TEMPORARY: Again, static value
 
     public bool CanMove { get; set; }
+    public bool CanAttack { get; set; }
     Dictionary<string, Reminder> Reminders { get; set; } = new Dictionary<string, Reminder>();
 
     public void SettleIntoGrid()
@@ -28,11 +30,15 @@ public class MapMob : MonoBehaviour
     {
         CanMove = true;
         ShowReminder(nameof(CanMove));
+
+        CanAttack = true;
+        ShowReminder(nameof(CanAttack));
     }
 
     public void ClearForEndOfTurn()
     {
         CanMove = false;
+        CanAttack = false;
         HideAllReminders();
     }
 

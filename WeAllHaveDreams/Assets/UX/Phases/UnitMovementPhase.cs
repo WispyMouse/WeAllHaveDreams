@@ -24,6 +24,11 @@ public class UnitMovementPhase : InputGameplayPhase
         }
 
         MapMetaInstance.ShowUnitMovementRange(selectedUnit);
+
+        if (selectedUnit.CanAttack)
+        {
+            MapMetaInstance.ShowUnitAttackRangePastMovementRange(selectedUnit);
+        }
     }
 
     public override void EndPhase()
@@ -42,6 +47,11 @@ public class UnitMovementPhase : InputGameplayPhase
         }
 
         MapMetaInstance.ShowUnitMovementRange(selectedUnit);
+
+        if (selectedUnit.CanAttack)
+        {
+            MapMetaInstance.ShowUnitAttackRangePastMovementRange(selectedUnit);
+        }
     }
 
     public override InputGameplayPhase TileClicked(Vector3Int position)

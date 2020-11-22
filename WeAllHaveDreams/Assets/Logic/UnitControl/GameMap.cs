@@ -119,6 +119,57 @@ public class GameMap
         return possibleVisits.Keys;
     }
 
+    public IEnumerable<Vector3Int> PotentialAttacks(MapMob attacking, Vector3Int from)
+    {
+        Vector3Int startingTile = from;
+
+        var frontier = new Dictionary<Vector3Int, int>();
+        var possibleAttacks = new Dictionary<Vector3Int, int>();
+
+        possibleAttacks.Add(startingTile, 0);
+        frontier.Add(startingTile, 0);
+
+        while (frontier.Any())
+        {
+            var thisTile = frontier.First();
+            frontier.Remove(thisTile.Key);
+
+            // If we've already expended all our movement, stop moving
+            if (thisTile.Value >= attacking.AttackRange)
+            {
+                continue;
+            }
+
+            foreach (Vector3Int neighbor in Neighbors[thisTile.Key])
+            {
+                int totalCost = thisTile.Value + 1; // TEMPORARY: This will eventually consider the movement cost of the tile we're moving on to
+
+                // If we've already considered this tile, and it was more efficient last time, ignore this attempt
+                // If we haven't considered this tile, then add it
+                if (possibleAttacks.ContainsKey(neighbor))
+                {
+                    if (possibleAttacks[neighbor] > totalCost)
+                    {
+                        possibleAttacks[neighbor] = totalCost;
+
+                        // reconsider this as a frontier if it isn't already
+                        if (!frontier.ContainsKey(neighbor))
+                        {
+                            frontier.Add(neighbor, totalCost);
+                        }
+                    }
+                }
+                else
+                {
+                    possibleAttacks.Add(neighbor, totalCost);
+                    frontier.Add(neighbor, totalCost);
+                }
+            }
+        }
+
+        return possibleAttacks.Keys;
+    }
+
     bool CanMoveInTo(MapMob moving, Vector3Int from, Vector3Int to, MobHolder mobHolder)
     {
         MapMob mobOnPoint;
