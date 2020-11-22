@@ -15,8 +15,13 @@ public class MoveMobPlayerInput : PlayerInput
 
     public override void Execute(MapHolder mapHolder, MobHolder mobHolder)
     {
+        if (!Moving.CanMove)
+        {
+            DebugTextLog.AddTextToLog("A unit tried to move, but cannot move.");
+            return;
+        }
+
         mobHolder.MoveUnit(Moving, To);
         Moving.CanMove = false;
-        Moving.HideReminder(nameof(Moving.CanMove));
     }
 }

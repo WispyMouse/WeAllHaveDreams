@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -116,7 +117,17 @@ public class GameMap
             }
         }
 
-        return possibleVisits.Keys;
+        List<Vector3Int> possibleMoves = new List<Vector3Int>();
+
+        foreach (Vector3Int position in possibleVisits.Keys)
+        {
+            if (CanStopOn(movingMob, position, mobHolderController))
+            {
+                possibleMoves.Add(position);
+            }
+        }
+
+        return possibleMoves;
     }
 
     public IEnumerable<Vector3Int> PotentialAttacks(MapMob attacking, Vector3Int from)
@@ -170,11 +181,103 @@ public class GameMap
         return possibleAttacks.Keys;
     }
 
+    public List<Vector3Int> Path(MapMob moving, Vector3Int to, MobHolder mobHolder)
+    {
+        // TEMPORARY: Looks like there's no convenient built in solutions for a Priority Queue, will have to make one
+        var frontier = new List<Tuple<Vector3Int, int>>(); ;
+        frontier.Add(new Tuple<Vector3Int, int>(moving.Position, 0));
+
+        var cameFrom = new Dictionary<Vector3Int, Vector3Int>();
+        cameFrom.Add(moving.Position, moving.Position);
+
+        var costSoFar = new Dictionary<Vector3Int, int>();
+        costSoFar.Add(moving.Position, 0);
+
+        while (frontier.Any())
+        {
+            Tuple<Vector3Int, int> curPositionTuple = frontier.OrderBy(f => f.Item2).First();
+            frontier.Remove(curPositionTuple);
+
+            Vector3Int positionValue = curPositionTuple.Item1;
+
+            if (positionValue == to)
+            {
+                break;
+            }
+
+            foreach (Vector3Int neighbor in Neighbors[positionValue])
+            {
+                // Can't move here, don't consider it
+                if (!CanMoveInTo(moving, positionValue, neighbor, mobHolder))
+                {
+                    continue;
+                }
+
+                int newCost = costSoFar[positionValue] + 1; // TEMPORARY: Will eventually consider value of neighbor
+                int heuristicDistance = newCost + Mathf.Abs(to.x - neighbor.x) + Mathf.Abs(to.y - neighbor.y);
+
+                if (cameFrom.ContainsKey(neighbor))
+                {
+                    if (newCost < costSoFar[neighbor])
+                    {
+                        costSoFar[neighbor] = newCost;
+                        cameFrom[neighbor] = positionValue;
+                        frontier.Add(new Tuple<Vector3Int, int>(positionValue, heuristicDistance));
+                    }
+                }
+                else
+                {
+                    costSoFar.Add(neighbor, newCost);
+                    cameFrom.Add(neighbor, positionValue);
+                    frontier.Add(new Tuple<Vector3Int, int>(positionValue, heuristicDistance));
+                }
+            }
+        }
+
+        // Weren't able to find the path, return null
+        if (!cameFrom.ContainsKey(to))
+        {
+            return null;
+        }
+
+        List<Vector3Int> path = new List<Vector3Int>();
+        Vector3Int current = to;
+
+        while (current != moving.Position)
+        {
+            path.Add(current);
+            current = cameFrom[current];
+        }
+
+        path.Reverse();
+        return path;
+    }
+
+    public IEnumerable<Vector3Int> CanAttackFrom(MapMob attacking, Vector3Int target)
+    {
+        // TEMPORARY: Assume everyone attacks in a perfect area around them, with no diversity in allowed patterns
+        // Given this assumption, just find the PotentialAttacks from that position and return that
+        // This isn't going to last, but it's handy
+        return PotentialAttacks(attacking, target);
+    }
+
     bool CanMoveInTo(MapMob moving, Vector3Int from, Vector3Int to, MobHolder mobHolder)
     {
         MapMob mobOnPoint;
 
         if ((mobOnPoint = mobHolder.MobOnPoint(to)) != null && mobOnPoint.PlayerSideIndex != moving.PlayerSideIndex)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    bool CanStopOn(MapMob moving, Vector3Int to, MobHolder mobHolder)
+    {
+        MapMob mobOnPoint;
+
+        if ((mobOnPoint = mobHolder.MobOnPoint(to)) != null && mobOnPoint != moving)
         {
             return false;
         }

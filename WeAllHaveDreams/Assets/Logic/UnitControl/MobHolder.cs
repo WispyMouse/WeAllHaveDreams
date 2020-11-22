@@ -48,7 +48,9 @@ public class MobHolder : MonoBehaviour
 
     public void MoveUnit(MapMob toMove, Vector3Int to)
     {
-        if (MobOnPoint(to))
+        MapMob onPoint;
+
+        if ((onPoint = MobOnPoint(to)) != null && onPoint != toMove)
         {
             Debug.LogWarning($"A unit is trying to move to an occuppied tile at {{{to.x}, {to.y}, {to.z}}}");
             return;

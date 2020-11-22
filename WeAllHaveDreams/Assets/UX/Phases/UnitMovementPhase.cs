@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UnitMovementPhase : InputGameplayPhase
 {
     public InputResolutionPhase InputResolutionPhaseInstance;
+    public NeutralPhase NeutralPhaseInstance;
     public MapMeta MapMetaInstance;
+    public MapHolder MapHolderInstance;
 
     MapMob selectedUnit { get; set; }
 
@@ -79,6 +82,31 @@ public class UnitMovementPhase : InputGameplayPhase
             return UnitSelected(mob);
         }
 
-        return this;
+        // What tile can we attack this unit from?
+        // We want to pick the closest one to the target out of our possibilities, that is still in this units movement range
+        IEnumerable<Vector3Int> attackingRanges = MapHolderInstance.CanHitFrom(selectedUnit, mob.Position);
+        IEnumerable<Vector3Int> possibleMoves = MapHolderInstance.PotentialMoves(selectedUnit);
+
+        IEnumerable<Vector3Int> overlap = attackingRanges.Intersect(possibleMoves);
+
+        if (!overlap.Any())
+        {
+            DebugTextLog.AddTextToLog("That unit is out of this units attack range.");
+            return this;
+        }
+
+        Vector3Int closestSpot = overlap.OrderBy(position => Mathf.Abs(position.x - mob.Position.x) + Mathf.Abs(position.y - mob.Position.y) 
+                                                             + Mathf.Abs(position.x - selectedUnit.Position.x) + Mathf.Abs(position.y - selectedUnit.Position.y))
+                                        .First();
+
+        // We're already there! No need to walk
+        if (closestSpot == selectedUnit.Position)
+        {
+            return InputResolutionPhaseInstance.ResolveThis(new AttackWithMobInput(selectedUnit, mob, closestSpot), this);
+        }
+        else
+        {
+            return InputResolutionPhaseInstance.ResolveThis(new AttackWithMobInput(selectedUnit, mob, closestSpot), NeutralPhaseInstance);
+        }
     }
 }

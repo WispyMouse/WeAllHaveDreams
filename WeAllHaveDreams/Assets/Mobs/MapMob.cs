@@ -10,8 +10,50 @@ public class MapMob : MonoBehaviour
     public int MoveRange => 3; // TEMPORARY: Just a static move value
     public int AttackRange => 1; // TEMPORARY: Again, static value
 
-    public bool CanMove { get; set; }
-    public bool CanAttack { get; set; }
+    public bool CanMove
+    {
+        get
+        {
+            return _canMove;
+        }
+        set
+        {
+            _canMove = value;
+
+            if (value)
+            {
+                ShowReminder(nameof(CanMove));
+            }
+            else
+            {
+                HideReminder(nameof(CanMove));
+            }
+        }
+    }
+    private bool _canMove { get; set; }
+
+    public bool CanAttack
+    {
+        get
+        {
+            return _canAttack;
+        }
+        set
+        {
+            _canAttack = value;
+
+            if (value)
+            {
+                ShowReminder(nameof(CanAttack));
+            }
+            else
+            {
+                HideReminder(nameof(CanAttack));
+            }
+        }
+    }
+    private bool _canAttack { get; set; }
+
     Dictionary<string, Reminder> Reminders { get; set; } = new Dictionary<string, Reminder>();
 
     public void SettleIntoGrid()
@@ -55,7 +97,7 @@ public class MapMob : MonoBehaviour
         }
     }
 
-    public void HideReminder(string reminderTag)
+    void HideReminder(string reminderTag)
     {
         if (Reminders.ContainsKey(reminderTag))
         {
@@ -63,7 +105,7 @@ public class MapMob : MonoBehaviour
         }
     }
 
-    public void HideAllReminders()
+    void HideAllReminders()
     {
         foreach (string key in Reminders.Keys)
         {

@@ -186,6 +186,7 @@ MonoBehaviour:
   MetaMap: {fileID: 285715986}
   MapHolderController: {fileID: 2100281716}
   MovementTile: {fileID: 11400000, guid: 514d6ee1508a5174487333bd167db7f4, type: 2}
+  AttackTile: {fileID: 11400000, guid: 2c6b36665600a3048b765b990be79bbc, type: 2}
 --- !u!114 &198427621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1907,6 +1908,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ReminderPF: {fileID: 3067243966292015861, guid: 136e7a1c0b314e744a19cbfdc6e62f36, type: 3}
+  MoveReminderSprite: {fileID: -1206512049882286765, guid: ecf71f6915a963841af1d8ab9ce6ed58, type: 3}
+  AttackReminderSprite: {fileID: -6299032902051394275, guid: ecf71f6915a963841af1d8ab9ce6ed58, type: 3}
 --- !u!1001 &768757384
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2038,7 +2041,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InputResolutionPhaseInstance: {fileID: 902307289}
+  NeutralPhaseInstance: {fileID: 902307292}
   MapMetaInstance: {fileID: 198427620}
+  MapHolderInstance: {fileID: 2100281716}
 --- !u!114 &902307291
 MonoBehaviour:
   m_ObjectHideFlags: 0
