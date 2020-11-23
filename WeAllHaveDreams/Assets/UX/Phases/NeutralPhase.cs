@@ -6,14 +6,17 @@ public class NeutralPhase : InputGameplayPhase
 {
     public UnitMovementPhase UnitMovementPhaseInstance;
 
-    public override InputGameplayPhase UnitClicked(MapMob mob)
+    public override bool TryHandleUnitClicked(MapMob mob, out InputGameplayPhase nextPhase)
     {
+        nextPhase = this;
+
         // If they're not on our team, there's nothing to do.
         if (mob.PlayerSideIndex != TurnManager.CurrentPlayer.PlayerSideIndex)
         {
-            return this;
+            return false;
         }
 
-        return UnitMovementPhaseInstance.UnitSelected(mob);
+        nextPhase = UnitMovementPhaseInstance.UnitSelected(mob);
+        return true;
     }
 }

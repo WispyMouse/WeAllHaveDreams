@@ -59,4 +59,24 @@ public class MobHolder : MonoBehaviour
         toMove.SetPosition(to);
         DebugTextLog.AddTextToLog($"Unit <unitnamehere> moved to {{{to.x}, {to.y}, {to.z}}}");
     }
+
+    public IEnumerator UnitEngagesUnit(MapMob engaging, MapMob defending)
+    {
+        decimal offensiveDamage = ProjectedDamages(engaging, defending);
+        defending.HitPoints = System.Math.Max(0, defending.HitPoints - offensiveDamage);
+
+        // TEMPORARY: This is where logic that checks to see if the unit can counter attack at this range would go
+        if (defending.HitPoints > 0)
+        {
+            decimal returnDamage = ProjectedDamages(defending, engaging);
+            engaging.HitPoints = System.Math.Max(0, engaging.HitPoints - returnDamage);
+        }
+
+        yield return new WaitForEndOfFrame();
+    }
+
+    public decimal ProjectedDamages(MapMob engaging, MapMob defending)
+    {
+        return engaging.CurrentAttackPower;
+    }
 }

@@ -7,8 +7,12 @@ public class MapMob : MonoBehaviour
     public int PlayerSideIndex; // TEMPORARY: Can be set within the editor
 
     public Vector3Int Position { get; set; }
+
     public int MoveRange => 3; // TEMPORARY: Just a static move value
     public int AttackRange => 1; // TEMPORARY: Again, static value
+
+    public decimal HitPoints { get; set; } = 10.0M;
+    public decimal DamageRatio { get; set; } = .4M;
 
     public bool CanMove
     {
@@ -110,6 +114,14 @@ public class MapMob : MonoBehaviour
         foreach (string key in Reminders.Keys)
         {
             HideReminder(key);
+        }
+    }
+
+    public decimal CurrentAttackPower
+    {
+        get
+        {
+            return HitPoints * DamageRatio;
         }
     }
 }

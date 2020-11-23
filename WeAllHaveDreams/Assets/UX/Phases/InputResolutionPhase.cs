@@ -9,17 +9,21 @@ public class InputResolutionPhase : InputGameplayPhase
 
     PlayerInput resolving { get; set; }
     InputGameplayPhase nextPhase { get; set; }
+    bool actionResolved { get; set; } = false;
 
     public InputResolutionPhase ResolveThis(PlayerInput toResolve, InputGameplayPhase thenPhase)
     {
         resolving = toResolve;
         nextPhase = thenPhase;
+        actionResolved = false;
         return this;
     }
 
-    public override void EnterPhase()
+    public override IEnumerator EnterPhase()
     {
-        resolving.Execute(MapHolderInstance, MobHolderInstance);
+        actionResolved = false;
+        yield return resolving.Execute(MapHolderInstance, MobHolderInstance);
+        actionResolved = true;
     }
 
     public override InputGameplayPhase GetNextPhase()
@@ -28,5 +32,5 @@ public class InputResolutionPhase : InputGameplayPhase
     }
 
     public override bool WaitingForInput => false;
-    public override bool NextPhasePending => true;
+    public override bool NextPhasePending => actionResolved;
 }

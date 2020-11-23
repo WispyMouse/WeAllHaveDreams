@@ -16,13 +16,10 @@ public class PlayerInputPhaseController : MonoBehaviour
 
     public InputGameplayPhase StartingPhase;
     InputGameplayPhase currentPhase { get; set; }
-    InputGameplayPhase nextPhase { get; set; }
+    InputGameplayPhase nextPhase;
 
-    private void Start()
-    {
-        currentPhase = StartingPhase;
-        currentPhase.EnterPhase();
-    }
+    Coroutine phaseHandler { get; set; }
+    bool shouldRefresh { get; set; }
 
     void Update()
     {
@@ -31,33 +28,14 @@ public class PlayerInputPhaseController : MonoBehaviour
             return;
         }
 
-        bool refresh = false;
+        if (currentPhase == null)
+        {
+            return;
+        }
 
         if (currentPhase.WaitingForInput)
         {
-            refresh = HandleInput();
-        }
-        else if (currentPhase.NextPhasePending)
-        {
-            nextPhase = currentPhase.GetNextPhase();
-            refresh = true;
-        }
-
-        if (refresh)
-        {
-            if (currentPhase != nextPhase)
-            {
-                currentPhase.EndPhase();
-                currentPhase = nextPhase;
-                currentPhase.EnterPhase();
-
-                DebugTextLog.AddTextToLog($"Moving to phase: {currentPhase.GetType().Name}");
-            }
-            else
-            {
-                currentPhase.UpdateAfterInput();
-                DebugTextLog.AddTextToLog($"Refreshing phase: {currentPhase.GetType().Name}");
-            }
+            HandleInput();
         }
     }
 
@@ -84,18 +62,24 @@ public class PlayerInputPhaseController : MonoBehaviour
 
             if (mobAtPoint)
             {
-                nextPhase = currentPhase.UnitClicked(mobAtPoint);
+                if (currentPhase.TryHandleUnitClicked(mobAtPoint, out nextPhase))
+                {
+                    shouldRefresh = true;
+                }
             }
             else
             {
-                nextPhase = currentPhase.TileClicked(worldpoint.Value);
+                if (currentPhase.TryHandleTileClicked(worldpoint.Value, out nextPhase))
+                {
+                    shouldRefresh = true;
+                }
             }
 
             return true;
         }
         else if (Input.GetMouseButtonDown(1))
         {
-            nextPhase = StartingPhase;
+            ResetPhases();
             return true;
         }
 
@@ -106,6 +90,8 @@ public class PlayerInputPhaseController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
+            StopCoroutine(phaseHandler);
+            currentPhase.EndPhase();
             TurnManager.PassTurnToNextPlayer();
             return true;
         }
@@ -115,6 +101,7 @@ public class PlayerInputPhaseController : MonoBehaviour
             if (currentPhase.TryHandleKeyPress(out InputGameplayPhase nextPhaseAfterKeyPress))
             {
                 nextPhase = nextPhaseAfterKeyPress;
+                shouldRefresh = true;
                 return true;
             }
         }
@@ -126,12 +113,52 @@ public class PlayerInputPhaseController : MonoBehaviour
     {
         if (currentPhase != null)
         {
+            DebugTextLog.AddTextToLog($"Resetting phase: {currentPhase.GetType().Name}");
             currentPhase.EndPhase();
+            StopCoroutine(phaseHandler);
         }
 
         currentPhase = StartingPhase;
-        currentPhase.EnterPhase();
-        nextPhase = currentPhase;
-        DebugTextLog.AddTextToLog($"Resetting phase: {currentPhase.GetType().Name}");
+        nextPhase = StartingPhase;
+        shouldRefresh = false;
+
+        phaseHandler = StartCoroutine(PhasesHandler());
+    }
+
+    IEnumerator PhasesHandler()
+    {
+        yield return currentPhase.EnterPhase();
+
+        bool refresh = false;
+
+        while (refresh == false && shouldRefresh == false)
+        {
+            if (currentPhase.WaitingForInput)
+            {
+                refresh |= shouldRefresh;
+            }
+            else if (currentPhase.NextPhasePending)
+            {
+                nextPhase = currentPhase.GetNextPhase();
+                refresh = true;
+            }
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        if (currentPhase != nextPhase)
+        {
+            currentPhase.EndPhase();
+            currentPhase = nextPhase;
+            DebugTextLog.AddTextToLog($"Moving to phase: {currentPhase.GetType().Name}");
+        }
+        else
+        {
+            currentPhase.UpdateAfterInput();
+            DebugTextLog.AddTextToLog($"Refreshing phase: {currentPhase.GetType().Name}");
+        }
+
+        shouldRefresh = false;
+        phaseHandler = StartCoroutine(PhasesHandler());
     }
 }

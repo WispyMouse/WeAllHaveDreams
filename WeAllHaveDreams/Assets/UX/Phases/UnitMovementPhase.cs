@@ -20,12 +20,12 @@ public class UnitMovementPhase : InputGameplayPhase
         return this;
     }
 
-    public override void EnterPhase()
+    public override IEnumerator EnterPhase()
     {
         // If we can't move, then don't do anything
         if (!selectedUnit.CanMove)
         {
-            return;
+            yield break;
         }
 
         MapMetaInstance.ShowUnitMovementRange(selectedUnit);
@@ -60,29 +60,35 @@ public class UnitMovementPhase : InputGameplayPhase
         }
     }
 
-    public override InputGameplayPhase TileClicked(Vector3Int position)
+    public override bool TryHandleTileClicked(Vector3Int position, out InputGameplayPhase nextPhase)
     {
+        nextPhase = this;
+
         // If we can't move, then don't do anything
         if (!selectedUnit.CanMove)
         {
-            return this;
+            return false;
         }
 
         // If the tile isn't in our move range, then don't do anything
         if (!MapMetaInstance.TileIsInActiveMovementRange(position))
         {
-            return this;
+            return false;
         }
 
-        return InputResolutionPhaseInstance.ResolveThis(new MoveMobPlayerInput(selectedUnit, position), this);
+        nextPhase = InputResolutionPhaseInstance.ResolveThis(new MoveMobPlayerInput(selectedUnit, position), this);
+        return true;
     }
 
-    public override InputGameplayPhase UnitClicked(MapMob mob)
+    public override bool TryHandleUnitClicked(MapMob mob, out InputGameplayPhase nextPhase)
     {
+        nextPhase = this;
+
         // If we click on an ally, select them
         if (mob.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex)
         {
-            return UnitSelected(mob);
+            nextPhase = UnitSelected(mob);
+            return true;
         }
 
         // What tile can we attack this unit from?
@@ -95,22 +101,24 @@ public class UnitMovementPhase : InputGameplayPhase
         if (!overlap.Any())
         {
             DebugTextLog.AddTextToLog("That unit is out of this units attack range.");
-            return this;
+            return false;
         }
 
-        Vector3Int closestSpot = overlap.OrderBy(position => Mathf.Abs(position.x - mob.Position.x) + Mathf.Abs(position.y - mob.Position.y) 
+        Vector3Int closestSpot = overlap.OrderBy(position => Mathf.Abs(position.x - mob.Position.x) + Mathf.Abs(position.y - mob.Position.y)
                                                              + Mathf.Abs(position.x - selectedUnit.Position.x) + Mathf.Abs(position.y - selectedUnit.Position.y))
                                         .First();
 
         // We're already there! No need to walk
         if (closestSpot == selectedUnit.Position)
         {
-            return InputResolutionPhaseInstance.ResolveThis(new AttackWithMobInput(selectedUnit, mob, closestSpot), this);
+            nextPhase = InputResolutionPhaseInstance.ResolveThis(new AttackWithMobInput(selectedUnit, mob, closestSpot), this);
         }
         else
         {
-            return InputResolutionPhaseInstance.ResolveThis(new AttackWithMobInput(selectedUnit, mob, closestSpot), NeutralPhaseInstance);
+            nextPhase = InputResolutionPhaseInstance.ResolveThis(new AttackWithMobInput(selectedUnit, mob, closestSpot), NeutralPhaseInstance);
         }
+
+        return true;
     }
 
     public override bool WaitingForInput

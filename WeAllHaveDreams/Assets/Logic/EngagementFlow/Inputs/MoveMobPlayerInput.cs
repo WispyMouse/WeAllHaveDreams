@@ -13,12 +13,12 @@ public class MoveMobPlayerInput : PlayerInput
         To = to;
     }
 
-    public override void Execute(MapHolder mapHolder, MobHolder mobHolder)
+    public override IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder)
     {
         if (!Moving.CanMove)
         {
             DebugTextLog.AddTextToLog("A unit tried to move, but cannot move.");
-            return;
+            yield break;
         }
 
         mobHolder.MoveUnit(Moving, To);

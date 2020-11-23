@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class PlayerInput
 {
-    public abstract void Execute(MapHolder mapHolder, MobHolder mobHolder);
+    public abstract IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder);
 }

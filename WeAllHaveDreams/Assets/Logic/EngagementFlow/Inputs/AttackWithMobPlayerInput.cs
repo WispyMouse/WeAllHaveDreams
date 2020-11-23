@@ -22,12 +22,12 @@ public class AttackWithMobInput : PlayerInput
         MoveTo = moveTo;
     }
 
-    public override void Execute(MapHolder mapHolder, MobHolder mobHolder)
+    public override IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder)
     {
         if (!Attacking.CanAttack)
         {
             DebugTextLog.AddTextToLog("A unit tried to attack, but cannot attack");
-            return;
+            yield break;
         }
 
         if (MoveTo.HasValue)
@@ -35,14 +35,14 @@ public class AttackWithMobInput : PlayerInput
             if (!Attacking.CanMove)
             {
                 DebugTextLog.AddTextToLog("A unit tried to move and attack, but cannot move");
-                return;
+                yield break;
             }
 
             mobHolder.MoveUnit(Attacking, MoveTo.Value);
             Attacking.CanMove = false;
         }
 
-        DebugTextLog.AddTextToLog("<unitname> attacks <unitname> and does <damage>!");
+        yield return mobHolder.UnitEngagesUnit(Attacking, Target);
         Attacking.CanAttack = false;
     }
 }

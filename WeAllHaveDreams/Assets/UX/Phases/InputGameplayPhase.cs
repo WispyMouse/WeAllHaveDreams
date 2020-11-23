@@ -4,18 +4,21 @@ using UnityEngine;
 
 public abstract class InputGameplayPhase : MonoBehaviour
 {
-    public virtual void EnterPhase()
+    public virtual IEnumerator EnterPhase()
     {
+        yield return new WaitForEndOfFrame();
     }
 
-    public virtual InputGameplayPhase TileClicked(Vector3Int position)
+    public virtual bool TryHandleTileClicked(Vector3Int position, out InputGameplayPhase nextPhase)
     {
-        return this;
+        nextPhase = this;
+        return false;
     }
 
-    public virtual InputGameplayPhase UnitClicked(MapMob mob)
+    public virtual bool TryHandleUnitClicked(MapMob mob, out InputGameplayPhase nextPhase)
     {
-        return this;
+        nextPhase = this;
+        return false;
     }
 
     public virtual bool TryHandleKeyPress(out InputGameplayPhase nextPhase)

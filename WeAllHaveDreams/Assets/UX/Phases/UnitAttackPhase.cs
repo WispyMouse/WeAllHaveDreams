@@ -19,12 +19,12 @@ public class UnitAttackPhase : InputGameplayPhase
         return this;
     }
 
-    public override void EnterPhase()
+    public override IEnumerator EnterPhase()
     {
         // If we can't attack, then don't do anything
         if (!selectedUnit.CanAttack)
         {
-            return;
+            yield break;
         }
 
         MapMetaInstance.ShowUnitAttackRange(selectedUnit);
@@ -53,22 +53,26 @@ public class UnitAttackPhase : InputGameplayPhase
         MapMetaInstance.ShowUnitAttackRange(selectedUnit);
     }
 
-    public override InputGameplayPhase UnitClicked(MapMob mob)
+    public override bool TryHandleUnitClicked(MapMob mob, out InputGameplayPhase nextPhase)
     {
+        nextPhase = this;
+
         // If we click on an ally, select them
         if (mob.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex)
         {
-            return UnitMovementPhaseInstance.UnitSelected(mob);
+            nextPhase = UnitMovementPhaseInstance.UnitSelected(mob);
+            return true;
         }
 
         IEnumerable<Vector3Int> attackingRanges = MapHolderInstance.CanHitFrom(selectedUnit, mob.Position);
         if (!attackingRanges.Contains(selectedUnit.Position))
         {
             DebugTextLog.AddTextToLog("That unit is out of this units attack range.");
-            return this;
+            return false;
         }
 
-        return InputResolutionPhaseInstance.ResolveThis(new AttackWithMobInput(selectedUnit, mob), UnitMovementPhaseInstance.UnitSelected(selectedUnit));
+        nextPhase = InputResolutionPhaseInstance.ResolveThis(new AttackWithMobInput(selectedUnit, mob), UnitMovementPhaseInstance.UnitSelected(selectedUnit));
+        return true;
     }
 
     public override bool TryHandleKeyPress(out InputGameplayPhase nextPhase)
