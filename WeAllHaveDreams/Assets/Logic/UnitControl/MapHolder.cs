@@ -16,6 +16,8 @@ public class MapHolder : MonoBehaviour
         activeMap = GameMap.InitializeMapFromTilemap(LoadedMap);
     }
 
+    public GameplayTile GetGameplayTile(Vector3Int position) => activeMap.GetGameplayTile(position);
+
     public IEnumerable<Vector3Int> PotentialMoves(MapMob moving) => activeMap.PotentialMoves(moving, MobHolderController);
     public IEnumerable<Vector3Int> PotentialAttacks(MapMob attacking, Vector3Int from) => activeMap.PotentialAttacks(attacking, from);
     public List<Vector3Int> Path(MapMob moving, Vector3Int to) => activeMap.Path(moving, to, MobHolderController);

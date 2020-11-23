@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: HighlightColor
+  m_Script: {fileID: 11500000, guid: 4763ef2a47105d34c9a40c810c980ce2, type: 3}
+  m_Name: SolidTile
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -7809696578904717175, guid: d03ac4cf0ac93e5458ca076685f36f7a, type: 3}
+  m_Sprite: {fileID: -834191202676457290, guid: d03ac4cf0ac93e5458ca076685f36f7a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -34,3 +34,4 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
+  CompletelySolid: 1

@@ -8,12 +8,19 @@ using UnityEngine.Tilemaps;
 public class GameMap
 {
     Dictionary<Vector3Int, IEnumerable<Vector3Int>> Neighbors { get; set; }
+    Dictionary<Vector3Int, GameplayTile> GameplayTiles { get; set; }
+
+    public GameplayTile GetGameplayTile(Vector3Int position)
+    {
+        return GameplayTiles[position];
+    }
 
     public static GameMap InitializeMapFromTilemap(Tilemap tileMap)
     {
         GameMap newMap = new GameMap();
 
         var neighbors = new Dictionary<Vector3Int, IEnumerable<Vector3Int>>();
+        var gameplayTiles = new Dictionary<Vector3Int, GameplayTile>();
 
         var traveled = new HashSet<Vector3Int>() { Vector3Int.zero };
         var frontier = new HashSet<Vector3Int>() { Vector3Int.zero };
@@ -43,12 +50,14 @@ public class GameMap
 
                 frontier.Add(curPotentialNeighbor);
                 traveled.Add(curPotentialNeighbor);
+                gameplayTiles.Add(curPotentialNeighbor, tileMap.GetTile<GameplayTile>(curPotentialNeighbor));
             }
 
             neighbors.Add(thisTile, actualNeighbors);
         }
 
         newMap.Neighbors = neighbors;
+        newMap.GameplayTiles = gameplayTiles;
 
         return newMap;
     }
@@ -266,6 +275,16 @@ public class GameMap
 
     bool CanMoveInTo(MapMob moving, Vector3Int from, Vector3Int to, MobHolder mobHolder)
     {
+        if (!GameplayTiles.ContainsKey(to))
+        {
+            return false;
+        }
+
+        if (GetGameplayTile(to).CompletelySolid)
+        {
+            return false;
+        }
+
         MapMob mobOnPoint;
 
         if ((mobOnPoint = mobHolder.MobOnPoint(to)) != null && mobOnPoint.PlayerSideIndex != moving.PlayerSideIndex)
@@ -278,6 +297,16 @@ public class GameMap
 
     bool CanStopOn(MapMob moving, Vector3Int to, MobHolder mobHolder)
     {
+        if (!GameplayTiles.ContainsKey(to))
+        {
+            return false;
+        }
+
+        if (GetGameplayTile(to).CompletelySolid)
+        {
+            return false;
+        }
+
         MapMob mobOnPoint;
 
         if ((mobOnPoint = mobHolder.MobOnPoint(to)) != null && mobOnPoint != moving)
