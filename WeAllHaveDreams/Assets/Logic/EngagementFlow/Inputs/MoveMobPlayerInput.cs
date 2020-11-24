@@ -21,7 +21,7 @@ public class MoveMobPlayerInput : PlayerInput
             yield break;
         }
 
-        mobHolder.MoveUnit(Moving, To);
+        yield return mobHolder.MoveUnit(Moving, To);
         Moving.CanMove = false;
     }
 }

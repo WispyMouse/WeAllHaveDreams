@@ -7,6 +7,8 @@ public class MobHolder : MonoBehaviour
 {
     public List<MapMob> ActiveMobs { get; set; } = new List<MapMob>();
 
+    public MovementHandler MovementHandlerInstance;
+
     private void Awake()
     {
         LoadAllMobsFromScene();
@@ -46,15 +48,17 @@ public class MobHolder : MonoBehaviour
         return null;
     }
 
-    public void MoveUnit(MapMob toMove, Vector3Int to)
+    public IEnumerator MoveUnit(MapMob toMove, Vector3Int to)
     {
         MapMob onPoint;
 
         if ((onPoint = MobOnPoint(to)) != null && onPoint != toMove)
         {
             Debug.LogWarning($"A unit is trying to move to an occuppied tile at {{{to.x}, {to.y}, {to.z}}}");
-            return;
+            yield break;
         }
+
+        yield return MovementHandlerInstance.UnitWalks(toMove, to);
 
         toMove.SetPosition(to);
         DebugTextLog.AddTextToLog($"Unit <unitnamehere> moved to {{{to.x}, {to.y}, {to.z}}}");

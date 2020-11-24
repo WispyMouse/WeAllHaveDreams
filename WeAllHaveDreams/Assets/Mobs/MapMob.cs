@@ -7,7 +7,7 @@ public class MapMob : MonoBehaviour
 {
     public int PlayerSideIndex; // TEMPORARY: Can be set within the editor
     public Transform RemindersParent;
-    public float ReminderHorizontalSpacing { get; set; } = -.35f; // TEMPORARY: This is a UI thing and should be somewhere else
+    public float ReminderHorizontalSpacing { get; set; } = .35f; // TEMPORARY: This is a UI thing and should be somewhere else
 
     public Vector3Int Position { get; set; }
 

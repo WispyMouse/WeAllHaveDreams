@@ -38,7 +38,7 @@ public class AttackWithMobInput : PlayerInput
                 yield break;
             }
 
-            mobHolder.MoveUnit(Attacking, MoveTo.Value);
+            yield return mobHolder.MoveUnit(Attacking, MoveTo.Value);
             Attacking.CanMove = false;
         }
 

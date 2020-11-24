@@ -234,14 +234,14 @@ public class GameMap
                     {
                         costSoFar[neighbor] = newCost;
                         cameFrom[neighbor] = positionValue;
-                        frontier.Add(new Tuple<Vector3Int, int>(positionValue, heuristicDistance));
+                        frontier.Add(new Tuple<Vector3Int, int>(neighbor, heuristicDistance));
                     }
                 }
                 else
                 {
                     costSoFar.Add(neighbor, newCost);
                     cameFrom.Add(neighbor, positionValue);
-                    frontier.Add(new Tuple<Vector3Int, int>(positionValue, heuristicDistance));
+                    frontier.Add(new Tuple<Vector3Int, int>(neighbor, heuristicDistance));
                 }
             }
         }

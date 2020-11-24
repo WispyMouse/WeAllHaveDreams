@@ -84,6 +84,6 @@ public class TurnManager : SingletonBase<TurnManager>
             yield return Singleton.MobHolderController.RemoveMob(remove);
         }
 
-        yield return new WaitForEndOfFrame();
+        yield break;
     }
 }
