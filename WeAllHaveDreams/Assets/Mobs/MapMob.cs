@@ -12,7 +12,8 @@ public class MapMob : MonoBehaviour
     public int AttackRange => 1; // TEMPORARY: Again, static value
 
     public decimal HitPoints { get; set; } = 10.0M;
-    public decimal DamageRatio { get; set; } = .4M;
+    public decimal DamageRatio { get; set; } = .5M;
+    public decimal FlatDamage { get; set; } = .2M;
 
     public bool CanMove
     {
@@ -121,7 +122,7 @@ public class MapMob : MonoBehaviour
     {
         get
         {
-            return HitPoints * DamageRatio;
+            return System.Math.Floor(HitPoints) * DamageRatio + FlatDamage;
         }
     }
 }

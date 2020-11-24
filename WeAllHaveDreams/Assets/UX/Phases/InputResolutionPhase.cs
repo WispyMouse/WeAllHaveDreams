@@ -23,6 +23,7 @@ public class InputResolutionPhase : InputGameplayPhase
     {
         actionResolved = false;
         yield return resolving.Execute(MapHolderInstance, MobHolderInstance);
+        yield return TurnManager.ResolveEffects();
         actionResolved = true;
     }
 

@@ -66,4 +66,24 @@ public class TurnManager : SingletonBase<TurnManager>
             Singleton.StartTurnOfPlayerAtIndex(Singleton.playerSides.Keys.Min());
         }
     }
+
+    public static IEnumerator ResolveEffects()
+    {
+        var shouldBeRemoved = new List<MapMob>();
+        foreach (MapMob mapMob in Singleton.MobHolderController.ActiveMobs)
+        {
+            if (mapMob.HitPoints <= 0)
+            {
+                shouldBeRemoved.Add(mapMob);
+                break;
+            }
+        }
+
+        foreach (MapMob remove in shouldBeRemoved)
+        {
+            yield return Singleton.MobHolderController.RemoveMob(remove);
+        }
+
+        yield return new WaitForEndOfFrame();
+    }
 }

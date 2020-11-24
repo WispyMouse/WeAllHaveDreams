@@ -64,12 +64,14 @@ public class MobHolder : MonoBehaviour
     {
         decimal offensiveDamage = ProjectedDamages(engaging, defending);
         defending.HitPoints = System.Math.Max(0, defending.HitPoints - offensiveDamage);
+        DebugTextLog.AddTextToLog($"<mobname> deals {offensiveDamage} damage to <mobname>! ({defending.HitPoints} remaining)");
 
         // TEMPORARY: This is where logic that checks to see if the unit can counter attack at this range would go
         if (defending.HitPoints > 0)
         {
             decimal returnDamage = ProjectedDamages(defending, engaging);
             engaging.HitPoints = System.Math.Max(0, engaging.HitPoints - returnDamage);
+            DebugTextLog.AddTextToLog($"<mobname> counters with {returnDamage} damage to <mobname>! ({engaging.HitPoints} remaining)");
         }
 
         yield return new WaitForEndOfFrame();
@@ -78,5 +80,13 @@ public class MobHolder : MonoBehaviour
     public decimal ProjectedDamages(MapMob engaging, MapMob defending)
     {
         return engaging.CurrentAttackPower;
+    }
+
+    public IEnumerator RemoveMob(MapMob toRemove)
+    {
+        DebugTextLog.AddTextToLog("Removing <mobname> from the map");
+        ActiveMobs.Remove(toRemove);
+        Destroy(toRemove.gameObject);
+        yield return new WaitForEndOfFrame();
     }
 }
