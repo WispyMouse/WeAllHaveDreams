@@ -1,19 +1,38 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MapMob : MonoBehaviour
 {
     public int PlayerSideIndex; // TEMPORARY: Can be set within the editor
+    public Transform RemindersParent;
+    public float ReminderHorizontalSpacing { get; set; } = -.35f; // TEMPORARY: This is a UI thing and should be somewhere else
 
     public Vector3Int Position { get; set; }
 
-    public int MoveRange => 3; // TEMPORARY: Just a static move value
+    public int MoveRange => 4; // TEMPORARY: Just a static move value
     public int AttackRange => 1; // TEMPORARY: Again, static value
 
-    public decimal HitPoints { get; set; } = 10.0M;
-    public decimal DamageRatio { get; set; } = .5M;
-    public decimal FlatDamage { get; set; } = .2M;
+    // TEMPORARY: This should definitely be in its own class
+    public SpriteRenderer HitPointsVisual;
+    public Sprite[] HitPointsNumerics;
+
+    public decimal HitPoints
+    {
+        get
+        {
+            return _hitPoints;
+        }
+        set
+        {
+            _hitPoints = value;
+            UpdateHitPointVisual();
+        }
+    }
+    private decimal _hitPoints { get; set; } = 10.0M;
+
+    public decimal DamageRatio { get; set; } = .6M;
 
     public bool CanMove
     {
@@ -100,6 +119,8 @@ public class MapMob : MonoBehaviour
             Reminder newReminder = ReminderFactory.GetReminder(this, reminderTag);
             Reminders.Add(reminderTag, newReminder);
         }
+
+        SettleReminderOrdering();
     }
 
     void HideReminder(string reminderTag)
@@ -108,6 +129,8 @@ public class MapMob : MonoBehaviour
         {
             Reminders[reminderTag].Hide();
         }
+
+        SettleReminderOrdering();
     }
 
     void HideAllReminders()
@@ -118,11 +141,36 @@ public class MapMob : MonoBehaviour
         }
     }
 
+    void SettleReminderOrdering()
+    {
+        List<Reminder> orderedReminders = Reminders.Values.OrderBy(r => r.ReminderTag).ToList();
+
+        for (int ii = 0; ii < Reminders.Count; ii++)
+        {
+            float offset = (float)ii * ReminderHorizontalSpacing;
+            Reminder thisReminder = orderedReminders[ii];
+            thisReminder.transform.localPosition = Vector3.left * offset;
+        }
+    }
+
     public decimal CurrentAttackPower
     {
         get
         {
-            return System.Math.Floor(HitPoints) * DamageRatio + FlatDamage;
+            return System.Math.Ceiling(HitPoints) * DamageRatio;
         }
+    }
+
+    public void UpdateHitPointVisual()
+    {
+        if (HitPoints == 10)
+        {
+            HitPointsVisual.gameObject.SetActive(false);
+            return;
+        }
+
+        int roundedValue = System.Math.Min(10, (int)System.Math.Ceiling(HitPoints));
+        HitPointsVisual.sprite = HitPointsNumerics[roundedValue];
+        HitPointsVisual.gameObject.SetActive(true);
     }
 }

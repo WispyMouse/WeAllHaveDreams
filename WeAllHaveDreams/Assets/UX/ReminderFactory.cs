@@ -11,7 +11,7 @@ public class ReminderFactory : SingletonBase<ReminderFactory>
 
     public static Reminder GetReminder(MapMob onMob, string reminderTag)
     {
-        Reminder newReminder = Instantiate(Singleton.ReminderPF, onMob.transform);
+        Reminder newReminder = Instantiate(Singleton.ReminderPF, onMob.RemindersParent);
 
         switch (reminderTag)
         {

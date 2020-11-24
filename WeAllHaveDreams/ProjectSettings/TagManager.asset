@@ -53,3 +53,6 @@ TagManager:
   - name: Reminders
     uniqueID: 412266679
     locked: 0
+  - name: HitPoints
+    uniqueID: 2612518297
+    locked: 0
