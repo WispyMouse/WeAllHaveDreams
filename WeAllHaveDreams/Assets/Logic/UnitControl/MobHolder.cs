@@ -8,6 +8,7 @@ public class MobHolder : MonoBehaviour
     public List<MapMob> ActiveMobs { get; set; } = new List<MapMob>();
 
     public MovementHandler MovementHandlerInstance;
+    public AttackHandler AttackAnimationHandlerInstance;
 
     private void Awake()
     {
@@ -67,15 +68,27 @@ public class MobHolder : MonoBehaviour
     public IEnumerator UnitEngagesUnit(MapMob engaging, MapMob defending)
     {
         decimal offensiveDamage = ProjectedDamages(engaging, defending);
-        defending.HitPoints = System.Math.Max(0, defending.HitPoints - offensiveDamage);
-        DebugTextLog.AddTextToLog($"<mobname> deals {offensiveDamage} damage to <mobname>! ({defending.HitPoints} remaining)");
+
+        yield return AttackAnimationHandlerInstance.UnitAttacksUnit(engaging, defending, new System.Action(() =>
+        {
+            defending.HitPoints = System.Math.Max(0, defending.HitPoints - offensiveDamage);
+            DebugTextLog.AddTextToLog($"<mobname> deals {offensiveDamage} damage to <mobname>! ({defending.HitPoints} remaining)");
+        }));
+
+        yield return TurnManager.ResolveEffects();
 
         // TEMPORARY: This is where logic that checks to see if the unit can counter attack at this range would go
-        if (defending.HitPoints > 0)
+        if (defending != null && defending.HitPoints > 0)
         {
             decimal returnDamage = ProjectedDamages(defending, engaging);
-            engaging.HitPoints = System.Math.Max(0, engaging.HitPoints - returnDamage);
-            DebugTextLog.AddTextToLog($"<mobname> counters with {returnDamage} damage to <mobname>! ({engaging.HitPoints} remaining)");
+
+            yield return AttackAnimationHandlerInstance.UnitAttacksUnit(defending, engaging, new System.Action(() =>
+            {
+                engaging.HitPoints = System.Math.Max(0, engaging.HitPoints - returnDamage);
+                DebugTextLog.AddTextToLog($"<mobname> counters with {returnDamage} damage to <mobname>! ({engaging.HitPoints} remaining)");
+            }));
+
+            yield return TurnManager.ResolveEffects();
         }
 
         yield return new WaitForEndOfFrame();
