@@ -13,6 +13,7 @@ public class PlayerInputPhaseController : MonoBehaviour
     public MapMeta MapMetaController;
     public MapHolder MapHolderController;
     public MobHolder MobHolderController;
+    public StructureHolder StructureHolderController;
 
     public InputGameplayPhase StartingPhase;
     InputGameplayPhase currentPhase { get; set; }
@@ -58,24 +59,26 @@ public class PlayerInputPhaseController : MonoBehaviour
                 return false;
             }
 
-            MapMob mobAtPoint = MobHolderController.MobOnPoint(worldpoint.Value);
 
-            if (mobAtPoint)
+            MapMob mobAtPoint;
+            MapStructure structureAtPoint;
+
+            if ((mobAtPoint = MobHolderController.MobOnPoint(worldpoint.Value))
+                && currentPhase.TryHandleUnitClicked(mobAtPoint, out nextPhase))
             {
-                if (currentPhase.TryHandleUnitClicked(mobAtPoint, out nextPhase))
-                {
-                    shouldRefresh = true;
-                }
+                shouldRefresh = true;
             }
-            else
+            else if ((structureAtPoint = StructureHolderController.StructureOnPoint(worldpoint.Value))
+                && currentPhase.TryHandleStructureClicked(structureAtPoint, out nextPhase))
             {
-                if (currentPhase.TryHandleTileClicked(worldpoint.Value, out nextPhase))
-                {
-                    shouldRefresh = true;
-                }
+                shouldRefresh = true;
+            }
+            else if (currentPhase.TryHandleTileClicked(worldpoint.Value, out nextPhase))
+            {
+                shouldRefresh = true;
             }
 
-            return true;
+            return shouldRefresh;
         }
         else if (Input.GetMouseButtonDown(1))
         {

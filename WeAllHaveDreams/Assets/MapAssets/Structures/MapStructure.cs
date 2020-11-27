@@ -7,6 +7,9 @@ public abstract class MapStructure : MapObject
     public int PlayerSideIndex;
     public bool UnCaptured;
 
+    public SpriteRenderer Renderer;
+    public Sprite[] SideSprites;
+
     public int MaxCapturePoints { get; set; } = 20;
     public int CurCapturePoints
     {
@@ -29,6 +32,11 @@ public abstract class MapStructure : MapObject
     private void Awake()
     {
         _curCapturePoints = MaxCapturePoints;
+
+        if (!UnCaptured)
+        {
+            Renderer.sprite = SideSprites[this.PlayerSideIndex];
+        }
     }
 
     public bool IsNotOwnedByMyTeam(int myTeam)
@@ -64,6 +72,13 @@ public abstract class MapStructure : MapObject
     {
         this.PlayerSideIndex = capturing.PlayerSideIndex;
         DebugTextLog.AddTextToLog("Base captured!");
-        DebugTextLog.AddTextToLog("This is where the sprite would change, but that hasn't been implemented.");
+        CurCapturePoints = MaxCapturePoints;
+
+        Renderer.sprite = SideSprites[this.PlayerSideIndex];
+    }
+
+    public virtual void DoLazyBuildingThing(MobHolder mobHolderInstance)
+    {
+        
     }
 }

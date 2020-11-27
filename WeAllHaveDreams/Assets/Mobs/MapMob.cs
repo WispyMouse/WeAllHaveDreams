@@ -16,6 +16,9 @@ public class MapMob : MapObject
     public SpriteRenderer HitPointsVisual;
     public Sprite[] HitPointsNumerics;
 
+    public SpriteRenderer Renderer;
+    public Sprite[] SideSprites;
+
     public decimal HitPoints
     {
         get
@@ -171,5 +174,10 @@ public class MapMob : MapObject
         int roundedValue = System.Math.Min(10, (int)System.Math.Ceiling(HitPoints));
         HitPointsVisual.sprite = HitPointsNumerics[roundedValue];
         HitPointsVisual.gameObject.SetActive(true);
+    }
+
+    public void SetUnitVisuals()
+    {
+        Renderer.sprite = SideSprites[PlayerSideIndex];
     }
 }

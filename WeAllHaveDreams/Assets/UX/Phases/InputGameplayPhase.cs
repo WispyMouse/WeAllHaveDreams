@@ -27,6 +27,12 @@ public abstract class InputGameplayPhase : MonoBehaviour
         return false;
     }
 
+    public virtual bool TryHandleStructureClicked(MapStructure structure, out InputGameplayPhase nextPhase)
+    {
+        nextPhase = this;
+        return false;
+    }
+
     public virtual void EndPhase()
     {
 

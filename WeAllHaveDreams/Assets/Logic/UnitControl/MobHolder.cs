@@ -101,4 +101,19 @@ public class MobHolder : MonoBehaviour
         Destroy(toRemove.gameObject);
         yield return new WaitForEndOfFrame();
     }
+
+    public void CreateNewUnit(MapMob prefab, int teamIndex, Vector3Int location)
+    {
+        if (ActiveMobs.Any(mob => mob.Position == location))
+        {
+            DebugTextLog.AddTextToLog("Tried to create another unit in an occuppied tile.");
+            return;
+        }
+
+        MapMob newMob = Instantiate(prefab);
+        newMob.SetPosition(location);
+        newMob.PlayerSideIndex = teamIndex;
+        newMob.SetUnitVisuals();
+        ActiveMobs.Add(newMob);
+    }
 }
