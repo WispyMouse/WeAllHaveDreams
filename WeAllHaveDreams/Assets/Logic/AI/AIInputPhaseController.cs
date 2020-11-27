@@ -39,6 +39,19 @@ public class AIInputPhaseController : MonoBehaviour
             yield return bestPlan.DeterminedInput.Execute(MapHolderInstance, MobHolderInstance);
         }
 
+        foreach (MapStructure curStructure in StructureHolderInstance.ActiveStructures.Where(structure => !structure.UnCaptured && structure.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex))
+        {
+            if (!MobHolderInstance.MobOnPoint(curStructure.Position))
+            {
+                PlayerInput toProcess = curStructure.DoLazyBuildingThing(MobHolderInstance);
+
+                if (toProcess != null)
+                {
+                    yield return toProcess.Execute(MapHolderInstance, MobHolderInstance);
+                }
+            }
+        }
+
         TurnManager.PassTurnToNextPlayer();
     }
 
