@@ -114,6 +114,7 @@ public class MobHolder : MonoBehaviour
         newMob.SetPosition(location);
         newMob.PlayerSideIndex = teamIndex;
         newMob.SetUnitVisuals();
+        newMob.ExhaustAllOptions();
         ActiveMobs.Add(newMob);
     }
 }

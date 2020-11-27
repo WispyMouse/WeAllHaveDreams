@@ -5,6 +5,8 @@ using UnityEngine;
 public class StructureUsagePhase : InputGameplayPhase
 {
     public NeutralPhase NeutralPhaseInstance;
+    public InputResolutionPhase InputResolutionPhaseInstance;
+
     public MobHolder MobHolderInstance;
 
     MapStructure selectedStructure { get; set; }
@@ -15,16 +17,17 @@ public class StructureUsagePhase : InputGameplayPhase
         return this;
     }
 
-    public override IEnumerator EnterPhase()
-    {
-        selectedStructure.DoLazyBuildingThing(MobHolderInstance);
-        yield break;
-    }
-
     public override bool WaitingForInput => false;
     public override bool NextPhasePending => true;
     public override InputGameplayPhase GetNextPhase()
     {
+        PlayerInput input = selectedStructure.DoLazyBuildingThing(MobHolderInstance);
+
+        if (input != null)
+        {
+            return InputResolutionPhaseInstance.ResolveThis(input, NeutralPhaseInstance);
+        }
+
         return NeutralPhaseInstance;
     }
 }

@@ -13,30 +13,41 @@ public class TurnManager : SingletonBase<TurnManager>
     public static PlayerSide CurrentPlayer => Singleton.playerSides[Singleton.playerIndex];
 
     public MobHolder MobHolderController;
+    public StructureHolder StructureHolderInstance;
+
     public PlayerInputPhaseController PlayerInputPhaseControllerInstance;
     public AIInputPhaseController AIInputPhaseControllerInstance;
+
+    public SideStatistics SideStatisticsInstance;
 
     private void Start()
     {
         // TEMPORARY: Hardcode the sides
-        PlayerSide humanControlledPlayerSide = new PlayerSide() { Name = "Human Player", PlayerSideIndex = 0, HumanControlled = true };
+        PlayerSide humanControlledPlayerSide = new PlayerSide() { Name = "Human Player", PlayerSideIndex = 0, HumanControlled = true, TotalResources = 100 };
         playerSides.Add(humanControlledPlayerSide.PlayerSideIndex, humanControlledPlayerSide);
 
-        PlayerSide aiControlledPlayerSide = new PlayerSide() { Name = "AI Player", PlayerSideIndex = 1, HumanControlled = false };
+        PlayerSide aiControlledPlayerSide = new PlayerSide() { Name = "AI Player", PlayerSideIndex = 1, HumanControlled = false, TotalResources = 100 };
         playerSides.Add(aiControlledPlayerSide.PlayerSideIndex, aiControlledPlayerSide);
 
-        StartTurnOfPlayerAtIndex(humanControlledPlayerSide.PlayerSideIndex);
+        StartCoroutine(StartTurnOfPlayerAtIndex(humanControlledPlayerSide.PlayerSideIndex));
     }
 
-    void StartTurnOfPlayerAtIndex(int index)
+    IEnumerator StartTurnOfPlayerAtIndex(int index)
     {
         playerIndex = index;
         DebugTextLog.AddTextToLog($"START OF TURN: {CurrentPlayer.Name}, engage!");
+
+        foreach (MapStructure structure in StructureHolderInstance.ActiveStructures.Where(structure => !structure.UnCaptured && structure.PlayerSideIndex == index))
+        {
+            CurrentPlayer.TotalResources += structure.ContributedResourcesPerTurn;
+        }
 
         foreach (MapMob curMob in Singleton.MobHolderController.MobsOnTeam(CurrentPlayer.PlayerSideIndex))
         {
             curMob.RefreshForStartOfTurn();
         }
+
+        yield return ResolveEffects();
 
         if (CurrentPlayer.HumanControlled)
         {
@@ -60,11 +71,11 @@ public class TurnManager : SingletonBase<TurnManager>
 
         if (laterSides.Any())
         {
-            Singleton.StartTurnOfPlayerAtIndex(laterSides.First());
+            Singleton.StartCoroutine(Singleton.StartTurnOfPlayerAtIndex(laterSides.First()));
         }
         else
         {
-            Singleton.StartTurnOfPlayerAtIndex(Singleton.playerSides.Keys.Min());
+            Singleton.StartCoroutine(Singleton.StartTurnOfPlayerAtIndex(Singleton.playerSides.Keys.Min()));
         }
     }
 
@@ -85,7 +96,7 @@ public class TurnManager : SingletonBase<TurnManager>
             yield return Singleton.MobHolderController.RemoveMob(remove);
         }
 
-        yield break;
+        Singleton.SideStatisticsInstance.UpdateVisuals();
     }
 
     public static void VictoryIsDeclared(int winner)
@@ -94,5 +105,10 @@ public class TurnManager : SingletonBase<TurnManager>
         Singleton.PlayerInputPhaseControllerInstance.StopAllInputs();
         DebugTextLog.AddTextToLog($"The winner is side #{winner}!");
         GameIsInProgress = false;
+    }
+
+    public static IEnumerable<PlayerSide> GetPlayers()
+    {
+        return Singleton.playerSides.Values;
     }
 }

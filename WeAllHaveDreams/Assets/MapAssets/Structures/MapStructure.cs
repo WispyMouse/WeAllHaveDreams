@@ -25,6 +25,8 @@ public abstract class MapStructure : MapObject
     }
     private int _curCapturePoints { get; set; }
 
+    public int ContributedResourcesPerTurn = 50;
+
     // TEMPORARY: This should definitely be in its own class
     public SpriteRenderer CapturePointsVisual;
     public Sprite[] CapturePointsNumerics;
@@ -77,8 +79,8 @@ public abstract class MapStructure : MapObject
         Renderer.sprite = SideSprites[this.PlayerSideIndex];
     }
 
-    public virtual void DoLazyBuildingThing(MobHolder mobHolderInstance)
+    public virtual PlayerInput DoLazyBuildingThing(MobHolder mobHolderInstance)
     {
-        
+        return null;
     }
 }
