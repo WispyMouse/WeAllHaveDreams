@@ -56,7 +56,7 @@ public class MobHolder : MonoBehaviour
 
         if ((onPoint = MobOnPoint(to)) != null && onPoint != toMove)
         {
-            Debug.LogWarning($"A unit is trying to move to an occuppied tile at {{{to.x}, {to.y}, {to.z}}}");
+            DebugTextLog.AddTextToLog($"A unit is trying to move to an occuppied tile at {{{to.x}, {to.y}, {to.z}}}");
             yield break;
         }
 

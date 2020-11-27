@@ -15,6 +15,24 @@ public class MobCapturesStructurePlayerInput : PlayerInput
 
     public override IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder)
     {
+        if (Capturing.Position != Target.Position)
+        {
+            if (!Capturing.CanMove)
+            {
+                DebugTextLog.AddTextToLog($"A unit tried to move to capture {Target.Position.x}, {Target.Position.y}, but can't move");
+                yield break;
+            }
+
+            if (mobHolder.MobOnPoint(Target.Position))
+            {
+                DebugTextLog.AddTextToLog($"A unit tried to move to capture {Target.Position.x}, {Target.Position.y}, but there was already a different unit on that point");
+                yield break;
+            }
+
+            yield return mobHolder.MoveUnit(Capturing, Target.Position);
+            Capturing.CanMove = false;
+        }
+
         if (!Capturing.CanCapture)
         {
             DebugTextLog.AddTextToLog("A unit tried to capture, but cannot capture");

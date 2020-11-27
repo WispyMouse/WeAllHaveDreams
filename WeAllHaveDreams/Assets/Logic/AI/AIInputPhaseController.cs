@@ -9,10 +9,13 @@ public class AIInputPhaseController : MonoBehaviour
 
     public MobHolder MobHolderInstance;
     public MapHolder MapHolderInstance;
+    public StructureHolder StructureHolderInstance;
     public MapMeta MapMetaInstance;
 
     public float TimeToWaitAfterSelectingUnit = .4f;
     public float TimeToWaitAfterMovingUnit = .15f;
+
+    List<MapMob> mobsUndecided = new List<MapMob>();
 
     public void StartTurn()
     {
@@ -21,83 +24,142 @@ public class AIInputPhaseController : MonoBehaviour
 
     IEnumerator ConductTurn()
     {
-        MapMob matchingMob;
-
-        while ((matchingMob = MobHolderInstance.MobsOnTeam(TurnManager.CurrentPlayer.PlayerSideIndex).Where(mob => mob.CanMove || mob.CanAttack).FirstOrDefault()) != null
-            && TurnManager.GameIsInProgress)
+        IEnumerable<MapMob> remainingActors;
+        while ((remainingActors = MobHolderInstance.MobsOnTeam(TurnManager.CurrentPlayer.PlayerSideIndex).Where(mob => mob.CanMove || mob.CanAttack)).Any())
         {
-            yield return ActWithUnit(matchingMob);
-            // TEMPORARY: Force set the Mob's Cans to false, so we can move on in the AI
-            matchingMob.ExhaustAllOptions();
+            List<UnitTurnPlan> possiblePlans = new List<UnitTurnPlan>();
+
+            foreach (MapMob curMob in remainingActors)
+            {
+                possiblePlans.Add(GetBestPersonalPlan(curMob));
+            }
+
+            UnitTurnPlan bestPlan = possiblePlans.OrderByDescending(plan => plan.Score).First();
+            DebugTextLog.AddTextToLog("determined best plan, acting");
+            yield return bestPlan.DeterminedInput.Execute(MapHolderInstance, MobHolderInstance);
         }
 
         TurnManager.PassTurnToNextPlayer();
     }
 
-    IEnumerator ActWithUnit(MapMob acting)
+    UnitTurnPlan GetBestPersonalPlan(MapMob acting)
     {
-        MapMetaInstance.ShowUnitAttackRangePastMovementRange(acting);
+        List<UnitTurnPlan> possiblePlans = new List<UnitTurnPlan>();
+        possiblePlans.Add(new UnitTurnPlan(new DoesNothingPlayerInput(acting), 0));
 
-        yield return new WaitForSeconds(TimeToWaitAfterSelectingUnit);
-        MapMetaInstance.ClearMetas();
-
-        // Simple AI: Find the nearest unit not on our team
-        // Move as close as we can to them
-        // If we can attack, attack
-        IEnumerable<MapMob> nearestEnemies = MobHolderInstance.ActiveMobs.Where(mob => mob.PlayerSideIndex != TurnManager.CurrentPlayer.PlayerSideIndex)
-            .OrderBy(mob => Mathf.Abs(mob.Position.x - acting.Position.x) + Mathf.Abs(mob.Position.y - acting.Position.y));
-
-        IEnumerable<Vector3Int> movementRange = MapHolderInstance.PotentialMoves(acting);
+        // Get our current movement and possible hurt ranges
+        IEnumerable<Vector3Int> movementRanges = MapHolderInstance.PotentialMoves(acting);
+        IEnumerable<Vector3Int> hurtRanges = movementRanges.SelectMany(mr => MapHolderInstance.PotentialAttacks(acting, mr));
 
         if (!acting.CanMove)
         {
-            movementRange = new List<Vector3Int>() { acting.Position };
+            movementRanges = new List<Vector3Int>() { acting.Position };
         }
 
-        foreach (MapMob nearestEnemy in nearestEnemies)
+        if (acting.CanAttack)
         {
-            // Assume every tile we can hit someone from, we could also hit from that tile
-            IEnumerable<Vector3Int> canBeHurtFrom = MapHolderInstance.CanHitFrom(acting, nearestEnemy.Position);
-            IEnumerable<Vector3Int> intersect;
-            if ((intersect = movementRange.Intersect(canBeHurtFrom)).Any())
-            {
-                if (acting.CanMove)
-                {
-                    Vector3Int closestToCurrent = intersect.OrderBy(pos => Mathf.Abs(acting.Position.x - pos.x) + Mathf.Abs(acting.Position.y - pos.y)).First();
+            // What opponents are in our hurt range?
+            IEnumerable<MapMob> opponentsInRange = MobHolderInstance.ActiveMobs
+                .Where(mob => mob.PlayerSideIndex != acting.PlayerSideIndex)
+                .Where(mob => hurtRanges.Contains(mob.Position));
 
-                    if (closestToCurrent != acting.Position)
-                    {
-                        yield return new MoveMobPlayerInput(acting, closestToCurrent).Execute(MapHolderInstance, MobHolderInstance);
-                        yield return new WaitForSeconds(TimeToWaitAfterMovingUnit);
-                    }
-                }
-                
-                if (acting.CanAttack && intersect.Contains(acting.Position))
+            if (opponentsInRange.Any())
+            {
+                foreach (MapMob inRange in opponentsInRange)
                 {
-                    yield return new AttackWithMobInput(acting, nearestEnemy).Execute(MapHolderInstance, MobHolderInstance);
+                    IEnumerable<Vector3Int> engagementTiles = MapHolderInstance.CanHitFrom(acting, inRange.Position)
+                        .Intersect(movementRanges);
+
+                    if (!engagementTiles.Any())
+                    {
+                        continue;
+                    }
+
+                    IEnumerable<Vector3Int> emptyEngagementTiles = engagementTiles.Where(tile => acting.Position == tile || MobHolderInstance.MobOnPoint(tile) == null);
+
+                    if (!emptyEngagementTiles.Any())
+                    {
+                        continue;
+                    }
+
+                    possiblePlans.Add(new UnitTurnPlan(new AttackWithMobInput(acting, inRange, emptyEngagementTiles.First()), ScoreEngagement(acting, inRange)));
+                }
+            }
+        }        
+
+        // Are there any structures in our movement range?
+        IEnumerable<MapStructure> structuresInRange = StructureHolderInstance.ActiveStructures
+            .Where(structure => movementRanges.Contains(structure.Position))
+            .Where(structure => structure.PlayerSideIndex != acting.PlayerSideIndex || structure.UnCaptured)
+            .Where(structure => acting.Position == structure.Position || MobHolderInstance.MobOnPoint(structure.Position) == null);
+
+        if (structuresInRange.Any())
+        {
+            foreach (MapStructure structure in structuresInRange)
+            {
+                int sameTileModifier = structure.Position == acting.Position ? 1 : 0;
+                possiblePlans.Add(new UnitTurnPlan(new MobCapturesStructurePlayerInput(acting, structure), ScoreCapturing(acting, structure) + sameTileModifier));
+            }
+        }
+
+        if (acting.CanMove)
+        {
+            // If the enemy has a base, move towards it
+            IEnumerable<MapStructure> enemyStructures = StructureHolderInstance.ActiveStructures
+                .Where(structure => structure.UnCaptured || structure.PlayerSideIndex != TurnManager.CurrentPlayer.PlayerSideIndex)
+                .Except(structuresInRange);
+
+            foreach (MapStructure structure in enemyStructures)
+            {
+                List<Vector3Int> path = MapHolderInstance.Path(acting, structure.Position);
+
+                if (path == null)
+                {
+                    continue;
+                }
+
+                for (int ii = Mathf.Min(path.Count - 1, acting.MoveRange); ii >= 0; ii--)
+                {
+                    List<Vector3Int> pathToSpot = MapHolderInstance.Path(acting, path[ii]);
+
+                    if (pathToSpot == null)
+                    {
+                        continue;
+                    }
+
+                    int distanceModifier = ii;
+                    possiblePlans.Add(new UnitTurnPlan(new MoveMobPlayerInput(acting, path[ii]), Mathf.FloorToInt((ScoreCapturing(acting, structure) - distanceModifier) * .25f)));
+
                     break;
                 }
             }
-            else if (canBeHurtFrom.Any() && acting.CanMove)
-            {
-                Vector3Int closestCanBeHurtFrom = canBeHurtFrom.OrderBy(hurtFrom => Mathf.Abs(acting.Position.x - hurtFrom.x) + Mathf.Abs(acting.Position.y - hurtFrom.y)).First();
-                List<Vector3Int> pathTowardsClosest = MapHolderInstance.Path(acting, closestCanBeHurtFrom);
-
-                if (pathTowardsClosest != null)
-                {
-                    IEnumerable<Vector3Int> intersectOfPath = pathTowardsClosest.Intersect(movementRange);
-
-                    for (int ii = pathTowardsClosest.Count - 1; ii >= 0; ii--)
-                    {
-                        if (intersectOfPath.Contains(pathTowardsClosest[ii]))
-                        {
-                            yield return new MoveMobPlayerInput(acting, pathTowardsClosest[ii]).Execute(MapHolderInstance, MobHolderInstance);
-                            break;
-                        }
-                    }
-                }
-            }
         }
+
+        return possiblePlans.OrderByDescending(plan => plan.Score).First();
+    }
+
+    int ScoreEngagement(MapMob acting, MapMob defending)
+    {
+        decimal projectedOutgoingDamage = MobHolderInstance.ProjectedDamages(acting, defending);
+
+        if (projectedOutgoingDamage > defending.HitPoints)
+        {
+            return (int)defending.HitPoints + 10;
+        }
+
+        return (int)projectedOutgoingDamage;
+    }
+
+    int ScoreCapturing(MapMob acting, MapStructure structure)
+    {
+        decimal projectedCapturePower = acting.CurrentCapturePoints;
+
+        if (projectedCapturePower > structure.CurCapturePoints)
+        {
+            return structure.CurCapturePoints + structure.CaptureImportance;
+        }
+
+        return (int)projectedCapturePower + structure.CaptureImportance;
     }
 
     public void StopAllInputs()

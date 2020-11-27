@@ -3242,11 +3242,11 @@ PrefabInstance:
     - target: {fileID: 8596382311653572228, guid: 74be687cbb7fab7458b7717cecd64712, type: 3}
       propertyPath: SideSprites.Array.data[0]
       value: 
-      objectReference: {fileID: 3796422788609999600, guid: 9f1e1a0a20f34ef48a2e377a68164f5a, type: 3}
+      objectReference: {fileID: -3854964705595706665, guid: 9f1e1a0a20f34ef48a2e377a68164f5a, type: 3}
     - target: {fileID: 8596382311653572228, guid: 74be687cbb7fab7458b7717cecd64712, type: 3}
       propertyPath: SideSprites.Array.data[1]
       value: 
-      objectReference: {fileID: -3854964705595706665, guid: 9f1e1a0a20f34ef48a2e377a68164f5a, type: 3}
+      objectReference: {fileID: 3796422788609999600, guid: 9f1e1a0a20f34ef48a2e377a68164f5a, type: 3}
     - target: {fileID: 8596382312432593999, guid: 74be687cbb7fab7458b7717cecd64712, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -4301,6 +4301,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MobHolderInstance: {fileID: 2100281717}
   MapHolderInstance: {fileID: 2100281716}
+  StructureHolderInstance: {fileID: 2100281718}
   MapMetaInstance: {fileID: 198427620}
   TimeToWaitAfterSelectingUnit: 0.4
   TimeToWaitAfterMovingUnit: 0.15

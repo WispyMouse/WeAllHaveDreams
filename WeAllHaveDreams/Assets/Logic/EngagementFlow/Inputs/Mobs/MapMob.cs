@@ -114,7 +114,7 @@ public class MapMob : MapObject
     {
         if (Reminders.ContainsKey(reminderTag))
         {
-            Reminders[reminderTag].Show();
+            Reminders[reminderTag]?.Show();
         }
         else
         {
@@ -129,7 +129,7 @@ public class MapMob : MapObject
     {
         if (Reminders.ContainsKey(reminderTag))
         {
-            Reminders[reminderTag].Hide();
+            Reminders[reminderTag]?.Hide();
         }
 
         SettleReminderOrdering();
@@ -179,5 +179,13 @@ public class MapMob : MapObject
     public void SetUnitVisuals()
     {
         Renderer.sprite = SideSprites[PlayerSideIndex];
+    }
+
+    public int CurrentCapturePoints
+    {
+        get
+        {
+            return (int)System.Math.Ceiling(HitPoints);
+        }
     }
 }
