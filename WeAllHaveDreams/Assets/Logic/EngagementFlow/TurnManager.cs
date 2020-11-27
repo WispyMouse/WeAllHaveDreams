@@ -13,6 +13,8 @@ public class TurnManager : SingletonBase<TurnManager>
     public MobHolder MobHolderController;
     public PlayerInputPhaseController PlayerInputPhaseControllerInstance;
 
+    public AIInputPhaseController AIInputPhaseControllerInstance;
+
     private void Start()
     {
         // TEMPORARY: Hardcode the sides
@@ -42,9 +44,7 @@ public class TurnManager : SingletonBase<TurnManager>
         }
         else
         {
-            // TEMPORARY: Just pass the turn, let the human play the game ~
-            DebugTextLog.AddTextToLog("The AI passes their turn");
-            PassTurnToNextPlayer();
+            AIInputPhaseControllerInstance.StartTurn();
         }
     }
 

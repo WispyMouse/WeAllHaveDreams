@@ -46,6 +46,8 @@ public class MapMeta : MonoBehaviour
 
     public void ShowUnitAttackRangePastMovementRange(MapMob toShow)
     {
+        ShowUnitMovementRange(toShow);
+
         ActiveAttackTiles = new HashSet<Vector3Int>();
 
         foreach (Vector3Int movementTile in ActiveMovementTiles)

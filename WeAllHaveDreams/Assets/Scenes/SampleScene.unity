@@ -375,6 +375,7 @@ GameObject:
   m_Component:
   - component: {fileID: 322355930}
   - component: {fileID: 322355931}
+  - component: {fileID: 322355932}
   m_Layer: 0
   m_Name: AnimationHandlers
   m_TagString: Untagged
@@ -410,6 +411,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MapHolderInstance: {fileID: 2100281716}
   TimeForUnitToWalkAcrossTile: 0.12
+--- !u!114 &322355932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322355929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a8bed9646b3fb048a9839e41f2f9af4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimeToImpact: 0.16
+  TimeForPauseAfterImpact: 0.2
+  TimeForRetract: 0.2
+  ClosenessPercentile: 0.65
 --- !u!1 &338639968
 GameObject:
   m_ObjectHideFlags: 0
@@ -3289,6 +3306,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2085925678}
   - component: {fileID: 2085925679}
+  - component: {fileID: 2085925680}
   m_Layer: 0
   m_Name: Engines
   m_TagString: Untagged
@@ -3324,6 +3342,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MobHolderController: {fileID: 2100281717}
   PlayerInputPhaseControllerInstance: {fileID: 198427621}
+  AIInputPhaseControllerInstance: {fileID: 2085925680}
+--- !u!114 &2085925680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2085925677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29d8903da810cbe41b58f7405baebd01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MobHolderInstance: {fileID: 2100281717}
+  MapHolderInstance: {fileID: 2100281716}
+  MapMetaInstance: {fileID: 198427620}
+  TimeToWaitAfterSelectingUnit: 0.4
+  TimeToWaitAfterMovingUnit: 0.15
 --- !u!1 &2100281714
 GameObject:
   m_ObjectHideFlags: 0
@@ -3383,6 +3419,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MovementHandlerInstance: {fileID: 322355931}
+  AttackAnimationHandlerInstance: {fileID: 322355932}
 --- !u!1 &2122848601
 GameObject:
   m_ObjectHideFlags: 0
