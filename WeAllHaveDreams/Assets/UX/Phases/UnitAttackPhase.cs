@@ -12,6 +12,7 @@ public class UnitAttackPhase : InputGameplayPhase
 
     public UnitMovementPhase UnitMovementPhaseInstance;
     public InputResolutionPhase InputResolutionPhaseInstance;
+    public StructureHolder StructureHolderInstance;
 
     public UnitAttackPhase UnitSelected(MapMob unit)
     {
@@ -32,6 +33,12 @@ public class UnitAttackPhase : InputGameplayPhase
         if (selectedUnit.CanMove)
         {
             DebugTextLog.AddTextToLog("Press 'M' to switch to Move mode");
+        }
+
+        MapStructure onStructure;
+        if ((onStructure = StructureHolderInstance.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
+        {
+            DebugTextLog.AddTextToLog("Press 'C' to capture this structure");
         }
     }
 
@@ -83,6 +90,16 @@ public class UnitAttackPhase : InputGameplayPhase
         {
             nextPhase = UnitMovementPhaseInstance.UnitSelected(selectedUnit);
             return true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            MapStructure onStructure;
+            if ((onStructure = StructureHolderInstance.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
+            {
+                nextPhase = InputResolutionPhaseInstance.ResolveThis(new MobCapturesStructurePlayerInput(selectedUnit, onStructure), this);
+                return true;
+            }
         }
 
         return false;

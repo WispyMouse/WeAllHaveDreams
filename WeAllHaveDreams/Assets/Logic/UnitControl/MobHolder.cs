@@ -43,6 +43,7 @@ public class MobHolder : MonoBehaviour
 
         if ((mobOnPoint = ActiveMobs.FirstOrDefault(mob => mob.Position == position)) != null)
         {
+            // DebugTextLog.AddTextToLog($"Reporting that there is a mob at {position.x}, {position.y}");
             return mobOnPoint;
         }
 
@@ -75,8 +76,6 @@ public class MobHolder : MonoBehaviour
             DebugTextLog.AddTextToLog($"<mobname> deals {offensiveDamage} damage to <mobname>! ({defending.HitPoints} remaining)");
         }));
 
-        yield return TurnManager.ResolveEffects();
-
         // TEMPORARY: This is where logic that checks to see if the unit can counter attack at this range would go
         if (defending != null && defending.HitPoints > 0)
         {
@@ -87,11 +86,7 @@ public class MobHolder : MonoBehaviour
                 engaging.HitPoints = System.Math.Max(0, engaging.HitPoints - returnDamage);
                 DebugTextLog.AddTextToLog($"<mobname> counters with {returnDamage} damage to <mobname>! ({engaging.HitPoints} remaining)");
             }));
-
-            yield return TurnManager.ResolveEffects();
         }
-
-        yield return new WaitForEndOfFrame();
     }
 
     public decimal ProjectedDamages(MapMob engaging, MapMob defending)

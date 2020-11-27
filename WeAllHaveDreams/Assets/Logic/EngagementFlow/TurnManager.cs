@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class TurnManager : SingletonBase<TurnManager>
 {
+    public static bool GameIsInProgress { get; set; } = true;
+
     int playerIndex { get; set; }
     SortedDictionary<int, PlayerSide> playerSides = new SortedDictionary<int, PlayerSide>();
 
@@ -12,7 +14,6 @@ public class TurnManager : SingletonBase<TurnManager>
 
     public MobHolder MobHolderController;
     public PlayerInputPhaseController PlayerInputPhaseControllerInstance;
-
     public AIInputPhaseController AIInputPhaseControllerInstance;
 
     private void Start()
@@ -85,5 +86,13 @@ public class TurnManager : SingletonBase<TurnManager>
         }
 
         yield break;
+    }
+
+    public static void VictoryIsDeclared(int winner)
+    {
+        Singleton.AIInputPhaseControllerInstance.StopAllInputs();
+        Singleton.PlayerInputPhaseControllerInstance.StopAllInputs();
+        DebugTextLog.AddTextToLog($"The winner is side #{winner}!");
+        GameIsInProgress = false;
     }
 }

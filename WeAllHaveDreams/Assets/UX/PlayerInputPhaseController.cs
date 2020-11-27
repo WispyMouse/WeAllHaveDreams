@@ -23,7 +23,7 @@ public class PlayerInputPhaseController : MonoBehaviour
 
     void Update()
     {
-        if (!TurnManager.CurrentPlayer.HumanControlled)
+        if (!TurnManager.CurrentPlayer.HumanControlled || !TurnManager.GameIsInProgress)
         {
             return;
         }
@@ -160,5 +160,10 @@ public class PlayerInputPhaseController : MonoBehaviour
 
         shouldRefresh = false;
         phaseHandler = StartCoroutine(PhasesHandler());
+    }
+
+    public void StopAllInputs()
+    {
+        StopCoroutine(phaseHandler);
     }
 }

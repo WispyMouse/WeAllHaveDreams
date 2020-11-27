@@ -44,5 +44,7 @@ public class AttackWithMobInput : PlayerInput
 
         yield return mobHolder.UnitEngagesUnit(Attacking, Target);
         Attacking.CanAttack = false;
+
+        yield return TurnManager.ResolveEffects();
     }
 }

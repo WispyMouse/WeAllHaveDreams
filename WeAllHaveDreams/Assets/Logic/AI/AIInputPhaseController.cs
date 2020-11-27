@@ -23,12 +23,12 @@ public class AIInputPhaseController : MonoBehaviour
     {
         MapMob matchingMob;
 
-        while ((matchingMob = MobHolderInstance.MobsOnTeam(TurnManager.CurrentPlayer.PlayerSideIndex).Where(mob => mob.CanMove || mob.CanAttack).FirstOrDefault()) != null)
+        while ((matchingMob = MobHolderInstance.MobsOnTeam(TurnManager.CurrentPlayer.PlayerSideIndex).Where(mob => mob.CanMove || mob.CanAttack).FirstOrDefault()) != null
+            && TurnManager.GameIsInProgress)
         {
             yield return ActWithUnit(matchingMob);
             // TEMPORARY: Force set the Mob's Cans to false, so we can move on in the AI
-            matchingMob.CanAttack = false;
-            matchingMob.CanMove = false;
+            matchingMob.ExhaustAllOptions();
         }
 
         TurnManager.PassTurnToNextPlayer();
@@ -68,7 +68,6 @@ public class AIInputPhaseController : MonoBehaviour
                     if (closestToCurrent != acting.Position)
                     {
                         yield return new MoveMobPlayerInput(acting, closestToCurrent).Execute(MapHolderInstance, MobHolderInstance);
-                        yield return TurnManager.ResolveEffects();
                         yield return new WaitForSeconds(TimeToWaitAfterMovingUnit);
                     }
                 }
@@ -76,7 +75,6 @@ public class AIInputPhaseController : MonoBehaviour
                 if (acting.CanAttack && intersect.Contains(acting.Position))
                 {
                     yield return new AttackWithMobInput(acting, nearestEnemy).Execute(MapHolderInstance, MobHolderInstance);
-                    yield return TurnManager.ResolveEffects();
                     break;
                 }
             }
@@ -94,12 +92,16 @@ public class AIInputPhaseController : MonoBehaviour
                         if (intersectOfPath.Contains(pathTowardsClosest[ii]))
                         {
                             yield return new MoveMobPlayerInput(acting, pathTowardsClosest[ii]).Execute(MapHolderInstance, MobHolderInstance);
-                            yield return TurnManager.ResolveEffects();
                             break;
                         }
                     }
                 }
             }
         }
+    }
+
+    public void StopAllInputs()
+    {
+        StopCoroutine(TurnBeingPlayed);
     }
 }

@@ -23,5 +23,7 @@ public class MoveMobPlayerInput : PlayerInput
 
         yield return mobHolder.MoveUnit(Moving, To);
         Moving.CanMove = false;
+
+        yield return TurnManager.ResolveEffects();
     }
 }

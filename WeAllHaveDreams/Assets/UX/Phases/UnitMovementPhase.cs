@@ -11,6 +11,7 @@ public class UnitMovementPhase : InputGameplayPhase
 
     public MapMeta MapMetaInstance;
     public MapHolder MapHolderInstance;
+    public StructureHolder StructureHolderInstance;
 
     MapMob selectedUnit { get; set; }
 
@@ -34,6 +35,12 @@ public class UnitMovementPhase : InputGameplayPhase
         {
             MapMetaInstance.ShowUnitAttackRangePastMovementRange(selectedUnit);
             DebugTextLog.AddTextToLog("Press 'A' to enter Attack Only mode");
+        }
+
+        MapStructure onStructure;
+        if ((onStructure = StructureHolderInstance.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
+        {
+            DebugTextLog.AddTextToLog("Press 'C' to capture this structure");
         }
     }
 
@@ -155,6 +162,16 @@ public class UnitMovementPhase : InputGameplayPhase
         {
             nextPhase = UnitAttackPhaseInstance.UnitSelected(selectedUnit);
             return true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            MapStructure onStructure;
+            if ((onStructure = StructureHolderInstance.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
+            {
+                nextPhase = InputResolutionPhaseInstance.ResolveThis(new MobCapturesStructurePlayerInput(selectedUnit, onStructure), this);
+                return true;
+            }
         }
 
         return false;

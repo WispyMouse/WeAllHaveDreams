@@ -24,6 +24,7 @@ public class GameMap
 
         var traveled = new HashSet<Vector3Int>() { Vector3Int.zero };
         var frontier = new HashSet<Vector3Int>() { Vector3Int.zero };
+        gameplayTiles.Add(Vector3Int.zero, tileMap.GetTile<GameplayTile>(Vector3Int.zero));
 
         while (frontier.Any())
         {
@@ -277,11 +278,13 @@ public class GameMap
     {
         if (!GameplayTiles.ContainsKey(to))
         {
+            DebugTextLog.AddTextToLog($"Reporting that {to.x}, {to.y} is off the gameplay map and can't be moved in to");
             return false;
         }
 
         if (GetGameplayTile(to).CompletelySolid)
         {
+            // DebugTextLog.AddTextToLog($"Reporting that {to.x}, {to.y} is completely solid and can't be moved in to");
             return false;
         }
 

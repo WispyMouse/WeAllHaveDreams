@@ -21,5 +21,6 @@ public class DebugTextLog : SingletonBase<DebugTextLog>
         }
 
         Singleton.TextLog.text = string.Join("\n", Singleton.ActiveText);
+        Debug.Log(text);
     }
 }
