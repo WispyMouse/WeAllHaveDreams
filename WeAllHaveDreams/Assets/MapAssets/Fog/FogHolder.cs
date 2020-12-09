@@ -17,15 +17,17 @@ public class FogHolder : MonoBehaviour
     public HashSet<Vector3Int> AllTiles { get; private set; } = new HashSet<Vector3Int>();
     public Dictionary<int, TeamVisibility> TeamVisibilityData = new Dictionary<int, TeamVisibility>();
 
-    public FogVisibilitySettings FogVisibility;
+    Configuration.FogVisibilityConfigurations fogVisibilityConfigurations { get; set; }
 
     public void Initialize(MapHolder mapHolderInstance)
     {
+        fogVisibilityConfigurations = ConfigurationLoadingEntrypoint.GetConfigurationData<Configuration.FogVisibilityConfigurations>();
+
         AllTiles = new HashSet<Vector3Int>(mapHolderInstance.GetAllTiles());
 
         foreach (Vector3Int tile in AllTiles)
         {
-            if (FogVisibility.CoverMapInDarknessInitially)
+            if (fogVisibilityConfigurations.CoverMapInDarknessInitially)
             {
                 FogTileMap.SetTile(tile, HiddenTile);
             }
@@ -38,7 +40,7 @@ public class FogHolder : MonoBehaviour
 
     public void RefreshFogVisuals()
     {
-        if (FogVisibility.FogTurnHandlingMode == FogTurnHandlingEnum.ShowAllMap)
+        if (fogVisibilityConfigurations.FogTurnHandlingMode == FogTurnHandlingEnum.ShowAllMap)
         {
             foreach (Vector3Int position in AllTiles)
             {
@@ -53,7 +55,7 @@ public class FogHolder : MonoBehaviour
 
         foreach (int player in TeamVisibilityData.Keys)
         {
-            if (FogVisibility.ShouldShowMapView(player))
+            if (fogVisibilityConfigurations.ShouldShowMapView(player))
             {
                 TeamVisibility curVisibility = TeamVisibilityData[player];
                 visibleTiles = new HashSet<Vector3Int>(visibleTiles.Union(curVisibility.VisibleTiles));
@@ -61,7 +63,7 @@ public class FogHolder : MonoBehaviour
             }
         }
 
-        if (!FogVisibility.CoverMapInDarknessInitially)
+        if (!fogVisibilityConfigurations.CoverMapInDarknessInitially)
         {
             hasBeenTiles = AllTiles;
         }
@@ -108,7 +110,7 @@ public class FogHolder : MonoBehaviour
             assignedVisibility.IncorporateVisibleTiles(thisMobsVisibleTiles);
         }
 
-        if (FogVisibility.ShouldShowMapView(player))
+        if (fogVisibilityConfigurations.ShouldShowMapView(player))
         {
             RefreshFogVisuals();
         }

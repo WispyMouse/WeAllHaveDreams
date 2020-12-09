@@ -24,7 +24,7 @@ public class PlayerInputPhaseController : MonoBehaviour
 
     void Update()
     {
-        if (!TurnManager.CurrentPlayer.HumanControlled || !TurnManager.GameIsInProgress)
+        if (!TurnManager.GameIsInProgress || !TurnManager.CurrentPlayer.HumanControlled)
         {
             return;
         }

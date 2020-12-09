@@ -1,11 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class TurnManager : SingletonBase<TurnManager>
 {
-    public static bool GameIsInProgress { get; set; } = true;
+    public static bool GameIsInProgress { get; set; } = false;
 
     int playerIndex { get; set; }
     SortedDictionary<int, PlayerSide> playerSides = new SortedDictionary<int, PlayerSide>();
@@ -25,6 +27,19 @@ public class TurnManager : SingletonBase<TurnManager>
 
     private void Start()
     {
+        // Kick off the start up sequence, which will start the game when it is done
+        _ = HandleGameBootupSequence(GameplayReady);
+    }
+
+    async Task HandleGameBootupSequence(Action preparationsReady)
+    {
+        // Load in the configuration data
+        await ConfigurationLoadingEntrypoint.LoadAllConfigurationData();
+        preparationsReady();
+    }
+
+    void GameplayReady()
+    {
         // TEMPORARY: Hardcode the sides
         PlayerSide humanControlledPlayerSide = new PlayerSide() { Name = "Human Player", PlayerSideIndex = 0, HumanControlled = true, TotalResources = 100 };
         playerSides.Add(humanControlledPlayerSide.PlayerSideIndex, humanControlledPlayerSide);
@@ -33,6 +48,8 @@ public class TurnManager : SingletonBase<TurnManager>
         playerSides.Add(aiControlledPlayerSide.PlayerSideIndex, aiControlledPlayerSide);
 
         FogHolderController.Initialize(MapHolderController);
+
+        GameIsInProgress = true;
 
         StartCoroutine(StartTurnOfPlayerAtIndex(humanControlledPlayerSide.PlayerSideIndex));
     }
