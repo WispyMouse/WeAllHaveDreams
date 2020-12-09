@@ -25,7 +25,14 @@ public class FogHolder : MonoBehaviour
 
         foreach (Vector3Int tile in AllTiles)
         {
-            FogTileMap.SetTile(tile, HiddenTile);
+            if (FogVisibility.CoverMapInDarknessInitially)
+            {
+                FogTileMap.SetTile(tile, HiddenTile);
+            }
+            else
+            {
+                FogTileMap.SetTile(tile, HasBeenSeenTile);
+            }
         }
     }
 
@@ -52,6 +59,11 @@ public class FogHolder : MonoBehaviour
                 visibleTiles = new HashSet<Vector3Int>(visibleTiles.Union(curVisibility.VisibleTiles));
                 hasBeenTiles = new HashSet<Vector3Int>(hasBeenTiles.Union(curVisibility.HasBeenSeenTiles));
             }
+        }
+
+        if (!FogVisibility.CoverMapInDarknessInitially)
+        {
+            hasBeenTiles = AllTiles;
         }
 
         foreach (Vector3Int position in AllTiles)

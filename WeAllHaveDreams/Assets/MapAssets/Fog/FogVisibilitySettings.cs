@@ -7,6 +7,7 @@ public class FogVisibilitySettings
 {
     public int FactionToShowFogFor;
     public FogTurnHandlingEnum FogTurnHandlingMode;
+    public bool CoverMapInDarknessInitially;
 
     public bool ShouldShowMapView(int player)
     {
