@@ -8,6 +8,7 @@ public class GameplayTile : Tile
 {
     public bool CompletelySolid;
 
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/GameplayTile")]
     public static void CreateGameplayTile()
     {
@@ -16,4 +17,5 @@ public class GameplayTile : Tile
             return;
         AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<GameplayTile>(), path);
     }
+#endif
 }

@@ -12,6 +12,9 @@ public class TurnManager : SingletonBase<TurnManager>
 
     public static PlayerSide CurrentPlayer => Singleton.playerSides[Singleton.playerIndex];
 
+    public FogHolder FogHolderController;
+    public MapHolder MapHolderController;
+
     public MobHolder MobHolderController;
     public StructureHolder StructureHolderInstance;
 
@@ -28,6 +31,8 @@ public class TurnManager : SingletonBase<TurnManager>
 
         PlayerSide aiControlledPlayerSide = new PlayerSide() { Name = "AI Player", PlayerSideIndex = 1, HumanControlled = false, TotalResources = 100 };
         playerSides.Add(aiControlledPlayerSide.PlayerSideIndex, aiControlledPlayerSide);
+
+        FogHolderController.Initialize(MapHolderController);
 
         StartCoroutine(StartTurnOfPlayerAtIndex(humanControlledPlayerSide.PlayerSideIndex));
     }
@@ -95,6 +100,8 @@ public class TurnManager : SingletonBase<TurnManager>
         {
             yield return Singleton.MobHolderController.RemoveMob(remove);
         }
+
+        Singleton.FogHolderController.UpdateVisibilityForPlayers(Singleton.MapHolderController, Singleton.MobHolderController);
 
         Singleton.SideStatisticsInstance.UpdateVisuals();
     }

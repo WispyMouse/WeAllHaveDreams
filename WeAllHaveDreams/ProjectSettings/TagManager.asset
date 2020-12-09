@@ -50,6 +50,9 @@ TagManager:
   - name: Units
     uniqueID: 78406283
     locked: 0
+  - name: Fog
+    uniqueID: 3091003189
+    locked: 0
   - name: Reminders
     uniqueID: 412266679
     locked: 0

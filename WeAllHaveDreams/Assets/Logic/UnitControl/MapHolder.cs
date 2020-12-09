@@ -17,6 +17,8 @@ public class MapHolder : MonoBehaviour
     }
 
     public GameplayTile GetGameplayTile(Vector3Int position) => activeMap.GetGameplayTile(position);
+    public IEnumerable<Vector3Int> GetAllTiles() => activeMap.GetAllTiles();
+    public IEnumerable<Vector3Int> GetNeighbors(Vector3Int point) => activeMap.GetNeighbors(point);
 
     public IEnumerable<Vector3Int> PotentialMoves(MapMob moving) => activeMap.PotentialMoves(moving, MobHolderController);
     public IEnumerable<Vector3Int> PotentialAttacks(MapMob attacking, Vector3Int from) => activeMap.PotentialAttacks(attacking, from);

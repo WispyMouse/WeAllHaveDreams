@@ -11,6 +11,7 @@ public class MapMob : MapObject
 
     public int MoveRange => 4; // TEMPORARY: Just a static move value
     public int AttackRange => 1; // TEMPORARY: Again, static value
+    public int SightRange => 4; // TEMPORARY: Testing value
 
     // TEMPORARY: This should definitely be in its own class
     public SpriteRenderer HitPointsVisual;

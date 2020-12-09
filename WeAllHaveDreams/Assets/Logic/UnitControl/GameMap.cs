@@ -95,7 +95,7 @@ public class GameMap
                 continue;
             }
 
-            foreach (Vector3Int neighbor in Neighbors[thisTile.Key])
+            foreach (Vector3Int neighbor in GetNeighbors(thisTile.Key))
             {
                 int totalCost = thisTile.Value + 1; // TEMPORARY: This will eventually consider the movement cost of the tile we're moving on to
 
@@ -161,7 +161,7 @@ public class GameMap
                 continue;
             }
 
-            foreach (Vector3Int neighbor in Neighbors[thisTile.Key])
+            foreach (Vector3Int neighbor in GetNeighbors(thisTile.Key))
             {
                 int totalCost = thisTile.Value + 1; // TEMPORARY: This will eventually consider the movement cost of the tile we're moving on to
 
@@ -218,7 +218,7 @@ public class GameMap
                 break;
             }
 
-            foreach (Vector3Int neighbor in Neighbors[positionValue])
+            foreach (Vector3Int neighbor in GetNeighbors(positionValue))
             {
                 // Can't move here, don't consider it
                 if (!CanMoveInTo(moving, positionValue, neighbor, mobHolder))
@@ -318,5 +318,15 @@ public class GameMap
         }
 
         return true;
+    }
+
+    public IEnumerable<Vector3Int> GetNeighbors(Vector3Int point)
+    {
+        return Neighbors[point];
+    }
+
+    public IEnumerable<Vector3Int> GetAllTiles()
+    {
+        return GameplayTiles.Keys;
     }
 }
