@@ -282,10 +282,6 @@ MonoBehaviour:
   HiddenTile: {fileID: 11400000, guid: 562d6aab84d488740984537f8e18e956, type: 2}
   HasBeenSeenTile: {fileID: 11400000, guid: f3777bae83fad314e9c8bd7ced3d6aa1, type: 2}
   VisibleTile: {fileID: 11400000, guid: 08a3579b622cc7249bdf33d8a24d0667, type: 2}
-  FogVisibility:
-    FactionToShowFogFor: 0
-    FogTurnHandlingMode: 0
-    CoverMapInDarknessInitially: 0
 --- !u!4 &202494515 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8596382311653572227, guid: 74be687cbb7fab7458b7717cecd64712, type: 3}
@@ -3531,6 +3527,50 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1120445399
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1120445400}
+  - component: {fileID: 1120445401}
+  m_Layer: 0
+  m_Name: Library
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1120445400
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120445399}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1120445401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120445399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 321526c59ec1071428bf30268054c229, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DefaultTile: {fileID: 11400000, guid: b42ca993e29664a41a00bb47008883d9, type: 2}
 --- !u!1 &1166089049
 GameObject:
   m_ObjectHideFlags: 0
@@ -3940,6 +3980,7 @@ Transform:
   - {fileID: 2100281715}
   - {fileID: 2085925678}
   - {fileID: 335620701}
+  - {fileID: 1670046673}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4245,6 +4286,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1730766962215249336, guid: e6e779e26810d8e44a7e4980d9952c13, type: 3}
   m_PrefabInstance: {fileID: 1654028609}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1670046672
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1670046673}
+  - component: {fileID: 1670046674}
+  m_Layer: 0
+  m_Name: EngagementFlow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1670046673
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1670046672}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1407796187}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1670046674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1670046672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da985a43636af540a7ab2d62d79f401, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TurnManagerInstance: {fileID: 2085925679}
+  MapHolderInstance: {fileID: 2100281716}
 --- !u!1 &1795259029
 GameObject:
   m_ObjectHideFlags: 0
@@ -4528,6 +4614,7 @@ GameObject:
   - component: {fileID: 2085925678}
   - component: {fileID: 2085925679}
   - component: {fileID: 2085925680}
+  - component: {fileID: 2085925681}
   m_Layer: 0
   m_Name: Engines
   m_TagString: Untagged
@@ -4586,6 +4673,20 @@ MonoBehaviour:
   MapMetaInstance: {fileID: 198427620}
   TimeToWaitAfterSelectingUnit: 0.4
   TimeToWaitAfterMovingUnit: 0.15
+--- !u!114 &2085925681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2085925677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da985a43636af540a7ab2d62d79f401, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TurnManagerInstance: {fileID: 0}
+  MapHolderInstance: {fileID: 0}
 --- !u!1 &2100281714
 GameObject:
   m_ObjectHideFlags: 0

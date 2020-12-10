@@ -10,9 +10,30 @@ public class GameMap
     Dictionary<Vector3Int, IEnumerable<Vector3Int>> Neighbors { get; set; }
     Dictionary<Vector3Int, GameplayTile> GameplayTiles { get; set; }
 
+    Realm loadedRealm;
+
     public GameplayTile GetGameplayTile(Vector3Int position)
     {
         return GameplayTiles[position];
+    }
+
+    public static GameMap LoadFromRealm(Realm realmData)
+    {
+        var gameplayTiles = new Dictionary<Vector3Int, GameplayTile>();
+
+        GameMap newMap = new GameMap();
+        newMap.loadedRealm = realmData;
+
+        realmData.Hydrate();
+
+        foreach (Vector3Int curPosition in realmData.AllPositions)
+        {
+            GameplayTile tile = ScriptableObject.CreateInstance(typeof(GameplayTile)) as GameplayTile;
+            gameplayTiles.Add(curPosition, tile);
+        }
+
+        newMap.Neighbors = realmData.Neighbors;
+        return newMap;
     }
 
     public static GameMap InitializeMapFromTilemap(Tilemap tileMap)
@@ -63,7 +84,7 @@ public class GameMap
         return newMap;
     }
 
-    static Vector3Int[] GetPotentialNeighbors(Vector3Int center)
+    public static Vector3Int[] GetPotentialNeighbors(Vector3Int center)
     {
         return new Vector3Int[]
         {

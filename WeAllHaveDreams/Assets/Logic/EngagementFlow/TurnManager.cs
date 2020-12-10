@@ -25,20 +25,7 @@ public class TurnManager : SingletonBase<TurnManager>
 
     public SideStatistics SideStatisticsInstance;
 
-    private void Start()
-    {
-        // Kick off the start up sequence, which will start the game when it is done
-        _ = HandleGameBootupSequence(GameplayReady);
-    }
-
-    async Task HandleGameBootupSequence(Action preparationsReady)
-    {
-        // Load in the configuration data
-        await ConfigurationLoadingEntrypoint.LoadAllConfigurationData();
-        preparationsReady();
-    }
-
-    void GameplayReady()
+    public void GameplayReady()
     {
         // TEMPORARY: Hardcode the sides
         PlayerSide humanControlledPlayerSide = new PlayerSide() { Name = "Human Player", PlayerSideIndex = 0, HumanControlled = true, TotalResources = 100 };

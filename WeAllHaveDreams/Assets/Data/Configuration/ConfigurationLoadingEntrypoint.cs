@@ -8,13 +8,12 @@ using UnityEngine;
 
 public class ConfigurationLoadingEntrypoint : SingletonBase<ConfigurationLoadingEntrypoint>
 {
-    // should start with a /
-    const string ConfigurationFolderPathRelative = "/Resources";
+    const string ConfigurationFolderPathRelative = "Resources/Configurations";
     public static string ConfigurationFolderPath
     {
         get
         {
-            return $"{Application.dataPath}{ConfigurationFolderPathRelative}";
+            return Path.Combine(Application.dataPath, ConfigurationFolderPathRelative).Replace("\\", "/");
         }
     }
 
@@ -31,20 +30,20 @@ public class ConfigurationLoadingEntrypoint : SingletonBase<ConfigurationLoading
 
     public static async Task LoadAllConfigurationData()
     {
-        Debug.LogWarning(typeof(Configuration.FogVisibilityConfigurations).FullName);
-
         Singleton.configurationData = new HashSet<ConfigurationData>();
 
         DebugTextLog.AddTextToLog($"The configuration folder is at: {ConfigurationFolderPath}");
 
         foreach (string filePath in Directory.GetFiles(ConfigurationFolderPath, ConfigurationFileSearch, SearchOption.AllDirectories))
         {
-            DebugTextLog.AddTextToLog($"Found {filePath}");
+            string sanitizedFilePath = filePath.Replace("\\", "/");
+
+            DebugTextLog.AddTextToLog($"Found {sanitizedFilePath}");
             try
             {
                 string fileText;
 
-                using (var reader = File.OpenText(filePath))
+                using (var reader = File.OpenText(sanitizedFilePath))
                 {
                     fileText = await reader.ReadToEndAsync();
                 }
