@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -23,14 +24,18 @@ public class MapHolder : MonoBehaviour
 
     public async Task LoadFromRealm(Realm toLoad)
     {
-        activeMap = GameMap.LoadFromRealm(toLoad);
+        activeMap = await GameMap.LoadFromRealm(toLoad);
 
         LoadedMap.ClearAllTiles();
 
         foreach (Vector3Int position in toLoad.AllPositions)
         {
-            GameplayTile matchingTile = TileLibrary.GetTile(toLoad.TileTagAtPosition(position));
-            LoadedMap.SetTile(position, matchingTile);
+            // TEMPORARY HACK: Tiles are not the only things defined here. For now, get the first tile indicated and discard the rest.
+            foreach (GameplayTile curTile in toLoad.KeysAtPositions[position].Select(key => key.GetTileInstance()))
+            {
+                LoadedMap.SetTile(position, curTile);
+                break;
+            }
         }
     }
 }

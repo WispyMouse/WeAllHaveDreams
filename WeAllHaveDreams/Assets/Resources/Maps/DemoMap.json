@@ -1,3 +1,14 @@
 {
-	"MapString": "______\n______\n______"
+	"MapImage": "DemoMap.png",
+	"Keys":
+	[
+		{
+			"Color": "#272736",
+			"Object": "Void"
+		},
+		{
+			"Color": "#ffffeb",
+			"Object": "Floor"
+		}
+	]
 }

@@ -1,63 +1,100 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Realm
 {
-    public string MapString;
+    // These control how many pixels per coordinate there are in the MapImage.
+    const int PixelWidthPerTile = 2;
+    const int PixelHeightPerTile = 2;
+
+    public string MapImage;
+    public IEnumerable<RealmKey> Keys;
+    Dictionary<Color, RealmKey> ColorsToKeys { get; set; }
 
     public HashSet<Vector3Int> AllPositions { get; private set; }
     public Dictionary<Vector3Int, IEnumerable<Vector3Int>> Neighbors { get; private set; }
+    public Dictionary<Vector3Int, HashSet<RealmKey>> KeysAtPositions { get; private set; }
 
-    Dictionary<Vector3Int, char> Chars { get; set; }
-    Dictionary<char, string> Tags { get; set; }
-
-    public void Hydrate()
+    public async Task Hydrate()
     {
-        GenerateTags();
-        GenerateCharsMap();
+        await GenerateMapFromImage();
         GenerateNeighbors();
     }
 
-    void GenerateTags()
+    async Task GenerateMapFromImage()
     {
-        Tags = new Dictionary<char, string>();
+        KeysAtPositions = new Dictionary<Vector3Int, HashSet<RealmKey>>();
+        ColorsToKeys = new Dictionary<Color, RealmKey>();
 
-        Tags.Add('_', "Floor");
-    }
-
-    void GenerateCharsMap()
-    {
-        AllPositions = new HashSet<Vector3Int>();
-        Chars = new Dictionary<Vector3Int, char>();
-
-        string[] splitProtoMap = MapString.Split('\n');
-        int longestWidth = splitProtoMap.Max(line => line.Length);
-
-        for (int yy = 0; yy < splitProtoMap.Length; yy++)
+        foreach (RealmKey key in Keys)
         {
-            string thisLine = splitProtoMap[yy];
-
-            for (int xx = 0; xx < longestWidth; xx++)
+            if (ColorUtility.TryParseHtmlString(key.Color, out Color parsedColor))
             {
-                Vector3Int thisPosition = new Vector3Int(xx, yy, 0);
+                ColorsToKeys.Add(parsedColor, key);
+            }
+            else
+            {
+                DebugTextLog.AddTextToLog($"Could not parse color '{key.Color}'");
+            }
+        }
 
-                AllPositions.Add(thisPosition);
+        string mapImagePath = Path.Combine(MapBootup.MapFolderPath, MapImage);
 
-                if (thisLine.Length <= xx)
+        if (!File.Exists(mapImagePath))
+        {
+            string errorMessage = $"No map was found at {mapImagePath}.";
+            DebugTextLog.AddTextToLog(errorMessage);
+            throw new System.Exception(errorMessage);
+        }
+
+        ResourceRequest request = Resources.LoadAsync<Sprite>("Maps/DemoMap");
+
+        while (!request.isDone)
+        {
+            await Task.Delay(1);
+        }
+
+        Sprite loadedSprite = request.asset as Sprite;
+        
+        for (int xx = 0; xx < loadedSprite.rect.width / PixelWidthPerTile; xx++)
+        {
+            for (int yy = 0; yy < loadedSprite.rect.height / PixelHeightPerTile; yy++)
+            {
+                Vector3Int mapCoordinate = new Vector3Int(xx, yy, 0);
+                HashSet<Color> colors = new HashSet<Color>();
+
+                // Every 2x2 block is one tile. (or whatever is configured in PixelWidthPerTile and PixelHeightPerTile)
+                // Everything indicated in the key should be put in to this coordinate
+                foreach (Vector2Int pixelCoordinate in PointsForCoordinate(mapCoordinate))
                 {
-                    Chars.Add(thisPosition, '_');
+                    colors.Add(loadedSprite.texture.GetPixel(pixelCoordinate.x, pixelCoordinate.y));
                 }
-                else
+
+                KeysAtPositions.Add(mapCoordinate, new HashSet<RealmKey>());
+
+                foreach (Color color in colors)
                 {
-                    Chars.Add(thisPosition, thisLine[xx]);
+                    KeysAtPositions[mapCoordinate].Add(ColorsToKeys[color]);
                 }
             }
         }
     }
+
+    IEnumerable<Vector2Int> PointsForCoordinate(Vector3Int mapCoordinate)
+    {
+        // Given a starting left and top, what are the pixel coordinates in the GameMap that should correspond to it?
+        return Enumerable.Range(mapCoordinate.x * PixelWidthPerTile, PixelWidthPerTile)
+            .SelectMany(x => Enumerable.Range(mapCoordinate.y * PixelHeightPerTile, PixelHeightPerTile)
+            .Select(y => new Vector2Int(x, y)));
+    }
+
     void GenerateNeighbors()
     {
+        AllPositions = new HashSet<Vector3Int>(KeysAtPositions.Keys);
         Neighbors = new Dictionary<Vector3Int, IEnumerable<Vector3Int>>();
 
         foreach (Vector3Int position in AllPositions)
@@ -74,10 +111,5 @@ public class Realm
 
             Neighbors.Add(position, neighbors);
         }
-    }
-
-    public string TileTagAtPosition(Vector3Int position)
-    {
-        return Tags[Chars[position]];
     }
 }

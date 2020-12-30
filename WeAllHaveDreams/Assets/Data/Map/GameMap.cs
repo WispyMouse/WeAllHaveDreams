@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -17,14 +18,14 @@ public class GameMap
         return GameplayTiles[position];
     }
 
-    public static GameMap LoadFromRealm(Realm realmData)
+    public static async Task<GameMap> LoadFromRealm(Realm realmData)
     {
         var gameplayTiles = new Dictionary<Vector3Int, GameplayTile>();
 
         GameMap newMap = new GameMap();
         newMap.loadedRealm = realmData;
 
-        realmData.Hydrate();
+        await realmData.Hydrate();
 
         foreach (Vector3Int curPosition in realmData.AllPositions)
         {
@@ -33,6 +34,7 @@ public class GameMap
         }
 
         newMap.Neighbors = realmData.Neighbors;
+        newMap.GameplayTiles = gameplayTiles;
         return newMap;
     }
 
@@ -57,7 +59,7 @@ public class GameMap
             foreach (Vector3Int curPotentialNeighbor in GetPotentialNeighbors(thisTile))
             {
                 // If this tile isn't in the map, continue
-                if (!tileMap.HasTile(curPotentialNeighbor))
+                if (!tileMap.HasTile((Vector3Int)curPotentialNeighbor))
                 {
                     continue;
                 }
@@ -72,7 +74,7 @@ public class GameMap
 
                 frontier.Add(curPotentialNeighbor);
                 traveled.Add(curPotentialNeighbor);
-                gameplayTiles.Add(curPotentialNeighbor, tileMap.GetTile<GameplayTile>(curPotentialNeighbor));
+                gameplayTiles.Add(curPotentialNeighbor, tileMap.GetTile<GameplayTile>((Vector3Int)curPotentialNeighbor));
             }
 
             neighbors.Add(thisTile, actualNeighbors);

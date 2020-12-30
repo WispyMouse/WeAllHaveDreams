@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 public class MapBootup : MonoBehaviour
 {
-    const string MapFolderPathRelative = "Resources/Maps";
+    public const string MapFolderPathRelative = "Resources/Maps";
     public static string MapFolderPath
     {
         get
@@ -50,7 +51,7 @@ public class MapBootup : MonoBehaviour
                 fileText = await reader.ReadToEndAsync();
             }
 
-            return JsonUtility.FromJson<Realm>(fileText);
+            return JsonConvert.DeserializeObject<Realm>(fileText);
         }
 
         return null;

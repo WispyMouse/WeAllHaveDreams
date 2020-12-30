@@ -6,7 +6,7 @@ public class TileLibrary : SingletonBase<TileLibrary>
 {
     public GameplayTile DefaultTile;
 
-    public static GameplayTile GetTile(string tag)
+    public static GameplayTile GetTile(string tileName)
     {
         return Singleton.DefaultTile;
     }
