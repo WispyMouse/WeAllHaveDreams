@@ -12,6 +12,8 @@ public class MapHolder : MonoBehaviour
     public Tilemap LoadedMap;
 
     public MobHolder MobHolderController;
+    public FogHolder FogHolderController;
+    public StructureHolder StructureHolderController;
 
     public GameplayTile GetGameplayTile(Vector3Int position) => activeMap.GetGameplayTile(position);
     public IEnumerable<Vector3Int> GetAllTiles() => activeMap.GetAllTiles();
@@ -46,5 +48,13 @@ public class MapHolder : MonoBehaviour
             0);
 
         toCenter.transform.position = center + Vector3.back * 10;
+    }
+
+    public void ClearEverything()
+    {
+        LoadedMap.ClearAllTiles();
+        FogHolderController.ClearAllTiles();
+        MobHolderController.ClearAllMobs();
+        StructureHolderController.ClearAllStructures();
     }
 }

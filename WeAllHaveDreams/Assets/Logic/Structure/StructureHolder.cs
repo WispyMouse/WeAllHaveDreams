@@ -42,4 +42,13 @@ public class StructureHolder : MonoBehaviour
 
         return null;
     }
+
+    public void ClearAllStructures()
+    {
+        foreach (MapStructure curStructure in GameObject.FindObjectsOfType<MapStructure>())
+        {
+            Destroy(curStructure.gameObject);
+        }
+        ActiveStructures = new List<MapStructure>();
+    }
 }

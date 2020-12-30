@@ -31,6 +31,8 @@ public class MapBootup : MonoBehaviour
 
     private async void Start()
     {
+        MapHolderInstance.ClearEverything();
+
         await ConfigurationLoadingEntrypoint.LoadAllConfigurationData();
         Realm defaultRealm = await GetDefaultRealm();
         await MapHolderInstance.LoadFromRealm(defaultRealm);

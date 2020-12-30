@@ -163,4 +163,11 @@ public class FogHolder : MonoBehaviour
 
         return true;
     }
+
+    public void ClearAllTiles()
+    {
+        AllTiles = new HashSet<Vector3Int>();
+        TeamVisibilityData = new Dictionary<int, TeamVisibility>();
+        FogTileMap.ClearAllTiles();
+    }
 }

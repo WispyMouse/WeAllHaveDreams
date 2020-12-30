@@ -4724,6 +4724,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LoadedMap: {fileID: 630442907}
   MobHolderController: {fileID: 2100281717}
+  FogHolderController: {fileID: 198427622}
+  StructureHolderController: {fileID: 2100281718}
 --- !u!114 &2100281717
 MonoBehaviour:
   m_ObjectHideFlags: 0

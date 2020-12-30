@@ -117,4 +117,14 @@ public class MobHolder : MonoBehaviour
         newMob.ExhaustAllOptions();
         ActiveMobs.Add(newMob);
     }
+
+    public void ClearAllMobs()
+    {
+        foreach (MapMob curMob in GameObject.FindObjectsOfType<MapMob>())
+        {
+            Destroy(curMob.gameObject);
+        }
+
+        ActiveMobs = new List<MapMob>();
+    }
 }
