@@ -14,6 +14,9 @@ public class TurnManager : SingletonBase<TurnManager>
 
     public static PlayerSide CurrentPlayer => Singleton.playerSides[Singleton.playerIndex];
 
+    // TEMPORARY: This should not be here! But, it is the easiest place to insert for now.
+    public Camera MainCamera;
+
     public FogHolder FogHolderController;
     public MapHolder MapHolderController;
 
@@ -35,6 +38,8 @@ public class TurnManager : SingletonBase<TurnManager>
         playerSides.Add(aiControlledPlayerSide.PlayerSideIndex, aiControlledPlayerSide);
 
         FogHolderController.Initialize(MapHolderController);
+
+        MapHolderController.CenterCamera(MainCamera);
 
         GameIsInProgress = true;
 
