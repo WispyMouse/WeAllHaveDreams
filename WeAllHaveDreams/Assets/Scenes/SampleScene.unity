@@ -3601,6 +3601,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 321526c59ec1071428bf30268054c229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Tiles:
+  - {fileID: 11400000, guid: 4eac625df3f5f80499f928a1025c19c8, type: 2}
+  - {fileID: 11400000, guid: b42ca993e29664a41a00bb47008883d9, type: 2}
   DefaultTile: {fileID: 11400000, guid: b42ca993e29664a41a00bb47008883d9, type: 2}
 --- !u!1 &1166089049
 GameObject:

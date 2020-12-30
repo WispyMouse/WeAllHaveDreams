@@ -4,7 +4,7 @@
 	[
 		{
 			"Color": "#272736",
-			"Object": "Void"
+			"Object": "SolidTile"
 		},
 		{
 			"Color": "#ffffeb",
