@@ -30,7 +30,7 @@ public class AttackWithMobInput : PlayerInput
             yield break;
         }
 
-        if (MoveTo.HasValue)
+        if (MoveTo.HasValue && MoveTo.Value != Attacking.Position)
         {
             if (!Attacking.CanMove)
             {
