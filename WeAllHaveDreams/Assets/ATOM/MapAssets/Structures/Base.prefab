@@ -71,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 8416898281017630943, guid: 34e46206aae16b548bfd165cd47852f9, type: 3}
+  m_Sprite: {fileID: 8299319516169970853, guid: 34e46206aae16b548bfd165cd47852f9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -151,7 +151,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1682448999
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 8060736529220523392, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -175,7 +175,7 @@ GameObject:
   - component: {fileID: 1730766962215249336}
   - component: {fileID: 4941115558927489737}
   m_Layer: 0
-  m_Name: HumanBaseSignpost
+  m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -210,12 +210,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerSideIndex: 0
-  UnCaptured: 0
+  UnCaptured: 1
   Renderer: {fileID: 1730766960836441972}
   SideSprites:
   - {fileID: 8416898281017630943, guid: 34e46206aae16b548bfd165cd47852f9, type: 3}
   - {fileID: 3934902697012066516, guid: 34e46206aae16b548bfd165cd47852f9, type: 3}
   ContributedResourcesPerTurn: 20
+  CaptureImportance: 10
   CapturePointsVisual: {fileID: 1730766961185032154}
   CapturePointsNumerics:
   - {fileID: -1439962401544170818, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}

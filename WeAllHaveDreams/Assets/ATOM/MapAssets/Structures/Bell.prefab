@@ -151,7 +151,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1682448999
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 8060736529220523392, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -175,7 +175,7 @@ GameObject:
   - component: {fileID: 249596872484963954}
   - component: {fileID: 4444208731043189985}
   m_Layer: 0
-  m_Name: HumansideBell
+  m_Name: Bell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -215,6 +215,8 @@ MonoBehaviour:
   SideSprites:
   - {fileID: -3571065555159573361, guid: 451ddd0aedb6bd6468edc8be1949d3f4, type: 3}
   - {fileID: 7638030212143318558, guid: 451ddd0aedb6bd6468edc8be1949d3f4, type: 3}
+  ContributedResourcesPerTurn: 50
+  CaptureImportance: 10
   CapturePointsVisual: {fileID: 249596871456793616}
   CapturePointsNumerics:
   - {fileID: -1439962401544170818, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
@@ -238,4 +240,5 @@ MonoBehaviour:
   - {fileID: -3215136061973271139, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   - {fileID: -1366181965666896206, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   - {fileID: 8060736529220523392, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
+  CostOfUnit: 100
   MapMobPf: {fileID: 4605866297119515865, guid: 455eb6148552663469f967e741c41fea, type: 3}

@@ -59,6 +59,11 @@ public class Realm
         }
 
         Sprite loadedSprite = request.asset as Sprite;
+
+        if (loadedSprite.rect.width % PixelWidthPerTile != 0 || loadedSprite.rect.height % PixelHeightPerTile != 0)
+        {
+            DebugTextLog.AddTextToLog($"Warning! The map file is not perfectly divisible by both {PixelWidthPerTile} for width and {PixelHeightPerTile} for height!! It may fail to load.");
+        }
         
         for (int xx = 0; xx < loadedSprite.rect.width / PixelWidthPerTile; xx++)
         {
@@ -78,7 +83,14 @@ public class Realm
 
                 foreach (Color color in colors)
                 {
-                    KeysAtPositions[mapCoordinate].Add(ColorsToKeys[color]);
+                    if (ColorsToKeys.TryGetValue(color, out RealmKey matchedKey))
+                    {
+                        KeysAtPositions[mapCoordinate].Add(ColorsToKeys[color]);
+                    }
+                    else
+                    {
+                        DebugTextLog.AddTextToLog($"Did not recognize the color {ColorUtility.ToHtmlStringRGB(color)}");
+                    }
                 }
             }
         }

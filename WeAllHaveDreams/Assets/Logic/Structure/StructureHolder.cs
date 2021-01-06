@@ -6,12 +6,15 @@ using UnityEngine;
 public class StructureHolder : MonoBehaviour
 {
     public MapHolder MapHolderInstance;
+    public Transform StructuresParent;
 
     public List<MapStructure> ActiveStructures { get; set; } = new List<MapStructure>();
 
-    private void Awake()
+    public void SetStructure(Vector3Int position, MapStructure toSet)
     {
-        LoadStructuresFromScene();
+        toSet.transform.SetParent(StructuresParent);
+        toSet.SetPosition(position);
+        ActiveStructures.Add(toSet);
     }
 
     public void LoadStructuresFromScene()
@@ -50,5 +53,15 @@ public class StructureHolder : MonoBehaviour
             Destroy(curStructure.gameObject);
         }
         ActiveStructures = new List<MapStructure>();
+    }
+
+    public void SetOwnership(Vector3Int position, int team)
+    {
+        MapStructure structureOnPoint = ActiveStructures.FirstOrDefault(structure => structure.Position == position);
+
+        if (structureOnPoint != null)
+        {
+            structureOnPoint.SetOwnership(team);
+        }
     }
 }

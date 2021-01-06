@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8596382311653572227}
   - component: {fileID: 8596382311653572228}
   m_Layer: 0
-  m_Name: HumanCapital
+  m_Name: Capital
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8596382311653572226}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 2, z: 0}
+  m_LocalPosition: {x: 17, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8596382312432593998}
@@ -46,9 +46,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerSideIndex: 0
-  UnCaptured: 0
+  UnCaptured: 1
   Renderer: {fileID: 8596382312432593999}
-  SideSprites: []
+  SideSprites:
+  - {fileID: -3854964705595706665, guid: 9f1e1a0a20f34ef48a2e377a68164f5a, type: 3}
+  - {fileID: 3796422788609999600, guid: 9f1e1a0a20f34ef48a2e377a68164f5a, type: 3}
+  ContributedResourcesPerTurn: 50
+  CaptureImportance: 10
   CapturePointsVisual: {fileID: 8596382312637603041}
   CapturePointsNumerics:
   - {fileID: -1439962401544170818, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
@@ -143,7 +147,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -3854964705595706665, guid: 9f1e1a0a20f34ef48a2e377a68164f5a, type: 3}
+  m_Sprite: {fileID: -9043860729359145966, guid: 9f1e1a0a20f34ef48a2e377a68164f5a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -223,7 +227,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1682448999
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 8060736529220523392, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

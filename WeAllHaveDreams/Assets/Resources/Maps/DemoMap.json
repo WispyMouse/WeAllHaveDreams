@@ -4,11 +4,38 @@
 	[
 		{
 			"Color": "#272736",
+			"Type": "Tile",
 			"Object": "SolidTile"
 		},
 		{
 			"Color": "#ffffeb",
+			"Type": "Tile",
 			"Object": "Floor"
+		},
+		{
+			"Color": "#8fde5d",
+			"Type": "Structure",
+			"Object": "Capital"
+		},
+		{
+			"Color": "#66ffe3",
+			"Type": "Structure",
+			"Object": "Base"
+		},
+		{
+			"Color": "#bd4882",
+			"Type": "Structure",
+			"Object": "Bell"
+		},
+		{
+			"Color": "#1a7a3e",
+			"Type": "Ownership",
+			"Object": 0
+		},
+		{
+			"Color": "#e86a73",
+			"Type": "Ownership",
+			"Object": 1
 		}
 	]
 }

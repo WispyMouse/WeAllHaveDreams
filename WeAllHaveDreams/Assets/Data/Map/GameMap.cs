@@ -29,8 +29,15 @@ public class GameMap
 
         foreach (Vector3Int curPosition in realmData.AllPositions)
         {
-            GameplayTile tile = ScriptableObject.CreateInstance(typeof(GameplayTile)) as GameplayTile;
-            gameplayTiles.Add(curPosition, tile);
+            foreach (RealmKey key in realmData.KeysAtPositions[curPosition])
+            {
+                switch (key.Type)
+                {
+                    case RealmKeyType.Tile:
+                        gameplayTiles.Add(curPosition, TileLibrary.GetTile(key.Object));
+                        break;
+                }
+            }
         }
 
         newMap.Neighbors = realmData.Neighbors;

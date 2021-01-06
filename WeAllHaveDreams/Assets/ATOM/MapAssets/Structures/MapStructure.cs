@@ -41,6 +41,15 @@ public abstract class MapStructure : MapObject
             Renderer.sprite = SideSprites[this.PlayerSideIndex];
         }
     }
+    
+
+    public void SetOwnership(int side)
+    {
+        this.PlayerSideIndex = side;
+        Renderer.sprite = SideSprites[side];
+        UnCaptured = false;
+        CurCapturePoints = MaxCapturePoints;
+    }
 
     public bool IsNotOwnedByMyTeam(int myTeam)
     {
@@ -73,12 +82,8 @@ public abstract class MapStructure : MapObject
 
     protected virtual void CompleteCapture(MapMob capturing)
     {
-        this.PlayerSideIndex = capturing.PlayerSideIndex;
-        UnCaptured = false;
+        SetOwnership(capturing.PlayerSideIndex);
         DebugTextLog.AddTextToLog("Base captured!");
-        CurCapturePoints = MaxCapturePoints;
-
-        Renderer.sprite = SideSprites[this.PlayerSideIndex];
     }
 
     public virtual PlayerInput DoLazyBuildingThing(MobHolder mobHolderInstance)

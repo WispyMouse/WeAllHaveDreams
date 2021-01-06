@@ -32,11 +32,20 @@ public class MapHolder : MonoBehaviour
 
         foreach (Vector3Int position in toLoad.AllPositions)
         {
-            // TEMPORARY HACK: Tiles are not the only things defined here. For now, get the first tile indicated and discard the rest.
-            foreach (GameplayTile curTile in toLoad.KeysAtPositions[position].Select(key => key.GetTileInstance()))
+            foreach (RealmKey curKey in toLoad.KeysAtPositions[position].OrderBy(key => (int)key.Type))
             {
-                LoadedMap.SetTile(position, curTile);
-                break;
+                switch (curKey.Type)
+                {
+                    case RealmKeyType.Tile:
+                        LoadedMap.SetTile(position, activeMap.GetGameplayTile(position));
+                        break;
+                    case RealmKeyType.Structure:
+                        StructureHolderController.SetStructure(position, curKey.GetStructureInstance());
+                        break;
+                    case RealmKeyType.Ownership:
+                        StructureHolderController.SetOwnership(position, curKey.GetTeam());
+                        break;
+                }
             }
         }
     }
