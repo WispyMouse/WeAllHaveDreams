@@ -3569,6 +3569,7 @@ GameObject:
   - component: {fileID: 1120445400}
   - component: {fileID: 1120445401}
   - component: {fileID: 1120445402}
+  - component: {fileID: 1120445403}
   m_Layer: 0
   m_Name: Library
   m_TagString: Untagged
@@ -3623,6 +3624,21 @@ MonoBehaviour:
   - {fileID: 4444208731043189985, guid: 9d7921fff1c89cc4dbcd33b21e58af8e, type: 3}
   - {fileID: 8596382311653572228, guid: 74be687cbb7fab7458b7717cecd64712, type: 3}
   DefaultStructure: {fileID: 4941115558927489737, guid: e6e779e26810d8e44a7e4980d9952c13, type: 3}
+--- !u!114 &1120445403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120445399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19f97f19ce6f742449fb2187733afb60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Mobs:
+  - {fileID: 4605866297119515865, guid: 455eb6148552663469f967e741c41fea, type: 3}
+  DefaultMob: {fileID: 4605866297119515865, guid: 455eb6148552663469f967e741c41fea, type: 3}
 --- !u!1 &1166089049
 GameObject:
   m_ObjectHideFlags: 0

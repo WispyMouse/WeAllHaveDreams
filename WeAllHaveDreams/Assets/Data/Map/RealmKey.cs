@@ -4,8 +4,6 @@ using UnityEngine;
 
 public struct RealmKey
 {
-    public const string Ownership = "Ownership";
-
     public string Color;
     public RealmKeyType Type;
     public string Object;
@@ -18,6 +16,11 @@ public struct RealmKey
     public MapStructure GetStructureInstance()
     {
         return StructureLibrary.GetStructure(Object);
+    }
+    
+    public MapMob GetMobInstance()
+    {
+        return MobLibrary.GetMob(Object);
     }
 
     public int GetTeam()

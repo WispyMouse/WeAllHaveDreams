@@ -28,6 +28,11 @@
 			"Object": "Bell"
 		},
 		{
+			"Color": "#92dcba",
+			"Type": "Mob",
+			"Object": "SimpleMob"
+		},
+		{
 			"Color": "#1a7a3e",
 			"Type": "Ownership",
 			"Object": 0

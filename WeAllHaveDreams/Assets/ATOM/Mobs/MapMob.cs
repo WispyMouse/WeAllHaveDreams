@@ -189,4 +189,10 @@ public class MapMob : MapObject
             return (int)System.Math.Ceiling(HitPoints);
         }
     }
+
+    public void SetOwnership(int side)
+    {
+        PlayerSideIndex = side;
+        Renderer.sprite = SideSprites[side];
+    }
 }

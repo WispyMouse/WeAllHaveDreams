@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class TileLibrary : SingletonBase<TileLibrary>
 {
-    public const string Tile = "Tile";
-
     public GameplayTile[] Tiles;
     Dictionary<string, GameplayTile> NamesToTiles { get; set; } = new Dictionary<string, GameplayTile>();
 

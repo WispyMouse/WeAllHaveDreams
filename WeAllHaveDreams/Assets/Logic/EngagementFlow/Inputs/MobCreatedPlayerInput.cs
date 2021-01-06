@@ -19,7 +19,7 @@ public class MobCreatedPlayerInput : PlayerInput
     {
         if (TurnManager.CurrentPlayer.TotalResources >= ResourceCost)
         {
-            mobHolder.CreateNewUnit(MapMobPf, AtStructure.PlayerSideIndex, AtStructure.Position);
+            mobHolder.CreateNewUnit(AtStructure.Position, MapMobPf, AtStructure.PlayerSideIndex);
         }
         else
         {

@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class StructureLibrary : SingletonBase<StructureLibrary>
 {
-    public const string Structure = "Structure";
-
     public MapStructure[] Structures;
     Dictionary<string, MapStructure> NamesToStructures { get; set; } = new Dictionary<string, MapStructure>();
 
