@@ -4,10 +4,16 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 4874137132420122426
-    second: OW_Mob_KawaiiPastel
+    second: OW_Mob_0
   - first:
       213: -488143866049295664
-    second: OW_Mob_Plant
+    second: OW_Mob_1
+  - first:
+      213: -4436459265350964180
+    second: OW_RangedMob_0
+  - first:
+      213: -429869358869659851
+    second: OW_RangedMob_1
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -119,7 +125,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: OW_Mob_KawaiiPastel
+      name: OW_Mob_0
       rect:
         serializedVersion: 2
         x: 0
@@ -127,7 +133,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -140,11 +146,32 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: OW_Mob_Plant
+      name: OW_Mob_1
       rect:
         serializedVersion: 2
         x: 32
         y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0da88d87db3c939f0800000000000000
+      internalID: -488143866049295664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OW_RangedMob_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
         width: 32
         height: 32
       alignment: 0
@@ -154,8 +181,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0da88d87db3c939f0800000000000000
-      internalID: -488143866049295664
+      spriteID: c2ce344bdc78e62c0800000000000000
+      internalID: -4436459265350964180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OW_RangedMob_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53fbfbc781cc80af0800000000000000
+      internalID: -429869358869659851
       vertices: []
       indices: 
       edges: []

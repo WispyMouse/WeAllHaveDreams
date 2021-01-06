@@ -33,6 +33,11 @@
 			"Object": "SimpleMob"
 		},
 		{
+			"Color": "#3a327c",
+			"Type": "Mob",
+			"Object": "RangedMob"
+		},
+		{
 			"Color": "#1a7a3e",
 			"Type": "Ownership",
 			"Object": 0

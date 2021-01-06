@@ -155,12 +155,14 @@ public class AIInputPhaseController : MonoBehaviour
     {
         decimal projectedOutgoingDamage = MobHolderInstance.ProjectedDamages(acting, defending);
 
-        if (projectedOutgoingDamage > defending.HitPoints)
+        if (projectedOutgoingDamage >= defending.HitPoints)
         {
             return (int)defending.HitPoints + 10;
         }
 
-        return (int)projectedOutgoingDamage;
+        decimal returnDamage = MobHolderInstance.ProjectedDamages(defending, acting, defending.HitPoints - projectedOutgoingDamage);
+
+        return (int)(projectedOutgoingDamage - returnDamage);
     }
 
     int ScoreCapturing(MapMob acting, MapStructure structure)

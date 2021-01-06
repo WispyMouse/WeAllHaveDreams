@@ -76,9 +76,14 @@ public class MobHolder : MonoBehaviour
             DebugTextLog.AddTextToLog($"<mobname> deals {offensiveDamage} damage to <mobname>! ({defending.HitPoints} remaining)");
         }));
 
-        // TEMPORARY: This is where logic that checks to see if the unit can counter attack at this range would go
-        if (defending != null && defending.HitPoints > 0)
+        if (defending.HitPoints > 0)
         {
+            // if we're out of range, we can't counter
+            if (!CanAttackFromCurrentPosition(engaging, defending))
+            {
+                yield break;
+            }
+
             decimal returnDamage = ProjectedDamages(defending, engaging);
 
             yield return AttackAnimationHandlerInstance.UnitAttacksUnit(defending, engaging, new System.Action(() =>
@@ -92,6 +97,23 @@ public class MobHolder : MonoBehaviour
     public decimal ProjectedDamages(MapMob engaging, MapMob defending)
     {
         return engaging.CurrentAttackPower;
+    }
+
+    public decimal ProjectedDamages(MapMob engaging, MapMob defending, decimal overrideEngagingHealth)
+    {
+        return engaging.AttackPowerAtHitPoints(overrideEngagingHealth);
+    }
+
+    public bool CanAttackFromCurrentPosition(MapMob engaging, MapMob defending)
+    {
+        // TEMPORARY TODO: This should be hooked up with actual attack ranges, rather than this math
+        int engagementRange = Mathf.Abs(engaging.Position.x - defending.Position.x) + Mathf.Abs(engaging.Position.y - defending.Position.y);
+        if (engagementRange > defending.AttackRange)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public IEnumerator RemoveMob(MapMob toRemove)
