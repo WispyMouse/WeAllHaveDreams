@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class BellStructure : MapStructure
 {
-    public int CostOfUnit = 100;
-    public MapMob MapMobPf;
+    public List<string> SoldUnits;
 
-    public override PlayerInput DoLazyBuildingThing(MobHolder mobHolderInstance)
+    public override IEnumerable<PlayerInput> GetPossiblePlayerInputs(MobHolder mobHolderInstance)
     {
-        DebugTextLog.AddTextToLog($"Attempting to use {CostOfUnit} resources to make <mobname>");
-        return new MobCreatedPlayerInput(this, MapMobPf, CostOfUnit);
+        List<PlayerInput> possibleInputs = new List<PlayerInput>();
+        foreach (string soldUnit in SoldUnits)
+        {
+            MapMob matchingUnit = MobLibrary.GetMob(soldUnit);
+            possibleInputs.Add(new MobCreatedPlayerInput(this, matchingUnit, matchingUnit.ResourceCost));
+        }
+        return possibleInputs;
     }
 }

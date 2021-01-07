@@ -22,6 +22,8 @@ public class AttackWithMobInput : PlayerInput
         MoveTo = moveTo;
     }
 
+    public override string LongTitle => $"Attack with {Attacking.name} at {Target.name}" + (MoveTo.HasValue ? $" after moving to ({MoveTo.Value.x}, {MoveTo.Value.y})" : "");
+
     public override IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder)
     {
         if (!Attacking.CanAttack)

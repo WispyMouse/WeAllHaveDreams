@@ -11,6 +11,8 @@ public class DoesNothingPlayerInput : PlayerInput
         notActing = doingNothing;
     }
 
+    public override string LongTitle => $"Do nothing and exhaust all options";
+
     public override IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder)
     {
         notActing.ExhaustAllOptions();

@@ -13,6 +13,8 @@ public class MoveMobPlayerInput : PlayerInput
         To = to;
     }
 
+    public override string LongTitle => $"Move {Moving.name} to ({To.x}, {To.y})";
+
     public override IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder)
     {
         if (!Moving.CanMove)

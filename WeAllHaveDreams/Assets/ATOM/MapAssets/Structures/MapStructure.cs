@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public abstract class MapStructure : MapObject
@@ -42,7 +43,6 @@ public abstract class MapStructure : MapObject
         }
     }
     
-
     public void SetOwnership(int side)
     {
         this.PlayerSideIndex = side;
@@ -89,5 +89,10 @@ public abstract class MapStructure : MapObject
     public virtual PlayerInput DoLazyBuildingThing(MobHolder mobHolderInstance)
     {
         return null;
+    }
+
+    public virtual IEnumerable<PlayerInput> GetPossiblePlayerInputs(MobHolder mobHolderInstance)
+    {
+        return Enumerable.Empty<PlayerInput>();
     }
 }

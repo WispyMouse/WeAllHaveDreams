@@ -13,6 +13,8 @@ public class MobCapturesStructurePlayerInput : PlayerInput
         Target = target;
     }
 
+    public override string LongTitle => $"Capture a structure with {Capturing.name} at ({Target.Position.x}, {Target.Position.y}) ";
+
     public override IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder)
     {
         if (Capturing.Position != Target.Position)

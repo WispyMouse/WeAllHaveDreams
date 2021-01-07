@@ -132,7 +132,7 @@ public class MobHolder : MonoBehaviour
             return null;
         }
 
-        MapMob newMob = instance;
+        MapMob newMob = Instantiate(instance);
         newMob.SetPosition(location);
         newMob.SetUnitVisuals();
         newMob.ExhaustAllOptions();
@@ -142,7 +142,7 @@ public class MobHolder : MonoBehaviour
 
     public void CreateNewUnit(Vector3Int location, MapMob prefab, int teamIndex)
     {
-        MapMob newMob = CreateNewUnit(location, Instantiate(prefab));
+        MapMob newMob = CreateNewUnit(location, prefab);
         newMob.SetOwnership(teamIndex);
     }
 

@@ -240,5 +240,6 @@ MonoBehaviour:
   - {fileID: -3215136061973271139, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   - {fileID: -1366181965666896206, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   - {fileID: 8060736529220523392, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
-  CostOfUnit: 100
-  MapMobPf: {fileID: 4605866297119515865, guid: 455eb6148552663469f967e741c41fea, type: 3}
+  SoldUnits:
+  - SimpleMob
+  - RangedMob

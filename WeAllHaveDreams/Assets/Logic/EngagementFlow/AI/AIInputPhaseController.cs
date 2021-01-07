@@ -43,11 +43,14 @@ public class AIInputPhaseController : MonoBehaviour
         {
             if (!MobHolderInstance.MobOnPoint(curStructure.Position))
             {
-                PlayerInput toProcess = curStructure.DoLazyBuildingThing(MobHolderInstance);
+                IEnumerable<PlayerInput> possibleInputs = curStructure.GetPossiblePlayerInputs(MobHolderInstance)
+                    .Where(input => input.IsPossible());
 
-                if (toProcess != null)
+                // Zombie behavior: Randomly pick from possible inputs
+                if (possibleInputs.Any())
                 {
-                    yield return toProcess.Execute(MapHolderInstance, MobHolderInstance);
+                    PlayerInput randomInput = possibleInputs.ToList()[Random.Range(0, possibleInputs.Count())];
+                    yield return randomInput.Execute(MapHolderInstance, MobHolderInstance);
                 }
             }
         }

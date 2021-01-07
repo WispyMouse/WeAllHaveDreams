@@ -130,6 +130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerSideIndex: 0
   RemindersParent: {fileID: 2983392750727460144}
+  ResourceCost: 150
   AttackRange: 2
   HitPointsVisual: {fileID: 5175822157192068787}
   HitPointsNumerics:

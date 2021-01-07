@@ -9,6 +9,7 @@ public class MapMob : MapObject
     public Transform RemindersParent;
     public float ReminderHorizontalSpacing { get; set; } = .35f; // TEMPORARY: This is a UI thing and should be somewhere else
 
+    public int ResourceCost;
     public int MoveRange => 4; // TEMPORARY: Just a static move value
     public int AttackRange;
     public int SightRange => 4; // TEMPORARY: Testing value

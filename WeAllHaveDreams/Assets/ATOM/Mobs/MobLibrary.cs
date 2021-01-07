@@ -14,7 +14,7 @@ public class MobLibrary : SingletonBase<MobLibrary>
     {
         if (Singleton.NamesToMobs.TryGetValue(mobName, out MapMob foundMob))
         {
-            return Instantiate(foundMob);
+            return foundMob;
         }
 
         MapMob matchingMob = Singleton.Mobs.FirstOrDefault(mob => mob.name == mobName);
@@ -22,10 +22,10 @@ public class MobLibrary : SingletonBase<MobLibrary>
         if (matchingMob == null)
         {
             DebugTextLog.AddTextToLog($"Could not find a Mob in the Library with the name {mobName}. Returning a default.");
-            return Instantiate(Singleton.DefaultMob);
+            return Singleton.DefaultMob;
         }
 
         Singleton.NamesToMobs.Add(mobName, matchingMob);
-        return Instantiate(matchingMob);
+        return matchingMob;
     }
 }
