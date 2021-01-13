@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -30,6 +31,11 @@ public class ConfigurationLoadingEntrypoint : SingletonBase<ConfigurationLoading
 
     public static async Task LoadAllConfigurationData()
     {
+        JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All
+        };
+
         Singleton.configurationData = new HashSet<ConfigurationData>();
 
         DebugTextLog.AddTextToLog($"The configuration folder is at: {ConfigurationFolderPath}");
@@ -58,10 +64,17 @@ public class ConfigurationLoadingEntrypoint : SingletonBase<ConfigurationLoading
                 Type specifiedType = Type.GetType(baseData.ConfigurationType, true, true);
 
                 DebugTextLog.AddTextToLog($"Converting to {specifiedType}");
-                ConfigurationData specifiedData = JsonUtility.FromJson(fileText, specifiedType) as ConfigurationData;
+                ConfigurationData specifiedData = (ConfigurationData)JsonConvert.DeserializeObject(fileText, specifiedType);
 
                 Singleton.configurationData.Add(specifiedData);
                 DebugTextLog.AddTextToLog($"Processed!");
+
+                string message = specifiedData.GetConfigurationShortReport();
+
+                if (!string.IsNullOrEmpty(message))
+                {
+                    DebugTextLog.AddTextToLog(message);
+                }
             }
             catch (Exception e)
             {

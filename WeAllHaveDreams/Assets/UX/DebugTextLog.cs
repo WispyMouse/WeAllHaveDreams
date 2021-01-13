@@ -11,7 +11,7 @@ public class DebugTextLog : SingletonBase<DebugTextLog>
     public Text TextLog;
     List<string> ActiveText = new List<string>();
 
-    public static void AddTextToLog(string text)
+    public static void AddTextToLog(string text, DebugTextLogChannel channel = DebugTextLogChannel.Generic)
     {
         Singleton.ActiveText.Add(text);
 

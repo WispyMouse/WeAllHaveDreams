@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,15 +8,19 @@ namespace Configuration
 {
     public class FogVisibilityConfigurations : ConfigurationData
     {
-        public int FactionToShowFogFor;
-        public FogTurnHandlingEnum FogTurnHandlingMode;
-        public bool CoverMapInDarknessInitially;
+        public int FactionToShowFogFor { get; set; }
+        public bool CoverMapInDarknessInitially { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
+        public FogTurnHandlingEnum FogTurnHandlingMode { get; set; }
+        
         public FogVisibilityConfigurations() : base()
         {
-            FactionToShowFogFor = 0;
-            FogTurnHandlingMode = FogTurnHandlingEnum.ShowAllMap;
-            CoverMapInDarknessInitially = false;
+        }
+
+        public override string GetConfigurationShortReport()
+        {
+            return $"Mode: {FogTurnHandlingMode} // Faction: {FactionToShowFogFor} // Initial Darkness: {CoverMapInDarknessInitially}";
         }
 
         public bool ShouldShowMapView(int player)
