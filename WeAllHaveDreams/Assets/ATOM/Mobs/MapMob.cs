@@ -10,7 +10,7 @@ public class MapMob : MapObject
     public Transform RemindersParent;
     public float ReminderHorizontalSpacing { get; set; } = .35f; // TEMPORARY: This is a UI thing and should be somewhere else
 
-    public MobConfiguration Configuration;
+    public MobConfiguration Configuration { get; set; }
     public string Name => Configuration.Name;
     public string DevelopmentName => Configuration.DevelopmentName;
     public int ResourceCost => Configuration.ResourceCost;

@@ -7,6 +7,8 @@ public class MobHolder : MonoBehaviour
 {
     public List<MapMob> ActiveMobs { get; set; } = new List<MapMob>();
 
+    public StructureHolder StructureHolderInstance;
+
     public MovementHandler MovementHandlerInstance;
     public AttackHandler AttackAnimationHandlerInstance;
 
@@ -62,6 +64,7 @@ public class MobHolder : MonoBehaviour
             yield break;
         }
 
+        StructureHolderInstance.MobRemovedFromPoint(toMove.Position);
         yield return MovementHandlerInstance.UnitWalks(toMove, to);
 
         toMove.SetPosition(to);
@@ -98,12 +101,12 @@ public class MobHolder : MonoBehaviour
 
     public decimal ProjectedDamages(MapMob engaging, MapMob defending)
     {
-        return engaging.CurrentAttackPower;
+        return engaging.CurrentAttackPower * defending.DamageReductionRatio;
     }
 
     public decimal ProjectedDamages(MapMob engaging, MapMob defending, decimal overrideEngagingHealth)
     {
-        return engaging.AttackPowerAtHitPoints(overrideEngagingHealth);
+        return engaging.AttackPowerAtHitPoints(overrideEngagingHealth) * defending.DamageReductionRatio;
     }
 
     public bool CanAttackFromCurrentPosition(MapMob engaging, MapMob defending)
@@ -135,6 +138,7 @@ public class MobHolder : MonoBehaviour
         }
 
         MapMob newMob = Instantiate(prefab, MobParent);
+        newMob.LoadFromConfiguration(prefab.Configuration);
         newMob.SetPosition(location);
         newMob.SetUnitVisuals();
         newMob.ExhaustAllOptions();

@@ -95,4 +95,9 @@ public abstract class MapStructure : MapObject
     {
         return Enumerable.Empty<PlayerInput>();
     }
+
+    public void ClearCapture()
+    {
+        CurCapturePoints = MaxCapturePoints;
+    }
 }

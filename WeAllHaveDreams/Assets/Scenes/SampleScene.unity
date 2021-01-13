@@ -4776,6 +4776,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86262575cc7a0f64ab51184b7e9b712b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StructureHolderInstance: {fileID: 2100281718}
   MovementHandlerInstance: {fileID: 322355931}
   AttackAnimationHandlerInstance: {fileID: 322355932}
   MobParent: {fileID: 912113229}

@@ -107,7 +107,10 @@ public class TurnManager : SingletonBase<TurnManager>
 
         foreach (MapMob remove in shouldBeRemoved)
         {
+            Vector3Int position = remove.Position;
+
             yield return Singleton.MobHolderController.RemoveMob(remove);
+            Singleton.StructureHolderInstance.MobRemovedFromPoint(position);
         }
 
         Singleton.FogHolderController.UpdateVisibilityForPlayers(Singleton.MapHolderController, Singleton.MobHolderController);
