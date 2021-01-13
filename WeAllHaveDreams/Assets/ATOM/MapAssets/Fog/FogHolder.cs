@@ -21,7 +21,7 @@ public class FogHolder : MonoBehaviour
 
     public void Initialize(MapHolder mapHolderInstance)
     {
-        fogVisibilityConfigurations = ConfigurationLoadingEntrypoint.GetConfigurationData<Configuration.FogVisibilityConfigurations>();
+        fogVisibilityConfigurations = ConfigurationLoadingEntrypoint.GetConfigurationData<Configuration.FogVisibilityConfigurations>().First();
 
         AllTiles = new HashSet<Vector3Int>(mapHolderInstance.GetAllTiles());
 

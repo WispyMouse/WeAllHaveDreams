@@ -3274,7 +3274,7 @@ GameObject:
   m_Component:
   - component: {fileID: 912113229}
   m_Layer: 0
-  m_Name: Units
+  m_Name: Mobs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3636,10 +3636,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19f97f19ce6f742449fb2187733afb60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Mobs:
-  - {fileID: 4605866297119515865, guid: 455eb6148552663469f967e741c41fea, type: 3}
-  - {fileID: 5904624486721887523, guid: 557e53d61f4db5d4eb50580daf2066dc, type: 3}
-  DefaultMob: {fileID: 4605866297119515865, guid: 455eb6148552663469f967e741c41fea, type: 3}
+  MobBase: {fileID: 4605866297119515865, guid: 455eb6148552663469f967e741c41fea, type: 3}
 --- !u!1 &1166089049
 GameObject:
   m_ObjectHideFlags: 0
@@ -4775,6 +4772,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MovementHandlerInstance: {fileID: 322355931}
   AttackAnimationHandlerInstance: {fileID: 322355932}
+  MobParent: {fileID: 912113229}
 --- !u!114 &2100281718
 MonoBehaviour:
   m_ObjectHideFlags: 0

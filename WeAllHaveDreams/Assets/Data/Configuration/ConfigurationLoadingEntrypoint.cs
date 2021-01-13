@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -81,19 +82,20 @@ public class ConfigurationLoadingEntrypoint : SingletonBase<ConfigurationLoading
                 DebugTextLog.AddTextToLog($"Unable to process file! {e.Message}, {e.InnerException?.Message}");
             }
         }
+
+        await MobLibrary.LoadMobsFromConfiguration();
     }
 
-    public static T GetConfigurationData<T>() where T : ConfigurationData, new()
+    public static IEnumerable<T> GetConfigurationData<T>() where T : ConfigurationData, new()
     {
-        ConfigurationData matchingData = Singleton.configurationData.FirstOrDefault(data => data is T);
+        IEnumerable<ConfigurationData> matchingData = Singleton.configurationData.Where(data => data is T);
 
-        if (matchingData == null)
+        if (!matchingData.Any())
         {
-            DebugTextLog.AddTextToLog($"Configuration data did not have {typeof(T).ToString()}. Returning a default.");
-            matchingData = new T();
-            Singleton.configurationData.Add(matchingData);
+            DebugTextLog.AddTextToLog($"Configuration data did not have {typeof(T).ToString()}.", DebugTextLogChannel.ConfigurationError);
+            return null;
         }
 
-        return matchingData as T;
+        return matchingData.Select(md => md as T);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Configuration;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,10 +10,15 @@ public class MapMob : MapObject
     public Transform RemindersParent;
     public float ReminderHorizontalSpacing { get; set; } = .35f; // TEMPORARY: This is a UI thing and should be somewhere else
 
-    public int ResourceCost;
-    public int MoveRange => 4; // TEMPORARY: Just a static move value
-    public int AttackRange;
-    public int SightRange => 4; // TEMPORARY: Testing value
+    public MobConfiguration Configuration;
+    public string Name => Configuration.Name;
+    public string DevelopmentName => Configuration.DevelopmentName;
+    public int ResourceCost => Configuration.ResourceCost;
+    public int MoveRange => Configuration.MoveRange;
+    public int AttackRange => Configuration.AttackRange;
+    public int SightRange => Configuration.SightRange;
+    public decimal DamageOutputRatio => Configuration.DamageOutputRatio;
+    public decimal DamageReductionRatio => Configuration.DamageReductionRatio;
 
     // TEMPORARY: This should definitely be in its own class
     public SpriteRenderer HitPointsVisual;
@@ -34,8 +40,6 @@ public class MapMob : MapObject
         }
     }
     private decimal _hitPoints { get; set; } = 10.0M;
-
-    public decimal DamageRatio { get; set; } = .6M;
 
     public bool CanMove
     {
@@ -167,7 +171,7 @@ public class MapMob : MapObject
 
     public decimal AttackPowerAtHitPoints(decimal hitPoints)
     {
-        return System.Math.Ceiling(hitPoints) * DamageRatio;
+        return System.Math.Ceiling(hitPoints) * DamageOutputRatio;
     }
 
     public void UpdateHitPointVisual()
@@ -200,5 +204,11 @@ public class MapMob : MapObject
     {
         PlayerSideIndex = side;
         Renderer.sprite = SideSprites[side];
+    }
+
+    public void LoadFromConfiguration(Configuration.MobConfiguration configuration)
+    {
+        Configuration = configuration;
+        gameObject.name = Configuration.Name;
     }
 }

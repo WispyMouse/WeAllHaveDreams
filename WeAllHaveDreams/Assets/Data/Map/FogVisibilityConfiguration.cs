@@ -6,13 +6,14 @@ using UnityEngine;
 
 namespace Configuration
 {
+    [System.Serializable]
     public class FogVisibilityConfigurations : ConfigurationData
     {
-        public int FactionToShowFogFor { get; set; }
-        public bool CoverMapInDarknessInitially { get; set; }
+        public int FactionToShowFogFor;
+        public bool CoverMapInDarknessInitially;
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public FogTurnHandlingEnum FogTurnHandlingMode { get; set; }
+        public FogTurnHandlingEnum FogTurnHandlingMode;
         
         public FogVisibilityConfigurations() : base()
         {

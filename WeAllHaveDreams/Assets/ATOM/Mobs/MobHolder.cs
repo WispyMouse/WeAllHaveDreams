@@ -10,6 +10,8 @@ public class MobHolder : MonoBehaviour
     public MovementHandler MovementHandlerInstance;
     public AttackHandler AttackAnimationHandlerInstance;
 
+    public Transform MobParent;
+
     private void Awake()
     {
         LoadAllMobsFromScene();
@@ -124,7 +126,7 @@ public class MobHolder : MonoBehaviour
         yield return new WaitForEndOfFrame();
     }
 
-    public MapMob CreateNewUnit(Vector3Int location, MapMob instance)
+    public MapMob CreateNewUnit(Vector3Int location, MapMob prefab)
     {
         if (ActiveMobs.Any(mob => mob.Position == location))
         {
@@ -132,10 +134,11 @@ public class MobHolder : MonoBehaviour
             return null;
         }
 
-        MapMob newMob = Instantiate(instance);
+        MapMob newMob = Instantiate(prefab, MobParent);
         newMob.SetPosition(location);
         newMob.SetUnitVisuals();
         newMob.ExhaustAllOptions();
+        newMob.gameObject.SetActive(true);
         ActiveMobs.Add(newMob);
         return newMob;
     }

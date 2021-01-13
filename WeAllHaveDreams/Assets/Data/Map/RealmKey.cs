@@ -18,7 +18,7 @@ public struct RealmKey
         return StructureLibrary.GetStructure(Object);
     }
     
-    public MapMob GetMobInstance()
+    public MapMob GetMobPrefab()
     {
         return MobLibrary.GetMob(Object);
     }

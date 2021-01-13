@@ -43,7 +43,7 @@ public class MapHolder : MonoBehaviour
                         StructureHolderController.SetStructure(position, curKey.GetStructureInstance());
                         break;
                     case RealmKeyType.Mob:
-                        MobHolderController.CreateNewUnit(position, curKey.GetMobInstance());
+                        MobHolderController.CreateNewUnit(position, curKey.GetMobPrefab());
                         break;
                     case RealmKeyType.Ownership:
                         StructureHolderController.SetOwnership(position, curKey.GetTeam());

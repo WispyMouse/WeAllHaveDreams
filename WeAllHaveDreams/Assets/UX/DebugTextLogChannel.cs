@@ -7,5 +7,6 @@ public enum DebugTextLogChannel
     Generic,
     Gameplay,
     DebugLogging,
-    ConfigurationReport
+    ConfigurationReport,
+    ConfigurationError
 }
