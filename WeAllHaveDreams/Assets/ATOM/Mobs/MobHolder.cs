@@ -78,7 +78,7 @@ public class MobHolder : MonoBehaviour
         yield return AttackAnimationHandlerInstance.UnitAttacksUnit(engaging, defending, new System.Action(() =>
         {
             defending.HitPoints = System.Math.Max(0, defending.HitPoints - offensiveDamage);
-            DebugTextLog.AddTextToLog($"<mobname> deals {offensiveDamage} damage to <mobname>! ({defending.HitPoints} remaining)");
+            DebugTextLog.AddTextToLog($"{engaging.Name} deals {offensiveDamage} damage to {defending.Name}! ({defending.HitPoints} remaining)");
         }));
 
         if (defending.HitPoints > 0)
@@ -94,7 +94,7 @@ public class MobHolder : MonoBehaviour
             yield return AttackAnimationHandlerInstance.UnitAttacksUnit(defending, engaging, new System.Action(() =>
             {
                 engaging.HitPoints = System.Math.Max(0, engaging.HitPoints - returnDamage);
-                DebugTextLog.AddTextToLog($"<mobname> counters with {returnDamage} damage to <mobname>! ({engaging.HitPoints} remaining)");
+                DebugTextLog.AddTextToLog($"{defending.Name} counters with {returnDamage} damage to {engaging.Name}! ({engaging.HitPoints} remaining)");
             }));
         }
     }
@@ -123,7 +123,7 @@ public class MobHolder : MonoBehaviour
 
     public IEnumerator RemoveMob(MapMob toRemove)
     {
-        DebugTextLog.AddTextToLog("Removing <mobname> from the map");
+        DebugTextLog.AddTextToLog($"Removing {toRemove.Name} from the map");
         ActiveMobs.Remove(toRemove);
         Destroy(toRemove.gameObject);
         yield return new WaitForEndOfFrame();

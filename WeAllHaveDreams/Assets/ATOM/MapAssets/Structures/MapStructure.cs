@@ -59,7 +59,7 @@ public abstract class MapStructure : MapObject
     public void ProceedCapture(MapMob capturing)
     {
         int newCapturePoints = (int)System.Math.Max(0, CurCapturePoints - capturing.CurrentCapturePoints);
-        DebugTextLog.AddTextToLog($"Mob <mobname> captures; {CurCapturePoints} => {newCapturePoints}");
+        DebugTextLog.AddTextToLog($"Mob {capturing.Name} captures; {CurCapturePoints} => {newCapturePoints}");
         CurCapturePoints = newCapturePoints;
 
         if (CurCapturePoints <= 0)
