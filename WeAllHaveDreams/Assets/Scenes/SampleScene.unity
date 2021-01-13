@@ -3637,6 +3637,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MobBase: {fileID: 4605866297119515865, guid: 455eb6148552663469f967e741c41fea, type: 3}
+  BasicMobSprite:
+  - {fileID: 4874137132420122426, guid: a0a088b2f9edf3146b85f3dbc839cef8, type: 3}
+  - {fileID: -488143866049295664, guid: a0a088b2f9edf3146b85f3dbc839cef8, type: 3}
+  RangedMobSprite:
+  - {fileID: -4436459265350964180, guid: a0a088b2f9edf3146b85f3dbc839cef8, type: 3}
+  - {fileID: -429869358869659851, guid: a0a088b2f9edf3146b85f3dbc839cef8, type: 3}
 --- !u!1 &1166089049
 GameObject:
   m_ObjectHideFlags: 0

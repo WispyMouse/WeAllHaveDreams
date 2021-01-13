@@ -12,6 +12,9 @@ public class MobLibrary : SingletonBase<MobLibrary>
 
     public MapMob MobBase;
 
+    public Sprite[] BasicMobSprite;
+    public Sprite[] RangedMobSprite;
+
     public async static Task LoadMobsFromConfiguration()
     {
         Singleton.MobConfigurations = ConfigurationLoadingEntrypoint.GetConfigurationData<MobConfiguration>();
@@ -34,5 +37,18 @@ public class MobLibrary : SingletonBase<MobLibrary>
 
         DebugTextLog.AddTextToLog($"Could not find a Mob in the Library with the name {mobName}.", DebugTextLogChannel.ConfigurationError);
         return null;
+    }
+
+    public static Sprite GetMobSprite(string appearance, int side)
+    {
+        // TODO HACK: This is a temporary holdover spot so we don't need to figure out graphics loading
+        switch (appearance)
+        {
+            default:
+            case nameof(BasicMobSprite):
+                return Singleton.BasicMobSprite[side];
+            case nameof(RangedMobSprite):
+                return Singleton.RangedMobSprite[side];
+        }
     }
 }

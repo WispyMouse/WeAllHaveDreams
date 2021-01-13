@@ -49,6 +49,12 @@ namespace Configuration
         /// </summary>
         public decimal DamageReductionRatio;
 
+        /// <summary>
+        /// What sprite set does this Mob load in?
+        /// This is a temporary, hacky solution to having different visuals for Mobs.
+        /// </summary>
+        public string Appearance;
+
         public MobConfiguration() : base()
         {
         }

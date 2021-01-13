@@ -25,7 +25,6 @@ public class MapMob : MapObject
     public Sprite[] HitPointsNumerics;
 
     public SpriteRenderer Renderer;
-    public Sprite[] SideSprites;
 
     public decimal HitPoints
     {
@@ -189,7 +188,7 @@ public class MapMob : MapObject
 
     public void SetUnitVisuals()
     {
-        Renderer.sprite = SideSprites[PlayerSideIndex];
+        Renderer.sprite = MobLibrary.GetMobSprite(Configuration.Appearance, PlayerSideIndex);
     }
 
     public int CurrentCapturePoints
@@ -203,7 +202,7 @@ public class MapMob : MapObject
     public void SetOwnership(int side)
     {
         PlayerSideIndex = side;
-        Renderer.sprite = SideSprites[side];
+        Renderer.sprite = MobLibrary.GetMobSprite(Configuration.Appearance, PlayerSideIndex);
     }
 
     public void LoadFromConfiguration(Configuration.MobConfiguration configuration)
