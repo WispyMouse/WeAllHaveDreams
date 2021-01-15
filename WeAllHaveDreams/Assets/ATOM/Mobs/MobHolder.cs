@@ -7,6 +7,7 @@ public class MobHolder : MonoBehaviour
 {
     public List<MapMob> ActiveMobs { get; set; } = new List<MapMob>();
 
+    public MapHolder MapHolderInstance;
     public StructureHolder StructureHolderInstance;
 
     public MovementHandler MovementHandlerInstance;
@@ -68,7 +69,7 @@ public class MobHolder : MonoBehaviour
         yield return MovementHandlerInstance.UnitWalks(toMove, to);
 
         toMove.SetPosition(to);
-        DebugTextLog.AddTextToLog($"Unit <unitnamehere> moved to {{{to.x}, {to.y}, {to.z}}}");
+        DebugTextLog.AddTextToLog($"Unit {toMove.Name} moved to {{{to.x}, {to.y}, {to.z}}}");
     }
 
     public IEnumerator UnitEngagesUnit(MapMob engaging, MapMob defending)
@@ -84,7 +85,7 @@ public class MobHolder : MonoBehaviour
         if (defending.HitPoints > 0)
         {
             // if we're out of range, we can't counter
-            if (!CanAttackFromCurrentPosition(engaging, defending))
+            if (!CanAttackFromPosition(defending, engaging, defending.Position))
             {
                 yield break;
             }
@@ -109,16 +110,9 @@ public class MobHolder : MonoBehaviour
         return engaging.AttackPowerAtHitPoints(overrideEngagingHealth) * defending.DamageReductionRatio;
     }
 
-    public bool CanAttackFromCurrentPosition(MapMob engaging, MapMob defending)
+    public bool CanAttackFromPosition(MapMob possibleAttacker, MapMob defender, Vector3Int attackerPosition)
     {
-        // TEMPORARY TODO: This should be hooked up with actual attack ranges, rather than this math
-        int engagementRange = Mathf.Abs(engaging.Position.x - defending.Position.x) + Mathf.Abs(engaging.Position.y - defending.Position.y);
-        if (engagementRange > defending.AttackRange)
-        {
-            return false;
-        }
-
-        return true;
+        return MapHolderInstance.PotentialAttacks(possibleAttacker, attackerPosition).Contains(defender.Position);
     }
 
     public IEnumerator RemoveMob(MapMob toRemove)

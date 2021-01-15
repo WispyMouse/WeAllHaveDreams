@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,10 +12,14 @@ public class AIInputPhaseController : MonoBehaviour
     public StructureHolder StructureHolderInstance;
     public MapMeta MapMetaInstance;
 
-    public float TimeToWaitAfterSelectingUnit = .4f;
-    public float TimeToWaitAfterMovingUnit = .15f;
+    public Configuration.AIConfiguration AISettings;
 
     List<MapMob> mobsUndecided = new List<MapMob>();
+
+    public void LoadSettings()
+    {
+        AISettings = ConfigurationLoadingEntrypoint.GetConfigurationData<Configuration.AIConfiguration>().First();
+    }
 
     public void StartTurn()
     {
@@ -35,7 +39,7 @@ public class AIInputPhaseController : MonoBehaviour
             }
 
             UnitTurnPlan bestPlan = possiblePlans.OrderByDescending(plan => plan.Score).First();
-            DebugTextLog.AddTextToLog("determined best plan, acting");
+            DebugTextLog.AddTextToLog($"AI Plan: {bestPlan.DeterminedInput.LongTitle}, score {bestPlan.Score}");
             yield return bestPlan.DeterminedInput.Execute(MapHolderInstance, MobHolderInstance);
         }
 
@@ -61,7 +65,7 @@ public class AIInputPhaseController : MonoBehaviour
     UnitTurnPlan GetBestPersonalPlan(MapMob acting)
     {
         List<UnitTurnPlan> possiblePlans = new List<UnitTurnPlan>();
-        possiblePlans.Add(new UnitTurnPlan(new DoesNothingPlayerInput(acting), 0));
+        possiblePlans.Add(new UnitTurnPlan(new DoesNothingPlayerInput(acting), -100));
 
         // Get our current movement and possible hurt ranges
         IEnumerable<Vector3Int> movementRanges = MapHolderInstance.PotentialMoves(acting);
@@ -98,7 +102,10 @@ public class AIInputPhaseController : MonoBehaviour
                         continue;
                     }
 
-                    possiblePlans.Add(new UnitTurnPlan(new AttackWithMobInput(acting, inRange, emptyEngagementTiles.First()), ScoreEngagement(acting, inRange)));
+                    foreach (Vector3Int validEngagementTile in emptyEngagementTiles)
+                    {
+                        possiblePlans.Add(new UnitTurnPlan(new AttackWithMobInput(acting, inRange, emptyEngagementTiles.First()), ScoreEngagement(acting, inRange, validEngagementTile)));
+                    }
                 }
             }
         }        
@@ -144,7 +151,7 @@ public class AIInputPhaseController : MonoBehaviour
                     }
 
                     int distanceModifier = ii;
-                    possiblePlans.Add(new UnitTurnPlan(new MoveMobPlayerInput(acting, path[ii]), Mathf.FloorToInt((ScoreCapturing(acting, structure) - distanceModifier) * .25f)));
+                    possiblePlans.Add(new UnitTurnPlan(new MoveMobPlayerInput(acting, path[ii]), Mathf.FloorToInt((float)(ScoreCapturing(acting, structure) - (distanceModifier * 4)) * .1f)));
 
                     break;
                 }
@@ -154,7 +161,7 @@ public class AIInputPhaseController : MonoBehaviour
         return possiblePlans.OrderByDescending(plan => plan.Score).First();
     }
 
-    int ScoreEngagement(MapMob acting, MapMob defending)
+    decimal ScoreEngagement(MapMob acting, MapMob defending, Vector3Int attackFrom)
     {
         decimal projectedOutgoingDamage = MobHolderInstance.ProjectedDamages(acting, defending);
 
@@ -163,21 +170,26 @@ public class AIInputPhaseController : MonoBehaviour
             return (int)defending.HitPoints + 10;
         }
 
+        if (!MobHolderInstance.CanAttackFromPosition(defending, acting, defending.Position))
+        {
+            return (int)projectedOutgoingDamage;
+        }
+
         decimal returnDamage = MobHolderInstance.ProjectedDamages(defending, acting, defending.HitPoints - projectedOutgoingDamage);
 
         return (int)(projectedOutgoingDamage - returnDamage);
     }
 
-    int ScoreCapturing(MapMob acting, MapStructure structure)
+    decimal ScoreCapturing(MapMob acting, MapStructure structure)
     {
         decimal projectedCapturePower = acting.CurrentCapturePoints;
 
         if (projectedCapturePower > structure.CurCapturePoints)
         {
-            return structure.CurCapturePoints + structure.CaptureImportance;
+            return structure.CaptureImportance * 10; // TEMPORARY: Finishing a capture is valuable
         }
 
-        return (int)projectedCapturePower + structure.CaptureImportance;
+        return (projectedCapturePower * .2M) + structure.CaptureImportance;
     }
 
     public void StopAllInputs()

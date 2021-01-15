@@ -36,6 +36,7 @@ public class TurnManager : SingletonBase<TurnManager>
 
         PlayerSide aiControlledPlayerSide = new PlayerSide() { Name = "AI Player", PlayerSideIndex = 1, HumanControlled = false, TotalResources = 100 };
         playerSides.Add(aiControlledPlayerSide.PlayerSideIndex, aiControlledPlayerSide);
+        AIInputPhaseControllerInstance.LoadSettings();
 
         FogHolderController.Initialize(MapHolderController);
 
