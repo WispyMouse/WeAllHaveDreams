@@ -7,8 +7,13 @@ public class MobHolder : MonoBehaviour
 {
     public List<MapMob> ActiveMobs { get; set; } = new List<MapMob>();
 
+    public MapHolder MapHolderInstance;
+    public StructureHolder StructureHolderInstance;
+
     public MovementHandler MovementHandlerInstance;
     public AttackHandler AttackAnimationHandlerInstance;
+
+    public Transform MobParent;
 
     private void Awake()
     {
@@ -60,10 +65,11 @@ public class MobHolder : MonoBehaviour
             yield break;
         }
 
+        StructureHolderInstance.MobRemovedFromPoint(toMove.Position);
         yield return MovementHandlerInstance.UnitWalks(toMove, to);
 
         toMove.SetPosition(to);
-        DebugTextLog.AddTextToLog($"Unit <unitnamehere> moved to {{{to.x}, {to.y}, {to.z}}}");
+        DebugTextLog.AddTextToLog($"Unit {toMove.Name} moved to {{{to.x}, {to.y}, {to.z}}}");
     }
 
     public IEnumerator UnitEngagesUnit(MapMob engaging, MapMob defending)
@@ -73,13 +79,13 @@ public class MobHolder : MonoBehaviour
         yield return AttackAnimationHandlerInstance.UnitAttacksUnit(engaging, defending, new System.Action(() =>
         {
             defending.HitPoints = System.Math.Max(0, defending.HitPoints - offensiveDamage);
-            DebugTextLog.AddTextToLog($"<mobname> deals {offensiveDamage} damage to <mobname>! ({defending.HitPoints} remaining)");
+            DebugTextLog.AddTextToLog($"{engaging.Name} deals {offensiveDamage} damage to {defending.Name}! ({defending.HitPoints} remaining)");
         }));
 
         if (defending.HitPoints > 0)
         {
             // if we're out of range, we can't counter
-            if (!CanAttackFromCurrentPosition(engaging, defending))
+            if (!CanAttackFromPosition(defending, engaging, defending.Position))
             {
                 yield break;
             }
@@ -89,42 +95,35 @@ public class MobHolder : MonoBehaviour
             yield return AttackAnimationHandlerInstance.UnitAttacksUnit(defending, engaging, new System.Action(() =>
             {
                 engaging.HitPoints = System.Math.Max(0, engaging.HitPoints - returnDamage);
-                DebugTextLog.AddTextToLog($"<mobname> counters with {returnDamage} damage to <mobname>! ({engaging.HitPoints} remaining)");
+                DebugTextLog.AddTextToLog($"{defending.Name} counters with {returnDamage} damage to {engaging.Name}! ({engaging.HitPoints} remaining)");
             }));
         }
     }
 
     public decimal ProjectedDamages(MapMob engaging, MapMob defending)
     {
-        return engaging.CurrentAttackPower;
+        return engaging.CurrentAttackPower * defending.DamageReductionRatio;
     }
 
     public decimal ProjectedDamages(MapMob engaging, MapMob defending, decimal overrideEngagingHealth)
     {
-        return engaging.AttackPowerAtHitPoints(overrideEngagingHealth);
+        return engaging.AttackPowerAtHitPoints(overrideEngagingHealth) * defending.DamageReductionRatio;
     }
 
-    public bool CanAttackFromCurrentPosition(MapMob engaging, MapMob defending)
+    public bool CanAttackFromPosition(MapMob possibleAttacker, MapMob defender, Vector3Int attackerPosition)
     {
-        // TEMPORARY TODO: This should be hooked up with actual attack ranges, rather than this math
-        int engagementRange = Mathf.Abs(engaging.Position.x - defending.Position.x) + Mathf.Abs(engaging.Position.y - defending.Position.y);
-        if (engagementRange > defending.AttackRange)
-        {
-            return false;
-        }
-
-        return true;
+        return MapHolderInstance.PotentialAttacks(possibleAttacker, attackerPosition).Contains(defender.Position);
     }
 
     public IEnumerator RemoveMob(MapMob toRemove)
     {
-        DebugTextLog.AddTextToLog("Removing <mobname> from the map");
+        DebugTextLog.AddTextToLog($"Removing {toRemove.Name} from the map");
         ActiveMobs.Remove(toRemove);
         Destroy(toRemove.gameObject);
         yield return new WaitForEndOfFrame();
     }
 
-    public MapMob CreateNewUnit(Vector3Int location, MapMob instance)
+    public MapMob CreateNewUnit(Vector3Int location, MapMob prefab)
     {
         if (ActiveMobs.Any(mob => mob.Position == location))
         {
@@ -132,10 +131,12 @@ public class MobHolder : MonoBehaviour
             return null;
         }
 
-        MapMob newMob = Instantiate(instance);
+        MapMob newMob = Instantiate(prefab, MobParent);
+        newMob.LoadFromConfiguration(prefab.Configuration);
         newMob.SetPosition(location);
         newMob.SetUnitVisuals();
         newMob.ExhaustAllOptions();
+        newMob.gameObject.SetActive(true);
         ActiveMobs.Add(newMob);
         return newMob;
     }

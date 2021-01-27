@@ -1,0 +1,12 @@
+{
+  "ConfigurationType": "Configuration.MobConfiguration",
+  "Name": "RangedMob",
+  "DevelopmentName": "RangedMob",
+  "ResourceCost": 150,
+  "MoveRange": 3,
+  "SightRange": 4,
+  "AttackRange": 2,
+  "DamageOutputRatio": 0.35,
+  "DamageReductionRatio": 1.1,
+  "Appearance": "RangedMobSprite"
+}

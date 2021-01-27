@@ -5,9 +5,9 @@ using UnityEngine;
 public class UnitTurnPlan
 {
     public PlayerInput DeterminedInput { get; set; }
-    public int Score { get; set; }
+    public decimal Score { get; set; }
 
-    public UnitTurnPlan(PlayerInput fromInput, int determinedScore)
+    public UnitTurnPlan(PlayerInput fromInput, decimal determinedScore)
     {
         DeterminedInput = fromInput;
         Score = determinedScore;

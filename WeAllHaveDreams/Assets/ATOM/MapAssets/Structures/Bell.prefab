@@ -216,7 +216,7 @@ MonoBehaviour:
   - {fileID: -3571065555159573361, guid: 451ddd0aedb6bd6468edc8be1949d3f4, type: 3}
   - {fileID: 7638030212143318558, guid: 451ddd0aedb6bd6468edc8be1949d3f4, type: 3}
   ContributedResourcesPerTurn: 50
-  CaptureImportance: 10
+  CaptureImportance: 2
   CapturePointsVisual: {fileID: 249596871456793616}
   CapturePointsNumerics:
   - {fileID: -1439962401544170818, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}

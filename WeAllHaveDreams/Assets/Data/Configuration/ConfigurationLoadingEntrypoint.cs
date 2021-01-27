@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Configuration;
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -30,6 +32,11 @@ public class ConfigurationLoadingEntrypoint : SingletonBase<ConfigurationLoading
 
     public static async Task LoadAllConfigurationData()
     {
+        JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All
+        };
+
         Singleton.configurationData = new HashSet<ConfigurationData>();
 
         DebugTextLog.AddTextToLog($"The configuration folder is at: {ConfigurationFolderPath}");
@@ -58,29 +65,37 @@ public class ConfigurationLoadingEntrypoint : SingletonBase<ConfigurationLoading
                 Type specifiedType = Type.GetType(baseData.ConfigurationType, true, true);
 
                 DebugTextLog.AddTextToLog($"Converting to {specifiedType}");
-                ConfigurationData specifiedData = JsonUtility.FromJson(fileText, specifiedType) as ConfigurationData;
+                ConfigurationData specifiedData = (ConfigurationData)JsonConvert.DeserializeObject(fileText, specifiedType);
 
                 Singleton.configurationData.Add(specifiedData);
                 DebugTextLog.AddTextToLog($"Processed!");
+
+                string message = specifiedData.GetConfigurationShortReport();
+
+                if (!string.IsNullOrEmpty(message))
+                {
+                    DebugTextLog.AddTextToLog(message);
+                }
             }
             catch (Exception e)
             {
                 DebugTextLog.AddTextToLog($"Unable to process file! {e.Message}, {e.InnerException?.Message}");
             }
         }
+
+        await MobLibrary.LoadMobsFromConfiguration();
     }
 
-    public static T GetConfigurationData<T>() where T : ConfigurationData, new()
+    public static IEnumerable<T> GetConfigurationData<T>() where T : ConfigurationData, new()
     {
-        ConfigurationData matchingData = Singleton.configurationData.FirstOrDefault(data => data is T);
+        IEnumerable<ConfigurationData> matchingData = Singleton.configurationData.Where(data => data is T);
 
-        if (matchingData == null)
+        if (!matchingData.Any())
         {
-            DebugTextLog.AddTextToLog($"Configuration data did not have {typeof(T).ToString()}. Returning a default.");
-            matchingData = new T();
-            Singleton.configurationData.Add(matchingData);
+            DebugTextLog.AddTextToLog($"Configuration data did not have {typeof(T).ToString()}.", DebugTextLogChannel.ConfigurationError);
+            return null;
         }
 
-        return matchingData as T;
+        return matchingData.Select(md => md as T);
     }
 }

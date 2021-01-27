@@ -15,7 +15,7 @@ public class MovementHandler : MonoBehaviour
 
         if (path == null)
         {
-            DebugTextLog.AddTextToLog("<mobname> tried to move to a tile that a path couldn't be found for.");
+            DebugTextLog.AddTextToLog($"{moving.Name} tried to move to a tile that a path couldn't be found for.");
             yield break;
         }
 

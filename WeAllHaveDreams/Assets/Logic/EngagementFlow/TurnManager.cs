@@ -36,6 +36,7 @@ public class TurnManager : SingletonBase<TurnManager>
 
         PlayerSide aiControlledPlayerSide = new PlayerSide() { Name = "AI Player", PlayerSideIndex = 1, HumanControlled = false, TotalResources = 100 };
         playerSides.Add(aiControlledPlayerSide.PlayerSideIndex, aiControlledPlayerSide);
+        AIInputPhaseControllerInstance.LoadSettings();
 
         FogHolderController.Initialize(MapHolderController);
 
@@ -107,7 +108,10 @@ public class TurnManager : SingletonBase<TurnManager>
 
         foreach (MapMob remove in shouldBeRemoved)
         {
+            Vector3Int position = remove.Position;
+
             yield return Singleton.MobHolderController.RemoveMob(remove);
+            Singleton.StructureHolderInstance.MobRemovedFromPoint(position);
         }
 
         Singleton.FogHolderController.UpdateVisibilityForPlayers(Singleton.MapHolderController, Singleton.MobHolderController);

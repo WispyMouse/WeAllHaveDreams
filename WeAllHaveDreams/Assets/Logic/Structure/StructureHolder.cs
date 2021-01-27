@@ -64,4 +64,14 @@ public class StructureHolder : MonoBehaviour
             structureOnPoint.SetOwnership(team);
         }
     }
+
+    public void MobRemovedFromPoint(Vector3Int position)
+    {
+        MapStructure structure = StructureOnPoint(position);
+
+        if (structure != null)
+        {
+            structure.ClearCapture();
+        }
+    }
 }

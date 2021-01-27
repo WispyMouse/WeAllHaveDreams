@@ -98,6 +98,14 @@ public class UnitMovementPhase : InputGameplayPhase
             return true;
         }
 
+        // Can we attack them from where we're standing?
+        IEnumerable<Vector3Int> standingAttacks = MapHolderInstance.PotentialAttacks(selectedUnit, mob.Position);
+        if (standingAttacks.Contains(mob.Position))
+        {
+            nextPhase = InputResolutionPhaseInstance.ResolveThis(new AttackWithMobInput(selectedUnit, mob), this);
+            return true;
+        }
+
         // What tile can we attack this unit from?
         // We want to pick the closest one to the target out of our possibilities, that is still in this units movement range
         IEnumerable<Vector3Int> attackingRanges = MapHolderInstance.CanHitFrom(selectedUnit, mob.Position);

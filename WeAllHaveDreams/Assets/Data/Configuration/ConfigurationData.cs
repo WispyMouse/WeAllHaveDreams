@@ -10,4 +10,9 @@ public class ConfigurationData
     {
         ConfigurationType = this.GetType().ToString();
     }
+
+    public virtual string GetConfigurationShortReport()
+    {
+        return string.Empty;
+    }
 }

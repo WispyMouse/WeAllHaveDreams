@@ -1,14 +1,32 @@
-﻿using System.Collections;
+﻿using Configuration;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class MobLibrary : SingletonBase<MobLibrary>
 {
-    public MapMob[] Mobs;
+    IEnumerable<MobConfiguration> MobConfigurations { get; set; }
     Dictionary<string, MapMob> NamesToMobs { get; set; } = new Dictionary<string, MapMob>();
 
-    public MapMob DefaultMob;
+    public MapMob MobBase;
+
+    public Sprite[] BasicMobSprite;
+    public Sprite[] RangedMobSprite;
+
+    public async static Task LoadMobsFromConfiguration()
+    {
+        Singleton.MobConfigurations = ConfigurationLoadingEntrypoint.GetConfigurationData<MobConfiguration>();
+
+        foreach (MobConfiguration curConfiguration in Singleton.MobConfigurations)
+        {
+            MapMob thisMob = Instantiate(Singleton.MobBase);
+            thisMob.LoadFromConfiguration(curConfiguration);
+            thisMob.gameObject.SetActive(false);
+            Singleton.NamesToMobs.Add(thisMob.DevelopmentName, thisMob);
+        }
+    }
 
     public static MapMob GetMob(string mobName)
     {
@@ -17,15 +35,20 @@ public class MobLibrary : SingletonBase<MobLibrary>
             return foundMob;
         }
 
-        MapMob matchingMob = Singleton.Mobs.FirstOrDefault(mob => mob.name == mobName);
+        DebugTextLog.AddTextToLog($"Could not find a Mob in the Library with the name {mobName}.", DebugTextLogChannel.ConfigurationError);
+        return null;
+    }
 
-        if (matchingMob == null)
+    public static Sprite GetMobSprite(string appearance, int side)
+    {
+        // TODO HACK: This is a temporary holdover spot so we don't need to figure out graphics loading
+        switch (appearance)
         {
-            DebugTextLog.AddTextToLog($"Could not find a Mob in the Library with the name {mobName}. Returning a default.");
-            return Singleton.DefaultMob;
+            default:
+            case nameof(BasicMobSprite):
+                return Singleton.BasicMobSprite[side];
+            case nameof(RangedMobSprite):
+                return Singleton.RangedMobSprite[side];
         }
-
-        Singleton.NamesToMobs.Add(mobName, matchingMob);
-        return matchingMob;
     }
 }

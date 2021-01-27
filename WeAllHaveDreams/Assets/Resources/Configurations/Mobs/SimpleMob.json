@@ -1,0 +1,12 @@
+{
+  "ConfigurationType": "Configuration.MobConfiguration",
+  "Name": "SimpleMob",
+  "DevelopmentName": "SimpleMob",
+  "ResourceCost": 100,
+  "MoveRange": 3,
+  "SightRange": 4,
+  "AttackRange": 1,
+  "DamageOutputRatio": 0.4,
+  "DamageReductionRatio": 1,
+  "Appearance": "SimpleMobSprite"
+}
