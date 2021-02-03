@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2116256686910681373}
-  - component: {fileID: -5422587477665786768}
+  - component: {fileID: 6386683235800390737}
   m_Layer: 0
   m_Name: HealTile
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-5422587477665786768
+--- !u!114 &6386683235800390737
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,7 +41,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2116256686910681372}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47ab22b99ab5d5740a42c0d8c8b3f40a, type: 3}
+  m_Script: {fileID: 11500000, guid: c36f344668a446a43977a06dd47659a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2116256688283198419

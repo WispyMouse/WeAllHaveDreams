@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FeatureHolder : MonoBehaviour
@@ -14,6 +15,18 @@ public class FeatureHolder : MonoBehaviour
         toSet.transform.SetParent(FeaturesParent);
         toSet.SetPosition(position);
         ActiveFeatures.Add(toSet);
+    }
+
+    public MapFeature FeatureOnPoint(Vector3Int position)
+    {
+        MapFeature featureOnPoint;
+
+        if ((featureOnPoint = ActiveFeatures.FirstOrDefault(feature => feature.Position == position)) != null)
+        {
+            return featureOnPoint;
+        }
+
+        return null;
     }
 
     public void ClearAllFeatures()

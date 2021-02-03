@@ -17,4 +17,11 @@ public class MapObject : MonoBehaviour
         Position = toPosition;
         transform.position = toPosition;
     }
+
+    public virtual bool HasStartOfTurnEffects => false;
+
+    public virtual void StartOfTurnEffects(MapMob mobOnTile)
+    {
+
+    }
 }

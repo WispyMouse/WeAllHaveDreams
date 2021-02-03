@@ -22,6 +22,7 @@ public class TurnManager : SingletonBase<TurnManager>
 
     public MobHolder MobHolderController;
     public StructureHolder StructureHolderInstance;
+    public FeatureHolder FeatureHolderInstance;
 
     public PlayerInputPhaseController PlayerInputPhaseControllerInstance;
     public AIInputPhaseController AIInputPhaseControllerInstance;
@@ -62,6 +63,7 @@ public class TurnManager : SingletonBase<TurnManager>
             curMob.RefreshForStartOfTurn();
         }
 
+        yield return ResolveStartOfTurnEffects();
         yield return ResolveEffects();
 
         if (CurrentPlayer.HumanControlled)
@@ -92,6 +94,22 @@ public class TurnManager : SingletonBase<TurnManager>
         {
             Singleton.StartCoroutine(Singleton.StartTurnOfPlayerAtIndex(Singleton.playerSides.Keys.Min()));
         }
+    }
+
+    public static IEnumerator ResolveStartOfTurnEffects()
+    {
+        // HACK: For now, ask each Feature under each of our Mobs if they have a start of turn effect
+        foreach (MapMob curMob in Singleton.MobHolderController.MobsOnTeam(CurrentPlayer.PlayerSideIndex))
+        {
+            MapFeature onFeature = Singleton.FeatureHolderInstance.FeatureOnPoint(curMob.Position);
+
+            if (onFeature != null && onFeature.HasStartOfTurnEffects)
+            {
+                onFeature.StartOfTurnEffects(curMob);
+            }
+        }
+
+        yield break;
     }
 
     public static IEnumerator ResolveEffects()

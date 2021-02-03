@@ -3657,7 +3657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Features:
-  - {fileID: -5422587477665786768, guid: 39a2ca9a71a730746bf2e08744c9133b, type: 3}
+  - {fileID: 6386683235800390737, guid: 39a2ca9a71a730746bf2e08744c9133b, type: 3}
   - {fileID: 2197523735503376789, guid: 9e3165e8952830249a71beeeb1ac448a, type: 3}
   DefaultFeature: {fileID: 2197523735503376789, guid: 9e3165e8952830249a71beeeb1ac448a, type: 3}
 --- !u!1 &1166089049
@@ -4727,6 +4727,7 @@ MonoBehaviour:
   MapHolderController: {fileID: 2100281716}
   MobHolderController: {fileID: 2100281717}
   StructureHolderInstance: {fileID: 2100281718}
+  FeatureHolderInstance: {fileID: 2100281719}
   PlayerInputPhaseControllerInstance: {fileID: 198427621}
   AIInputPhaseControllerInstance: {fileID: 2085925680}
   SideStatisticsInstance: {fileID: 183438005}

@@ -26,6 +26,7 @@ public class MapMob : MapObject
 
     public SpriteRenderer Renderer;
 
+    public decimal MaxHitPoints { get; set; } = 10.0M;
     public decimal HitPoints
     {
         get
@@ -175,7 +176,7 @@ public class MapMob : MapObject
 
     public void UpdateHitPointVisual()
     {
-        if (HitPoints == 10)
+        if (HitPoints == MaxHitPoints)
         {
             HitPointsVisual.gameObject.SetActive(false);
             return;
