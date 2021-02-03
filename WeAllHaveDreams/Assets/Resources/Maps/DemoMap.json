@@ -28,6 +28,16 @@
 			"Object": "Bell"
 		},
 		{
+			"Color": "#f7bbf4",
+			"Type": "Feature",
+			"Object": "HealTile"
+		},
+		{
+			"Color": "#ab1212",
+			"Type": "Feature",
+			"Object": "WatchTower"
+		},
+		{
 			"Color": "#92dcba",
 			"Type": "Mob",
 			"Object": "SimpleMob"

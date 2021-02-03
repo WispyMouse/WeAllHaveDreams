@@ -14,6 +14,7 @@ public class MapHolder : MonoBehaviour
     public MobHolder MobHolderController;
     public FogHolder FogHolderController;
     public StructureHolder StructureHolderController;
+    public FeatureHolder FeatureHolderController;
 
     public GameplayTile GetGameplayTile(Vector3Int position) => activeMap.GetGameplayTile(position);
     public IEnumerable<Vector3Int> GetAllTiles() => activeMap.GetAllTiles();
@@ -45,6 +46,9 @@ public class MapHolder : MonoBehaviour
                     case RealmKeyType.Mob:
                         MobHolderController.CreateNewUnit(position, curKey.GetMobPrefab());
                         break;
+                    case RealmKeyType.Feature:
+                        FeatureHolderController.SetFeature(position, curKey.GetFeatureInstance());
+                        break;
                     case RealmKeyType.Ownership:
                         StructureHolderController.SetOwnership(position, curKey.GetTeam());
 
@@ -75,5 +79,6 @@ public class MapHolder : MonoBehaviour
         FogHolderController.ClearAllTiles();
         MobHolderController.ClearAllMobs();
         StructureHolderController.ClearAllStructures();
+        FeatureHolderController.ClearAllFeatures();
     }
 }
