@@ -3644,6 +3644,9 @@ MonoBehaviour:
   RangedMobSprite:
   - {fileID: -4436459265350964180, guid: a0a088b2f9edf3146b85f3dbc839cef8, type: 3}
   - {fileID: -429869358869659851, guid: a0a088b2f9edf3146b85f3dbc839cef8, type: 3}
+  EngineerMobSprite:
+  - {fileID: 7223737727636295290, guid: a0a088b2f9edf3146b85f3dbc839cef8, type: 3}
+  - {fileID: 3779164993360873225, guid: a0a088b2f9edf3146b85f3dbc839cef8, type: 3}
 --- !u!114 &1120445404
 MonoBehaviour:
   m_ObjectHideFlags: 0

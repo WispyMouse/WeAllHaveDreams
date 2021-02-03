@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -55,6 +56,12 @@ namespace Configuration
         /// </summary>
         public string Appearance;
 
+        /// <summary>
+        /// What special abilities does this Mob have?
+        /// Treated as empty/none if not present.
+        /// </summary>
+        public IEnumerable<MobConfigurationAbility> Abilities;
+
         public MobConfiguration() : base()
         {
         }
@@ -76,6 +83,26 @@ namespace Configuration
             stats.Add(nameof(DamageReductionRatio), new MobStat(nameof(DamageReductionRatio), DamageReductionRatio));
 
             return stats;
+        }
+
+        public IEnumerable<MobConfigurationAbility> GetSaturatedAbilities()
+        {
+            if (Abilities == null)
+            {
+                return new List<MobConfigurationAbility>();
+            }
+
+            List<MobConfigurationAbility> saturatedAbilities = new List<MobConfigurationAbility>();
+
+            foreach (MobConfigurationAbility curAbility in Abilities)
+            {
+                Type abilityType = Type.GetType(curAbility.AbilityName);
+                MobConfigurationAbility boxedType = Activator.CreateInstance(abilityType) as MobConfigurationAbility;
+                boxedType.Load(curAbility);
+                saturatedAbilities.Add(boxedType);
+            }
+
+            return saturatedAbilities;
         }
     }
 }

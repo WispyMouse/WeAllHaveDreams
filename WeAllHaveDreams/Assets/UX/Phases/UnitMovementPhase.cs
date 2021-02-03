@@ -42,6 +42,16 @@ public class UnitMovementPhase : InputGameplayPhase
         {
             DebugTextLog.AddTextToLog("Press 'C' to capture this structure");
         }
+
+        foreach (MobConfigurationAbility curAbility in selectedUnit.Abilities)
+        {
+            IEnumerable<PlayerInput> possibleActions = curAbility.GetPossiblePlayerInputs(selectedUnit);
+
+            if (possibleActions.Any())
+            {
+                DebugTextLog.AddTextToLog($"This is where {curAbility.AbilityName} will be usable.");
+            }
+        }
     }
 
     public override void EndPhase()

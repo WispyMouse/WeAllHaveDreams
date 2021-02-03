@@ -5,6 +5,7 @@ using UnityEngine;
 public class MapObject : MonoBehaviour
 {
     public Vector3Int Position { get; set; }
+    public virtual IEnumerable<string> Tags { get; }
 
     public void SettleIntoGrid()
     {

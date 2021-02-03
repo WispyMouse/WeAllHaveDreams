@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class MapFeature : MapObject
 {
-
+    public int Cost { get; set; }
 }

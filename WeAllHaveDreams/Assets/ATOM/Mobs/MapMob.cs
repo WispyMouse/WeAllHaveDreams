@@ -21,6 +21,7 @@ public class MapMob : MapObject
     public decimal DamageOutputRatio => GetCurrentMobStat(nameof(DamageOutputRatio));
     public decimal DamageReductionRatio => GetCurrentMobStat(nameof(DamageReductionRatio));
     Dictionary<string, MobStat> MobStats { get; set; } = new Dictionary<string, MobStat>();
+    public IEnumerable<MobConfigurationAbility> Abilities { get; private set; } = new List<MobConfigurationAbility>();
 
     public IEnumerable<StatAdjustment> ActiveStatAdjustments { get; private set; } = new List<StatAdjustment>();
 
@@ -216,6 +217,7 @@ public class MapMob : MapObject
         gameObject.name = Configuration.Name;
 
         MobStats = configuration.GetAllMobStats();
+        Abilities = configuration.GetSaturatedAbilities();
     }
 
     public void CalculateStandingStatAdjustments(MapFeature onFeature)
