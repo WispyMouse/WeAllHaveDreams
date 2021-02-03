@@ -13,12 +13,16 @@ public class MapMob : MapObject
     public MobConfiguration Configuration { get; set; }
     public string Name => Configuration.Name;
     public string DevelopmentName => Configuration.DevelopmentName;
-    public int ResourceCost => Configuration.ResourceCost;
-    public int MoveRange => Configuration.MoveRange;
-    public int AttackRange => Configuration.AttackRange;
-    public int SightRange => Configuration.SightRange;
-    public decimal DamageOutputRatio => Configuration.DamageOutputRatio;
-    public decimal DamageReductionRatio => Configuration.DamageReductionRatio;
+
+    public int ResourceCost => (int)(GetCurrentMobStat(nameof(ResourceCost)));
+    public int MoveRange => (int)(GetCurrentMobStat(nameof(MoveRange)));
+    public int AttackRange => (int)(GetCurrentMobStat(nameof(AttackRange)));
+    public int SightRange => (int)(GetCurrentMobStat(nameof(SightRange)));
+    public decimal DamageOutputRatio => GetCurrentMobStat(nameof(DamageOutputRatio));
+    public decimal DamageReductionRatio => GetCurrentMobStat(nameof(DamageReductionRatio));
+    Dictionary<string, MobStat> MobStats { get; set; } = new Dictionary<string, MobStat>();
+
+    public IEnumerable<StatAdjustment> ActiveStatAdjustments { get; private set; } = new List<StatAdjustment>();
 
     // TEMPORARY: This should definitely be in its own class
     public SpriteRenderer HitPointsVisual;
@@ -210,5 +214,37 @@ public class MapMob : MapObject
     {
         Configuration = configuration;
         gameObject.name = Configuration.Name;
+
+        MobStats = configuration.GetAllMobStats();
+    }
+
+    public void CalculateStandingStatAdjustments(MapFeature onFeature)
+    {
+        // HACK: Temporarily, the only adjustments possible are from Features, so just calculate from that
+        if (onFeature == null)
+        {
+            ActiveStatAdjustments = new List<StatAdjustment>();
+            return;
+        }
+
+        ActiveStatAdjustments = onFeature.StatAdjustmentsForMob(this);
+    }
+
+    public decimal GetCurrentMobStat(string statName)
+    {
+        MobStat foundStat;
+
+        if (!MobStats.TryGetValue(statName, out foundStat))
+        {
+            DebugTextLog.AddTextToLog($"{statName} was asked for as a MobStat, but it is not in the dictionary.", DebugTextLogChannel.RuntimeError);
+            return 0;
+        }
+
+        foreach (StatAdjustment curAdjustment in ActiveStatAdjustments.Where(adjustment => adjustment.StatToChange == statName))
+        {
+            foundStat = foundStat.ApplyAdjustment(curAdjustment);
+        }
+
+        return foundStat.StatValue;
     }
 }

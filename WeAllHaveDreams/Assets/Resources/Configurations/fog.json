@@ -2,5 +2,5 @@
   "ConfigurationType": "Configuration.FogVisibilityConfigurations",
   "FactionToShowFogFor": 0,
   "FogTurnHandlingEnum": "StayOnOnePlayer",
-  "CoverMapInDarknessInitially":  false
+  "CoverMapInDarknessInitially":  true
 }

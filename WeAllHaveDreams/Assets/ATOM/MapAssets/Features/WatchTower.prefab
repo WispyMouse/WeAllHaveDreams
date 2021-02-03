@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4007712616340255992}
-  - component: {fileID: 2197523735503376789}
+  - component: {fileID: -5519137696546975165}
   m_Layer: 0
   m_Name: WatchTower
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2197523735503376789
+--- !u!114 &-5519137696546975165
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,7 +41,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4007712616340255993}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47ab22b99ab5d5740a42c0d8c8b3f40a, type: 3}
+  m_Script: {fileID: 11500000, guid: 651fc99d39f8ed341b80b5bdc826efc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &4007712617647760950

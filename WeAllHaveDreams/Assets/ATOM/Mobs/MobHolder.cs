@@ -9,6 +9,7 @@ public class MobHolder : MonoBehaviour
 
     public MapHolder MapHolderInstance;
     public StructureHolder StructureHolderInstance;
+    public FeatureHolder FeatureHolderInstance;
 
     public MovementHandler MovementHandlerInstance;
     public AttackHandler AttackAnimationHandlerInstance;
@@ -70,6 +71,8 @@ public class MobHolder : MonoBehaviour
 
         toMove.SetPosition(to);
         DebugTextLog.AddTextToLog($"Unit {toMove.Name} moved to {{{to.x}, {to.y}, {to.z}}}");
+
+        toMove.CalculateStandingStatAdjustments(FeatureHolderInstance.FeatureOnPoint(to));
     }
 
     public IEnumerator UnitEngagesUnit(MapMob engaging, MapMob defending)
@@ -145,6 +148,7 @@ public class MobHolder : MonoBehaviour
     {
         MapMob newMob = CreateNewUnit(location, prefab);
         newMob.SetOwnership(teamIndex);
+        newMob.CalculateStandingStatAdjustments(FeatureHolderInstance.FeatureOnPoint(location));
     }
 
     public void ClearAllMobs()

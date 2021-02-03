@@ -63,5 +63,19 @@ namespace Configuration
         {
             return $"Name: {Name}";
         }
+
+        public Dictionary<string, MobStat> GetAllMobStats()
+        {
+            Dictionary<string, MobStat> stats = new Dictionary<string, MobStat>();
+
+            stats.Add(nameof(ResourceCost), new MobStat(nameof(ResourceCost), ResourceCost));
+            stats.Add(nameof(MoveRange), new MobStat(nameof(MoveRange), MoveRange));
+            stats.Add(nameof(SightRange), new MobStat(nameof(SightRange), SightRange));
+            stats.Add(nameof(AttackRange), new MobStat(nameof(AttackRange), AttackRange));
+            stats.Add(nameof(DamageOutputRatio), new MobStat(nameof(DamageOutputRatio), DamageOutputRatio));
+            stats.Add(nameof(DamageReductionRatio), new MobStat(nameof(DamageReductionRatio), DamageReductionRatio));
+
+            return stats;
+        }
     }
 }

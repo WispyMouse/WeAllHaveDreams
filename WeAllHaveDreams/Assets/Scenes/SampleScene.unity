@@ -3658,8 +3658,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Features:
   - {fileID: 6386683235800390737, guid: 39a2ca9a71a730746bf2e08744c9133b, type: 3}
-  - {fileID: 2197523735503376789, guid: 9e3165e8952830249a71beeeb1ac448a, type: 3}
-  DefaultFeature: {fileID: 2197523735503376789, guid: 9e3165e8952830249a71beeeb1ac448a, type: 3}
+  - {fileID: -5519137696546975165, guid: 9e3165e8952830249a71beeeb1ac448a, type: 3}
+  DefaultFeature: {fileID: -5519137696546975165, guid: 9e3165e8952830249a71beeeb1ac448a, type: 3}
 --- !u!1 &1166089049
 GameObject:
   m_ObjectHideFlags: 0
@@ -4828,6 +4828,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MapHolderInstance: {fileID: 2100281716}
   StructureHolderInstance: {fileID: 2100281718}
+  FeatureHolderInstance: {fileID: 2100281719}
   MovementHandlerInstance: {fileID: 322355931}
   AttackAnimationHandlerInstance: {fileID: 322355932}
   MobParent: {fileID: 912113229}

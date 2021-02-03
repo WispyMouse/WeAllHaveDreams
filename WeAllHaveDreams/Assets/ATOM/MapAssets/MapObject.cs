@@ -12,7 +12,7 @@ public class MapObject : MonoBehaviour
         SetPosition(nearestStartPosition);
     }
 
-    public void SetPosition(Vector3Int toPosition)
+    public virtual void SetPosition(Vector3Int toPosition)
     {
         Position = toPosition;
         transform.position = toPosition;
@@ -23,5 +23,10 @@ public class MapObject : MonoBehaviour
     public virtual void StartOfTurnEffects(MapMob mobOnTile)
     {
 
+    }
+
+    public virtual IEnumerable<StatAdjustment> StatAdjustmentsForMob(MapMob mobOnTile)
+    {
+        return new List<StatAdjustment>();
     }
 }
