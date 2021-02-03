@@ -46,7 +46,7 @@ public class AIInputPhaseController : MonoBehaviour
             if (!WorldContextInstance.MobHolder.MobOnPoint(curStructure.Position))
             {
                 IEnumerable<PlayerInput> possibleInputs = curStructure.GetPossiblePlayerInputs(WorldContextInstance)
-                    .Where(input => input.IsPossible());
+                    .Where(input => input.IsPossible(WorldContextInstance));
 
                 // Zombie behavior: Randomly pick from possible inputs
                 if (possibleInputs.Any())

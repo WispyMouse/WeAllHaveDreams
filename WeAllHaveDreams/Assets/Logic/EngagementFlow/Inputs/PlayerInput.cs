@@ -6,7 +6,7 @@ public abstract class PlayerInput
 {
     public abstract IEnumerator Execute(WorldContext worldContext);
 
-    public virtual bool IsPossible()
+    public virtual bool IsPossible(WorldContext givenContext)
     {
         return true;
     }

@@ -3146,6 +3146,7 @@ GameObject:
   - component: {fileID: 902307290}
   - component: {fileID: 902307289}
   - component: {fileID: 902307293}
+  - component: {fileID: 902307294}
   m_Layer: 0
   m_Name: Phases
   m_TagString: Untagged
@@ -3195,6 +3196,7 @@ MonoBehaviour:
   InputResolutionPhaseInstance: {fileID: 902307289}
   NeutralPhaseInstance: {fileID: 902307292}
   UnitAttackPhaseInstance: {fileID: 902307291}
+  UseAbilityPhaseInstance: {fileID: 902307294}
   MapMetaInstance: {fileID: 198427620}
   MapHolderInstance: {fileID: 2100281716}
   StructureHolderInstance: {fileID: 2100281718}
@@ -3215,6 +3217,7 @@ MonoBehaviour:
   UnitMovementPhaseInstance: {fileID: 902307290}
   InputResolutionPhaseInstance: {fileID: 902307289}
   StructureHolderInstance: {fileID: 2100281718}
+  UseAbilityPhaseInstance: {fileID: 902307294}
 --- !u!114 &902307292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3245,6 +3248,20 @@ MonoBehaviour:
   NeutralPhaseInstance: {fileID: 902307292}
   InputResolutionPhaseInstance: {fileID: 902307289}
   WorldContextInstance: {fileID: 2100281720}
+--- !u!114 &902307294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 902307287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83c25dc1fa4e45740a06aa75afbe815b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NeutralPhaseInstance: {fileID: 902307292}
+  InputResolutionPhaseInstance: {fileID: 902307289}
 --- !u!1 &912113228
 GameObject:
   m_ObjectHideFlags: 0
@@ -4832,7 +4849,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594b3c7c42db82346ae8c05d7d8bd791, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapHolderInstance: {fileID: 2100281716}
+  WorldContextInstance: {fileID: 2100281720}
   FeaturesParent: {fileID: 1543551132}
 --- !u!114 &2100281720
 MonoBehaviour:

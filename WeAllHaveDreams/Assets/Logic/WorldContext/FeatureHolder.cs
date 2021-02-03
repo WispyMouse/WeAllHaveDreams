@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class FeatureHolder : MonoBehaviour
 {
-    public MapHolder MapHolderInstance;
+    public WorldContext WorldContextInstance;
     public Transform FeaturesParent;
 
     public List<MapFeature> ActiveFeatures { get; set; } = new List<MapFeature>();
@@ -15,6 +15,17 @@ public class FeatureHolder : MonoBehaviour
         toSet.transform.SetParent(FeaturesParent);
         toSet.SetPosition(position);
         ActiveFeatures.Add(toSet);
+
+        MapMob onTile = WorldContextInstance.MobHolder.MobOnPoint(position);
+        if (onTile != null)
+        {
+            onTile.CalculateStandingStatAdjustments(toSet);
+        }
+
+        if (TurnManager.GameIsInProgress)
+        {
+            WorldContextInstance.FogHolder.UpdateVisibilityForPlayer(TurnManager.CurrentPlayer.PlayerSideIndex);
+        }
     }
 
     public MapFeature FeatureOnPoint(Vector3Int position)
