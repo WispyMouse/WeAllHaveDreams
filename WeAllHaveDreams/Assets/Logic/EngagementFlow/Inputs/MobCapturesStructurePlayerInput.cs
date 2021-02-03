@@ -15,7 +15,7 @@ public class MobCapturesStructurePlayerInput : PlayerInput
 
     public override string LongTitle => $"Capture a structure with {Capturing.name} at ({Target.Position.x}, {Target.Position.y}) ";
 
-    public override IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder)
+    public override IEnumerator Execute(WorldContext worldContext)
     {
         if (Capturing.Position != Target.Position)
         {
@@ -25,13 +25,13 @@ public class MobCapturesStructurePlayerInput : PlayerInput
                 yield break;
             }
 
-            if (mobHolder.MobOnPoint(Target.Position))
+            if (worldContext.MobHolder.MobOnPoint(Target.Position))
             {
                 DebugTextLog.AddTextToLog($"A unit tried to move to capture {Target.Position.x}, {Target.Position.y}, but there was already a different unit on that point");
                 yield break;
             }
 
-            yield return mobHolder.MoveUnit(Capturing, Target.Position);
+            yield return worldContext.MobHolder.MoveUnit(Capturing, Target.Position);
             Capturing.CanMove = false;
         }
 

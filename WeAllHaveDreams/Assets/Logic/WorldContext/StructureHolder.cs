@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class StructureHolder : MonoBehaviour
 {
-    public MapHolder MapHolderInstance;
     public Transform StructuresParent;
 
     public List<MapStructure> ActiveStructures { get; set; } = new List<MapStructure>();

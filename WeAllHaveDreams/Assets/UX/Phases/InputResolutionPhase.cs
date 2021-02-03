@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class InputResolutionPhase : InputGameplayPhase
 {
-    public MapHolder MapHolderInstance;
-    public MobHolder MobHolderInstance;
+    public WorldContext WorldContextInstance;
 
     PlayerInput resolving { get; set; }
     InputGameplayPhase nextPhase { get; set; }
@@ -22,7 +21,7 @@ public class InputResolutionPhase : InputGameplayPhase
     public override IEnumerator EnterPhase()
     {
         actionResolved = false;
-        yield return resolving.Execute(MapHolderInstance, MobHolderInstance);
+        yield return resolving.Execute(WorldContextInstance);
         actionResolved = true;
     }
 

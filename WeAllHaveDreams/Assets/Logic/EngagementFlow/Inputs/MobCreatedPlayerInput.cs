@@ -17,11 +17,11 @@ public class MobCreatedPlayerInput : PlayerInput
 
     public override string LongTitle => $"Create {MapMobPf.name} for {ResourceCost} resources";
 
-    public override IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder)
+    public override IEnumerator Execute(WorldContext worldContext)
     {
         if (TurnManager.CurrentPlayer.TotalResources >= ResourceCost)
         {
-            mobHolder.CreateNewUnit(AtStructure.Position, MapMobPf, AtStructure.PlayerSideIndex);
+            worldContext.MobHolder.CreateNewUnit(AtStructure.Position, MapMobPf, AtStructure.PlayerSideIndex);
             TurnManager.CurrentPlayer.TotalResources -= ResourceCost;
         }
         else

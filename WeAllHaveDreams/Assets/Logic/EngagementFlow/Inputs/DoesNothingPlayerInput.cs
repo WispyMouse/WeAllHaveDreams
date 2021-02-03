@@ -13,7 +13,7 @@ public class DoesNothingPlayerInput : PlayerInput
 
     public override string LongTitle => $"Do nothing and exhaust all options";
 
-    public override IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder)
+    public override IEnumerator Execute(WorldContext worldContext)
     {
         notActing.ExhaustAllOptions();
         yield break;

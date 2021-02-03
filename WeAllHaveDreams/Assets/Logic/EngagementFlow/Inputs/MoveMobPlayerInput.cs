@@ -15,7 +15,7 @@ public class MoveMobPlayerInput : PlayerInput
 
     public override string LongTitle => $"Move {Moving.name} to ({To.x}, {To.y})";
 
-    public override IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder)
+    public override IEnumerator Execute(WorldContext worldContext)
     {
         if (!Moving.CanMove)
         {
@@ -23,7 +23,7 @@ public class MoveMobPlayerInput : PlayerInput
             yield break;
         }
 
-        yield return mobHolder.MoveUnit(Moving, To);
+        yield return worldContext.MobHolder.MoveUnit(Moving, To);
         Moving.CanMove = false;
 
         yield return TurnManager.ResolveEffects();

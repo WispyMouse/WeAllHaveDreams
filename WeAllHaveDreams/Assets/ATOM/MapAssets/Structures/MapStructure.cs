@@ -86,12 +86,12 @@ public abstract class MapStructure : MapObject
         DebugTextLog.AddTextToLog("Base captured!");
     }
 
-    public virtual PlayerInput DoLazyBuildingThing(MobHolder mobHolderInstance)
+    public virtual PlayerInput DoLazyBuildingThing(WorldContext worldContext)
     {
         return null;
     }
 
-    public virtual IEnumerable<PlayerInput> GetPossiblePlayerInputs(MobHolder mobHolderInstance)
+    public virtual IEnumerable<PlayerInput> GetPossiblePlayerInputs(WorldContext worldContext)
     {
         return Enumerable.Empty<PlayerInput>();
     }

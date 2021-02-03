@@ -17,12 +17,7 @@ public class TurnManager : SingletonBase<TurnManager>
     // TEMPORARY: This should not be here! But, it is the easiest place to insert for now.
     public Camera MainCamera;
 
-    public FogHolder FogHolderController;
-    public MapHolder MapHolderController;
-
-    public MobHolder MobHolderController;
-    public StructureHolder StructureHolderInstance;
-    public FeatureHolder FeatureHolderInstance;
+    public WorldContext WorldContextInstance;
 
     public PlayerInputPhaseController PlayerInputPhaseControllerInstance;
     public AIInputPhaseController AIInputPhaseControllerInstance;
@@ -39,9 +34,8 @@ public class TurnManager : SingletonBase<TurnManager>
         playerSides.Add(aiControlledPlayerSide.PlayerSideIndex, aiControlledPlayerSide);
         AIInputPhaseControllerInstance.LoadSettings();
 
-        FogHolderController.Initialize(MapHolderController);
-
-        MapHolderController.CenterCamera(MainCamera);
+        WorldContextInstance.FogHolder.Initialize();
+        WorldContextInstance.MapHolder.CenterCamera(MainCamera);
 
         GameIsInProgress = true;
 
@@ -53,12 +47,12 @@ public class TurnManager : SingletonBase<TurnManager>
         playerIndex = index;
         DebugTextLog.AddTextToLog($"START OF TURN: {CurrentPlayer.Name}, engage!");
 
-        foreach (MapStructure structure in StructureHolderInstance.ActiveStructures.Where(structure => !structure.UnCaptured && structure.PlayerSideIndex == index))
+        foreach (MapStructure structure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => !structure.UnCaptured && structure.PlayerSideIndex == index))
         {
             CurrentPlayer.TotalResources += structure.ContributedResourcesPerTurn;
         }
 
-        foreach (MapMob curMob in Singleton.MobHolderController.MobsOnTeam(CurrentPlayer.PlayerSideIndex))
+        foreach (MapMob curMob in WorldContextInstance.MobHolder.MobsOnTeam(CurrentPlayer.PlayerSideIndex))
         {
             curMob.RefreshForStartOfTurn();
         }
@@ -79,7 +73,7 @@ public class TurnManager : SingletonBase<TurnManager>
 
     public static void PassTurnToNextPlayer()
     {
-        foreach (MapMob curMob in Singleton.MobHolderController.MobsOnTeam(CurrentPlayer.PlayerSideIndex))
+        foreach (MapMob curMob in Singleton.WorldContextInstance.MobHolder.MobsOnTeam(CurrentPlayer.PlayerSideIndex))
         {
             curMob.ClearForEndOfTurn();
         }
@@ -99,9 +93,9 @@ public class TurnManager : SingletonBase<TurnManager>
     public static IEnumerator ResolveStartOfTurnEffects()
     {
         // HACK: For now, ask each Feature under each of our Mobs if they have a start of turn effect
-        foreach (MapMob curMob in Singleton.MobHolderController.MobsOnTeam(CurrentPlayer.PlayerSideIndex))
+        foreach (MapMob curMob in Singleton.WorldContextInstance.MobHolder.MobsOnTeam(CurrentPlayer.PlayerSideIndex))
         {
-            MapFeature onFeature = Singleton.FeatureHolderInstance.FeatureOnPoint(curMob.Position);
+            MapFeature onFeature = Singleton.WorldContextInstance.FeatureHolder.FeatureOnPoint(curMob.Position);
 
             if (onFeature != null && onFeature.HasStartOfTurnEffects)
             {
@@ -115,7 +109,7 @@ public class TurnManager : SingletonBase<TurnManager>
     public static IEnumerator ResolveEffects()
     {
         var shouldBeRemoved = new List<MapMob>();
-        foreach (MapMob mapMob in Singleton.MobHolderController.ActiveMobs)
+        foreach (MapMob mapMob in Singleton.WorldContextInstance.MobHolder.ActiveMobs)
         {
             if (mapMob.HitPoints <= 0)
             {
@@ -128,11 +122,11 @@ public class TurnManager : SingletonBase<TurnManager>
         {
             Vector3Int position = remove.Position;
 
-            yield return Singleton.MobHolderController.RemoveMob(remove);
-            Singleton.StructureHolderInstance.MobRemovedFromPoint(position);
+            yield return Singleton.WorldContextInstance.MobHolder.RemoveMob(remove);
+            Singleton.WorldContextInstance.StructureHolder.MobRemovedFromPoint(position);
         }
 
-        Singleton.FogHolderController.UpdateVisibilityForPlayers(Singleton.MapHolderController, Singleton.MobHolderController);
+        Singleton.WorldContextInstance.FogHolder.UpdateVisibilityForPlayers();
 
         Singleton.SideStatisticsInstance.UpdateVisuals();
     }

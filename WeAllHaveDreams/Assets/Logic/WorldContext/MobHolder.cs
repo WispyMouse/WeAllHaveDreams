@@ -7,9 +7,7 @@ public class MobHolder : MonoBehaviour
 {
     public List<MapMob> ActiveMobs { get; set; } = new List<MapMob>();
 
-    public MapHolder MapHolderInstance;
-    public StructureHolder StructureHolderInstance;
-    public FeatureHolder FeatureHolderInstance;
+    public WorldContext WorldContextInstance;
 
     public MovementHandler MovementHandlerInstance;
     public AttackHandler AttackAnimationHandlerInstance;
@@ -66,13 +64,13 @@ public class MobHolder : MonoBehaviour
             yield break;
         }
 
-        StructureHolderInstance.MobRemovedFromPoint(toMove.Position);
+        WorldContextInstance.StructureHolder.MobRemovedFromPoint(toMove.Position);
         yield return MovementHandlerInstance.UnitWalks(toMove, to);
 
         toMove.SetPosition(to);
         DebugTextLog.AddTextToLog($"Unit {toMove.Name} moved to {{{to.x}, {to.y}, {to.z}}}");
 
-        toMove.CalculateStandingStatAdjustments(FeatureHolderInstance.FeatureOnPoint(to));
+        toMove.CalculateStandingStatAdjustments(WorldContextInstance.FeatureHolder.FeatureOnPoint(to));
     }
 
     public IEnumerator UnitEngagesUnit(MapMob engaging, MapMob defending)
@@ -115,7 +113,7 @@ public class MobHolder : MonoBehaviour
 
     public bool CanAttackFromPosition(MapMob possibleAttacker, MapMob defender, Vector3Int attackerPosition)
     {
-        return MapHolderInstance.PotentialAttacks(possibleAttacker, attackerPosition).Contains(defender.Position);
+        return WorldContextInstance.MapHolder.PotentialAttacks(possibleAttacker, attackerPosition).Contains(defender.Position);
     }
 
     public IEnumerator RemoveMob(MapMob toRemove)
@@ -148,7 +146,7 @@ public class MobHolder : MonoBehaviour
     {
         MapMob newMob = CreateNewUnit(location, prefab);
         newMob.SetOwnership(teamIndex);
-        newMob.CalculateStandingStatAdjustments(FeatureHolderInstance.FeatureOnPoint(location));
+        newMob.CalculateStandingStatAdjustments(WorldContextInstance.FeatureHolder.FeatureOnPoint(location));
     }
 
     public void ClearAllMobs()

@@ -19,7 +19,7 @@ public class BuildsFeatureInput : PlayerInput
 
     public override string LongTitle => $"Build {FeatureToBuild} for {Cost}";
 
-    public override IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder)
+    public override IEnumerator Execute(WorldContext worldContext)
     {
         throw new System.NotImplementedException();
     }

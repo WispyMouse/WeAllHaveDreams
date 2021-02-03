@@ -11,18 +11,15 @@ public class MapHolder : MonoBehaviour
 
     public Tilemap LoadedMap;
 
-    public MobHolder MobHolderController;
-    public FogHolder FogHolderController;
-    public StructureHolder StructureHolderController;
-    public FeatureHolder FeatureHolderController;
+    public WorldContext WorldContextInstance;
 
     public GameplayTile GetGameplayTile(Vector3Int position) => activeMap.GetGameplayTile(position);
     public IEnumerable<Vector3Int> GetAllTiles() => activeMap.GetAllTiles();
     public IEnumerable<Vector3Int> GetNeighbors(Vector3Int point) => activeMap.GetNeighbors(point);
 
-    public IEnumerable<Vector3Int> PotentialMoves(MapMob moving) => activeMap.PotentialMoves(moving, MobHolderController);
+    public IEnumerable<Vector3Int> PotentialMoves(MapMob moving) => activeMap.PotentialMoves(moving, WorldContextInstance);
     public IEnumerable<Vector3Int> PotentialAttacks(MapMob attacking, Vector3Int from) => activeMap.PotentialAttacks(attacking, from);
-    public List<Vector3Int> Path(MapMob moving, Vector3Int to) => activeMap.Path(moving, to, MobHolderController);
+    public List<Vector3Int> Path(MapMob moving, Vector3Int to) => activeMap.Path(moving, to, WorldContextInstance);
     public IEnumerable<Vector3Int> CanHitFrom(MapMob attacking, Vector3Int target) => activeMap.CanAttackFrom(attacking, target);
 
     public async Task LoadFromRealm(Realm toLoad)
@@ -41,18 +38,18 @@ public class MapHolder : MonoBehaviour
                         LoadedMap.SetTile(position, activeMap.GetGameplayTile(position));
                         break;
                     case RealmKeyType.Structure:
-                        StructureHolderController.SetStructure(position, curKey.GetStructureInstance());
+                        WorldContextInstance.StructureHolder.SetStructure(position, curKey.GetStructureInstance());
                         break;
                     case RealmKeyType.Mob:
-                        MobHolderController.CreateNewUnit(position, curKey.GetMobPrefab());
+                        WorldContextInstance.MobHolder.CreateNewUnit(position, curKey.GetMobPrefab());
                         break;
                     case RealmKeyType.Feature:
-                        FeatureHolderController.SetFeature(position, curKey.GetFeatureInstance());
+                        WorldContextInstance.FeatureHolder.SetFeature(position, curKey.GetFeatureInstance());
                         break;
                     case RealmKeyType.Ownership:
-                        StructureHolderController.SetOwnership(position, curKey.GetTeam());
+                        WorldContextInstance.StructureHolder.SetOwnership(position, curKey.GetTeam());
 
-                        MapMob matchingMob = MobHolderController.MobOnPoint(position);
+                        MapMob matchingMob = WorldContextInstance.MobHolder.MobOnPoint(position);
 
                         if (matchingMob != null)
                         {
@@ -76,9 +73,6 @@ public class MapHolder : MonoBehaviour
     public void ClearEverything()
     {
         LoadedMap.ClearAllTiles();
-        FogHolderController.ClearAllTiles();
-        MobHolderController.ClearAllMobs();
-        StructureHolderController.ClearAllStructures();
-        FeatureHolderController.ClearAllFeatures();
+        WorldContextInstance.ClearEverything();
     }
 }

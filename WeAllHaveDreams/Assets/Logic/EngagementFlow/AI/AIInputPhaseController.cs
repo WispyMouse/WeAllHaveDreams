@@ -7,9 +7,7 @@ public class AIInputPhaseController : MonoBehaviour
 {
     Coroutine TurnBeingPlayed { get; set; }
 
-    public MobHolder MobHolderInstance;
-    public MapHolder MapHolderInstance;
-    public StructureHolder StructureHolderInstance;
+    public WorldContext WorldContextInstance;
     public MapMeta MapMetaInstance;
 
     public Configuration.AIConfiguration AISettings;
@@ -29,7 +27,7 @@ public class AIInputPhaseController : MonoBehaviour
     IEnumerator ConductTurn()
     {
         IEnumerable<MapMob> remainingActors;
-        while ((remainingActors = MobHolderInstance.MobsOnTeam(TurnManager.CurrentPlayer.PlayerSideIndex).Where(mob => mob.CanMove || mob.CanAttack)).Any())
+        while ((remainingActors = WorldContextInstance.MobHolder.MobsOnTeam(TurnManager.CurrentPlayer.PlayerSideIndex).Where(mob => mob.CanMove || mob.CanAttack)).Any())
         {
             List<UnitTurnPlan> possiblePlans = new List<UnitTurnPlan>();
 
@@ -40,21 +38,21 @@ public class AIInputPhaseController : MonoBehaviour
 
             UnitTurnPlan bestPlan = possiblePlans.OrderByDescending(plan => plan.Score).First();
             DebugTextLog.AddTextToLog($"AI Plan: {bestPlan.DeterminedInput.LongTitle}, score {bestPlan.Score}");
-            yield return bestPlan.DeterminedInput.Execute(MapHolderInstance, MobHolderInstance);
+            yield return bestPlan.DeterminedInput.Execute(WorldContextInstance);
         }
 
-        foreach (MapStructure curStructure in StructureHolderInstance.ActiveStructures.Where(structure => !structure.UnCaptured && structure.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex))
+        foreach (MapStructure curStructure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => !structure.UnCaptured && structure.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex))
         {
-            if (!MobHolderInstance.MobOnPoint(curStructure.Position))
+            if (!WorldContextInstance.MobHolder.MobOnPoint(curStructure.Position))
             {
-                IEnumerable<PlayerInput> possibleInputs = curStructure.GetPossiblePlayerInputs(MobHolderInstance)
+                IEnumerable<PlayerInput> possibleInputs = curStructure.GetPossiblePlayerInputs(WorldContextInstance)
                     .Where(input => input.IsPossible());
 
                 // Zombie behavior: Randomly pick from possible inputs
                 if (possibleInputs.Any())
                 {
                     PlayerInput randomInput = possibleInputs.ToList()[Random.Range(0, possibleInputs.Count())];
-                    yield return randomInput.Execute(MapHolderInstance, MobHolderInstance);
+                    yield return randomInput.Execute(WorldContextInstance);
                 }
             }
         }
@@ -68,8 +66,8 @@ public class AIInputPhaseController : MonoBehaviour
         possiblePlans.Add(new UnitTurnPlan(new DoesNothingPlayerInput(acting), -100));
 
         // Get our current movement and possible hurt ranges
-        IEnumerable<Vector3Int> movementRanges = MapHolderInstance.PotentialMoves(acting);
-        IEnumerable<Vector3Int> hurtRanges = movementRanges.SelectMany(mr => MapHolderInstance.PotentialAttacks(acting, mr));
+        IEnumerable<Vector3Int> movementRanges = WorldContextInstance.MapHolder.PotentialMoves(acting);
+        IEnumerable<Vector3Int> hurtRanges = movementRanges.SelectMany(mr => WorldContextInstance.MapHolder.PotentialAttacks(acting, mr));
 
         if (!acting.CanMove)
         {
@@ -79,7 +77,7 @@ public class AIInputPhaseController : MonoBehaviour
         if (acting.CanAttack)
         {
             // What opponents are in our hurt range?
-            IEnumerable<MapMob> opponentsInRange = MobHolderInstance.ActiveMobs
+            IEnumerable<MapMob> opponentsInRange = WorldContextInstance.MobHolder.ActiveMobs
                 .Where(mob => mob.PlayerSideIndex != acting.PlayerSideIndex)
                 .Where(mob => hurtRanges.Contains(mob.Position));
 
@@ -87,7 +85,7 @@ public class AIInputPhaseController : MonoBehaviour
             {
                 foreach (MapMob inRange in opponentsInRange)
                 {
-                    IEnumerable<Vector3Int> engagementTiles = MapHolderInstance.CanHitFrom(acting, inRange.Position)
+                    IEnumerable<Vector3Int> engagementTiles = WorldContextInstance.MapHolder.CanHitFrom(acting, inRange.Position)
                         .Intersect(movementRanges);
 
                     if (!engagementTiles.Any())
@@ -95,7 +93,7 @@ public class AIInputPhaseController : MonoBehaviour
                         continue;
                     }
 
-                    IEnumerable<Vector3Int> emptyEngagementTiles = engagementTiles.Where(tile => acting.Position == tile || MobHolderInstance.MobOnPoint(tile) == null);
+                    IEnumerable<Vector3Int> emptyEngagementTiles = engagementTiles.Where(tile => acting.Position == tile || WorldContextInstance.MobHolder.MobOnPoint(tile) == null);
 
                     if (!emptyEngagementTiles.Any())
                     {
@@ -111,10 +109,10 @@ public class AIInputPhaseController : MonoBehaviour
         }        
 
         // Are there any structures in our movement range?
-        IEnumerable<MapStructure> structuresInRange = StructureHolderInstance.ActiveStructures
+        IEnumerable<MapStructure> structuresInRange = WorldContextInstance.StructureHolder.ActiveStructures
             .Where(structure => movementRanges.Contains(structure.Position))
             .Where(structure => structure.PlayerSideIndex != acting.PlayerSideIndex || structure.UnCaptured)
-            .Where(structure => acting.Position == structure.Position || MobHolderInstance.MobOnPoint(structure.Position) == null);
+            .Where(structure => acting.Position == structure.Position || WorldContextInstance.MobHolder.MobOnPoint(structure.Position) == null);
 
         if (structuresInRange.Any())
         {
@@ -128,13 +126,13 @@ public class AIInputPhaseController : MonoBehaviour
         if (acting.CanMove)
         {
             // If the enemy has a base, move towards it
-            IEnumerable<MapStructure> enemyStructures = StructureHolderInstance.ActiveStructures
+            IEnumerable<MapStructure> enemyStructures = WorldContextInstance.StructureHolder.ActiveStructures
                 .Where(structure => structure.UnCaptured || structure.PlayerSideIndex != TurnManager.CurrentPlayer.PlayerSideIndex)
                 .Except(structuresInRange);
 
             foreach (MapStructure structure in enemyStructures)
             {
-                List<Vector3Int> path = MapHolderInstance.Path(acting, structure.Position);
+                List<Vector3Int> path = WorldContextInstance.MapHolder.Path(acting, structure.Position);
 
                 if (path == null)
                 {
@@ -143,7 +141,7 @@ public class AIInputPhaseController : MonoBehaviour
 
                 for (int ii = Mathf.Min(path.Count - 1, acting.MoveRange); ii >= 0; ii--)
                 {
-                    List<Vector3Int> pathToSpot = MapHolderInstance.Path(acting, path[ii]);
+                    List<Vector3Int> pathToSpot = WorldContextInstance.MapHolder.Path(acting, path[ii]);
 
                     if (pathToSpot == null)
                     {
@@ -163,19 +161,19 @@ public class AIInputPhaseController : MonoBehaviour
 
     decimal ScoreEngagement(MapMob acting, MapMob defending, Vector3Int attackFrom)
     {
-        decimal projectedOutgoingDamage = MobHolderInstance.ProjectedDamages(acting, defending);
+        decimal projectedOutgoingDamage = WorldContextInstance.MobHolder.ProjectedDamages(acting, defending);
 
         if (projectedOutgoingDamage >= defending.HitPoints)
         {
             return (int)defending.HitPoints + 10;
         }
 
-        if (!MobHolderInstance.CanAttackFromPosition(defending, acting, defending.Position))
+        if (!WorldContextInstance.MobHolder.CanAttackFromPosition(defending, acting, defending.Position))
         {
             return (int)projectedOutgoingDamage;
         }
 
-        decimal returnDamage = MobHolderInstance.ProjectedDamages(defending, acting, defending.HitPoints - projectedOutgoingDamage);
+        decimal returnDamage = WorldContextInstance.MobHolder.ProjectedDamages(defending, acting, defending.HitPoints - projectedOutgoingDamage);
 
         return (int)(projectedOutgoingDamage - returnDamage);
     }

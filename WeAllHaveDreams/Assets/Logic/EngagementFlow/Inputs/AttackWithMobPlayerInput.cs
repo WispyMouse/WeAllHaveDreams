@@ -24,7 +24,7 @@ public class AttackWithMobInput : PlayerInput
 
     public override string LongTitle => $"Attack with {Attacking.name} at {Target.name}" + (MoveTo.HasValue ? $" after moving to ({MoveTo.Value.x}, {MoveTo.Value.y})" : "");
 
-    public override IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder)
+    public override IEnumerator Execute(WorldContext worldContext)
     {
         if (!Attacking.CanAttack)
         {
@@ -40,11 +40,11 @@ public class AttackWithMobInput : PlayerInput
                 yield break;
             }
 
-            yield return mobHolder.MoveUnit(Attacking, MoveTo.Value);
+            yield return worldContext.MobHolder.MoveUnit(Attacking, MoveTo.Value);
             Attacking.CanMove = false;
         }
 
-        yield return mobHolder.UnitEngagesUnit(Attacking, Target);
+        yield return worldContext.MobHolder.UnitEngagesUnit(Attacking, Target);
 
         Attacking.CanAttack = false;
 
