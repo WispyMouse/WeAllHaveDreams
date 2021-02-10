@@ -108,7 +108,14 @@ public class FogHolder : MonoBehaviour
 
         foreach (MapMob curMob in WorldContextInstance.MobHolder.MobsOnTeam(player))
         {
-            HashSet<Vector3Int> thisMobsVisibleTiles = CalculateVisibleTiles(curMob, curMob.RestingPosition);
+            Vector3Int mobPosition = curMob.Position;
+
+            if (fogVisibilityConfigurations.UpdateVisibilityOnlyAfterSettling)
+            {
+                mobPosition = curMob.RestingPosition;
+            }
+            HashSet<Vector3Int> thisMobsVisibleTiles = CalculateVisibleTiles(curMob, mobPosition);
+
             assignedVisibility.IncorporateVisibleTiles(thisMobsVisibleTiles);
         }
 
