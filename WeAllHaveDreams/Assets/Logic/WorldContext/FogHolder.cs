@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -22,6 +23,7 @@ public class FogHolder : MonoBehaviour
     public void Initialize()
     {
         fogVisibilityConfigurations = ConfigurationLoadingEntrypoint.GetConfigurationData<Configuration.FogVisibilityConfigurations>().First();
+        DebugTextLog.AddTextToLog("Press F to switch visibility modes", DebugTextLogChannel.DebugLogging);
 
         AllTiles = new HashSet<Vector3Int>(WorldContextInstance.MapHolder.GetAllTiles());
 
@@ -169,5 +171,21 @@ public class FogHolder : MonoBehaviour
         AllTiles = new HashSet<Vector3Int>();
         TeamVisibilityData = new Dictionary<int, TeamVisibility>();
         FogTileMap.ClearAllTiles();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            FogTurnHandlingEnum previousSetting = fogVisibilityConfigurations.FogTurnHandlingMode;
+            List<FogTurnHandlingEnum> allSettings = Enum.GetValues(typeof(FogTurnHandlingEnum)).Cast<FogTurnHandlingEnum>().ToList();
+            int previousIndex = allSettings.IndexOf(previousSetting);
+            int nextIndex = (previousIndex + 1) % allSettings.Count;
+            FogTurnHandlingEnum nextSetting = allSettings[nextIndex];
+            fogVisibilityConfigurations.FogTurnHandlingMode = nextSetting;
+
+            DebugTextLog.AddTextToLog($"Changing fog settings from {previousSetting} to {nextSetting}.", DebugTextLogChannel.DebugOperations);
+            UpdateVisibilityForPlayers();
+        }
     }
 }
