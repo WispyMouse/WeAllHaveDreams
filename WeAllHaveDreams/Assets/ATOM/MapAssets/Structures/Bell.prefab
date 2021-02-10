@@ -243,3 +243,4 @@ MonoBehaviour:
   SoldUnits:
   - SimpleMob
   - RangedMob
+  - EngineerMob

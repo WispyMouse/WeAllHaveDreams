@@ -8,6 +8,7 @@ public class UnitMovementPhase : InputGameplayPhase
     public InputResolutionPhase InputResolutionPhaseInstance;
     public NeutralPhase NeutralPhaseInstance;
     public UnitAttackPhase UnitAttackPhaseInstance;
+    public UseAbilityPhase UseAbilityPhaseInstance;
 
     public MapMeta MapMetaInstance;
     public MapHolder MapHolderInstance;
@@ -15,9 +16,13 @@ public class UnitMovementPhase : InputGameplayPhase
 
     MapMob selectedUnit { get; set; }
 
+    // HACK: Currently only enabling one ability per mob
+    MobConfigurationAbility firstValidAbility { get; set; }
+
     public UnitMovementPhase UnitSelected(MapMob unit)
     {
         selectedUnit = unit;
+        firstValidAbility = null;
         return this;
     }
 
@@ -41,6 +46,19 @@ public class UnitMovementPhase : InputGameplayPhase
         if ((onStructure = StructureHolderInstance.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
         {
             DebugTextLog.AddTextToLog("Press 'C' to capture this structure");
+        }
+
+        foreach (MobConfigurationAbility curAbility in selectedUnit.Abilities)
+        {
+            IEnumerable<PlayerInput> possibleActions = curAbility.GetPossiblePlayerInputs(selectedUnit);
+
+            if (possibleActions.Any())
+            {
+                DebugTextLog.AddTextToLog($"Press 'X' to enter {curAbility.AbilityName} mode");
+                firstValidAbility = curAbility;
+                // HACK: Give units only one ability for now, so we don't need to sort out what button activates them
+                break;
+            }
         }
     }
 
@@ -180,6 +198,12 @@ public class UnitMovementPhase : InputGameplayPhase
                 nextPhase = InputResolutionPhaseInstance.ResolveThis(new MobCapturesStructurePlayerInput(selectedUnit, onStructure), this);
                 return true;
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.X) && firstValidAbility != null)
+        {
+            nextPhase = UseAbilityPhaseInstance.AbilitySelected(selectedUnit, firstValidAbility);
+            return true;
         }
 
         return false;

@@ -14,6 +14,12 @@ TextureImporter:
   - first:
       213: -429869358869659851
     second: OW_RangedMob_1
+  - first:
+      213: 7223737727636295290
+    second: OW_EngineerMob_0
+  - first:
+      213: 3779164993360873225
+    second: OW_EngineerMob_1
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -175,7 +181,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -196,7 +202,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -204,6 +210,48 @@ TextureImporter:
       bones: []
       spriteID: 53fbfbc781cc80af0800000000000000
       internalID: -429869358869659851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OW_EngineerMob_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7e4956b03fdf3460800000000000000
+      internalID: 7223737727636295290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OW_EngineerMob_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 907cdd0e98a427430800000000000000
+      internalID: 3779164993360873225
       vertices: []
       indices: 
       edges: []

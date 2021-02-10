@@ -8,7 +8,7 @@ public class StructureUsagePhase : InputGameplayPhase
     public NeutralPhase NeutralPhaseInstance;
     public InputResolutionPhase InputResolutionPhaseInstance;
 
-    public MobHolder MobHolderInstance;
+    public WorldContext WorldContextInstance;
 
     MapStructure selectedStructure { get; set; }
     List<PlayerInput> possibleInputs { get; set; }
@@ -17,7 +17,7 @@ public class StructureUsagePhase : InputGameplayPhase
     public StructureUsagePhase StructureSelected(MapStructure structure)
     {
         selectedStructure = structure;
-        possibleInputs = structure.GetPossiblePlayerInputs(MobHolderInstance).ToList();
+        possibleInputs = structure.GetPossiblePlayerInputs(WorldContextInstance).ToList();
         selectedInput = null;
         return this;
     }

@@ -8,5 +8,6 @@ public enum DebugTextLogChannel
     Gameplay,
     DebugLogging,
     ConfigurationReport,
-    ConfigurationError
+    ConfigurationError,
+    RuntimeError
 }

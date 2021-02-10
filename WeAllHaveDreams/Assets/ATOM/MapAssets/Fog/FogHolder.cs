@@ -8,7 +8,7 @@ public class FogHolder : MonoBehaviour
 {
     public Tilemap FogTileMap;
 
-    public MapHolder MapHolderController;
+    public WorldContext WorldContextInstance;
 
     public Tile HiddenTile;
     public Tile HasBeenSeenTile;
@@ -19,11 +19,11 @@ public class FogHolder : MonoBehaviour
 
     Configuration.FogVisibilityConfigurations fogVisibilityConfigurations { get; set; }
 
-    public void Initialize(MapHolder mapHolderInstance)
+    public void Initialize()
     {
         fogVisibilityConfigurations = ConfigurationLoadingEntrypoint.GetConfigurationData<Configuration.FogVisibilityConfigurations>().First();
 
-        AllTiles = new HashSet<Vector3Int>(mapHolderInstance.GetAllTiles());
+        AllTiles = new HashSet<Vector3Int>(WorldContextInstance.MapHolder.GetAllTiles());
 
         foreach (Vector3Int tile in AllTiles)
         {
@@ -85,15 +85,15 @@ public class FogHolder : MonoBehaviour
         }
     }
 
-    public void UpdateVisibilityForPlayers(MapHolder mapHolderInstance, MobHolder mobHolderInstance)
+    public void UpdateVisibilityForPlayers()
     {
         foreach (PlayerSide curPlayer in TurnManager.GetPlayers())
         {
-            UpdateVisibilityForPlayer(curPlayer.PlayerSideIndex, mapHolderInstance, mobHolderInstance);
+            UpdateVisibilityForPlayer(curPlayer.PlayerSideIndex);
         }
     }
 
-    public void UpdateVisibilityForPlayer(int player, MapHolder mapHolderInstance, MobHolder mobHolderInstance)
+    public void UpdateVisibilityForPlayer(int player)
     {
         TeamVisibility assignedVisibility;
 
@@ -104,9 +104,9 @@ public class FogHolder : MonoBehaviour
 
         assignedVisibility.ClearVisibleTiles();
 
-        foreach (MapMob curMob in mobHolderInstance.MobsOnTeam(player))
+        foreach (MapMob curMob in WorldContextInstance.MobHolder.MobsOnTeam(player))
         {
-            HashSet<Vector3Int> thisMobsVisibleTiles = CalculateVisibleTiles(curMob, mapHolderInstance);
+            HashSet<Vector3Int> thisMobsVisibleTiles = CalculateVisibleTiles(curMob);
             assignedVisibility.IncorporateVisibleTiles(thisMobsVisibleTiles);
         }
 
@@ -116,7 +116,7 @@ public class FogHolder : MonoBehaviour
         }
     }
 
-    public HashSet<Vector3Int> CalculateVisibleTiles(MapMob mob, MapHolder mapHolderInstance)
+    public HashSet<Vector3Int> CalculateVisibleTiles(MapMob mob)
     {
         var seenPositions = new HashSet<Vector3Int>();
 
@@ -136,7 +136,7 @@ public class FogHolder : MonoBehaviour
                 continue;
             }
 
-            foreach (Vector3Int neighbor in mapHolderInstance.GetNeighbors(thisTile))
+            foreach (Vector3Int neighbor in WorldContextInstance.MapHolder.GetNeighbors(thisTile))
             {
                 if (seenPositions.Contains(neighbor))
                 {

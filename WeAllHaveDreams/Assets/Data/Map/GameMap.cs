@@ -104,7 +104,7 @@ public class GameMap
         };
     }
 
-    public IEnumerable<Vector3Int> PotentialMoves(MapMob movingMob, MobHolder mobHolderController)
+    public IEnumerable<Vector3Int> PotentialMoves(MapMob movingMob, WorldContext worldContext)
     {
         Vector3Int startingTile = movingMob.Position;
 
@@ -129,7 +129,7 @@ public class GameMap
             {
                 int totalCost = thisTile.Value + 1; // TEMPORARY: This will eventually consider the movement cost of the tile we're moving on to
 
-                if (!CanMoveInTo(movingMob, thisTile.Key, neighbor, mobHolderController))
+                if (!CanMoveInTo(movingMob, thisTile.Key, neighbor, worldContext))
                 {
                     continue;
                 }
@@ -161,7 +161,7 @@ public class GameMap
 
         foreach (Vector3Int position in possibleVisits.Keys)
         {
-            if (CanStopOn(movingMob, position, mobHolderController))
+            if (CanStopOn(movingMob, position, worldContext))
             {
                 possibleMoves.Add(position);
             }
@@ -224,7 +224,7 @@ public class GameMap
         return possibleAttacks.Keys;
     }
 
-    public List<Vector3Int> Path(MapMob moving, Vector3Int to, MobHolder mobHolder)
+    public List<Vector3Int> Path(MapMob moving, Vector3Int to, WorldContext worldContext)
     {
         // TEMPORARY: Looks like there's no convenient built in solutions for a Priority Queue, will have to make one
         var frontier = new List<Tuple<Vector3Int, int>>(); ;
@@ -251,7 +251,7 @@ public class GameMap
             foreach (Vector3Int neighbor in GetNeighbors(positionValue))
             {
                 // Can't move here, don't consider it
-                if (!CanMoveInTo(moving, positionValue, neighbor, mobHolder))
+                if (!CanMoveInTo(moving, positionValue, neighbor, worldContext))
                 {
                     continue;
                 }
@@ -304,7 +304,7 @@ public class GameMap
         return PotentialAttacks(attacking, target);
     }
 
-    bool CanMoveInTo(MapMob moving, Vector3Int from, Vector3Int to, MobHolder mobHolder)
+    bool CanMoveInTo(MapMob moving, Vector3Int from, Vector3Int to, WorldContext worldContext)
     {
         if (!GameplayTiles.ContainsKey(to))
         {
@@ -320,7 +320,7 @@ public class GameMap
 
         MapMob mobOnPoint;
 
-        if ((mobOnPoint = mobHolder.MobOnPoint(to)) != null && mobOnPoint.PlayerSideIndex != moving.PlayerSideIndex)
+        if ((mobOnPoint = worldContext.MobHolder.MobOnPoint(to)) != null && mobOnPoint.PlayerSideIndex != moving.PlayerSideIndex)
         {
             return false;
         }
@@ -328,7 +328,7 @@ public class GameMap
         return true;
     }
 
-    bool CanStopOn(MapMob moving, Vector3Int to, MobHolder mobHolder)
+    bool CanStopOn(MapMob moving, Vector3Int to, WorldContext worldContext)
     {
         if (!GameplayTiles.ContainsKey(to))
         {
@@ -342,7 +342,7 @@ public class GameMap
 
         MapMob mobOnPoint;
 
-        if ((mobOnPoint = mobHolder.MobOnPoint(to)) != null && mobOnPoint != moving)
+        if ((mobOnPoint = worldContext.MobHolder.MobOnPoint(to)) != null && mobOnPoint != moving)
         {
             return false;
         }

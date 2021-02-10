@@ -23,6 +23,11 @@ public struct RealmKey
         return MobLibrary.GetMob(Object);
     }
 
+    public MapFeature GetFeatureInstance()
+    {
+        return FeatureLibrary.GetFeature(Object);
+    }
+
     public int GetTeam()
     {
         return int.Parse(Object);

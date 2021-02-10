@@ -5,6 +5,7 @@ using UnityEngine;
 public class MapObject : MonoBehaviour
 {
     public Vector3Int Position { get; set; }
+    public virtual IEnumerable<string> Tags { get; }
 
     public void SettleIntoGrid()
     {
@@ -12,9 +13,21 @@ public class MapObject : MonoBehaviour
         SetPosition(nearestStartPosition);
     }
 
-    public void SetPosition(Vector3Int toPosition)
+    public virtual void SetPosition(Vector3Int toPosition)
     {
         Position = toPosition;
         transform.position = toPosition;
+    }
+
+    public virtual bool HasStartOfTurnEffects => false;
+
+    public virtual void StartOfTurnEffects(MapMob mobOnTile)
+    {
+
+    }
+
+    public virtual IEnumerable<StatAdjustment> StatAdjustmentsForMob(MapMob mobOnTile)
+    {
+        return new List<StatAdjustment>();
     }
 }

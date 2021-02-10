@@ -14,6 +14,7 @@ public class MobLibrary : SingletonBase<MobLibrary>
 
     public Sprite[] BasicMobSprite;
     public Sprite[] RangedMobSprite;
+    public Sprite[] EngineerMobSprite;
 
     public async static Task LoadMobsFromConfiguration()
     {
@@ -44,11 +45,15 @@ public class MobLibrary : SingletonBase<MobLibrary>
         // TODO HACK: This is a temporary holdover spot so we don't need to figure out graphics loading
         switch (appearance)
         {
-            default:
             case nameof(BasicMobSprite):
                 return Singleton.BasicMobSprite[side];
             case nameof(RangedMobSprite):
                 return Singleton.RangedMobSprite[side];
+            case nameof(EngineerMobSprite):
+                return Singleton.EngineerMobSprite[side];
+            default:
+                DebugTextLog.AddTextToLog($"Asked for {appearance} for a sprite, but that is not in the library. Returning default.", DebugTextLogChannel.RuntimeError);
+                return Singleton.BasicMobSprite[side];
         }
     }
 }

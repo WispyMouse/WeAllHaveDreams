@@ -194,7 +194,6 @@ GameObject:
   - component: {fileID: 198427619}
   - component: {fileID: 198427620}
   - component: {fileID: 198427621}
-  - component: {fileID: 198427622}
   m_Layer: 0
   m_Name: Engines
   m_TagString: Untagged
@@ -265,23 +264,6 @@ MonoBehaviour:
   MobHolderController: {fileID: 2100281717}
   StructureHolderController: {fileID: 2100281718}
   StartingPhase: {fileID: 902307292}
---- !u!114 &198427622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 198427617}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d985900f8f1d4442b61904eff8a7e71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FogTileMap: {fileID: 1180671774}
-  MapHolderController: {fileID: 2100281716}
-  HiddenTile: {fileID: 11400000, guid: 562d6aab84d488740984537f8e18e956, type: 2}
-  HasBeenSeenTile: {fileID: 11400000, guid: f3777bae83fad314e9c8bd7ced3d6aa1, type: 2}
-  VisibleTile: {fileID: 11400000, guid: 08a3579b622cc7249bdf33d8a24d0667, type: 2}
 --- !u!4 &202494515 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8596382311653572227, guid: 74be687cbb7fab7458b7717cecd64712, type: 3}
@@ -3164,6 +3146,7 @@ GameObject:
   - component: {fileID: 902307290}
   - component: {fileID: 902307289}
   - component: {fileID: 902307293}
+  - component: {fileID: 902307294}
   m_Layer: 0
   m_Name: Phases
   m_TagString: Untagged
@@ -3197,8 +3180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b6420b41574ce84ea8a5265fc6f8d5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapHolderInstance: {fileID: 2100281716}
-  MobHolderInstance: {fileID: 2100281717}
+  WorldContextInstance: {fileID: 2100281720}
 --- !u!114 &902307290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3214,6 +3196,7 @@ MonoBehaviour:
   InputResolutionPhaseInstance: {fileID: 902307289}
   NeutralPhaseInstance: {fileID: 902307292}
   UnitAttackPhaseInstance: {fileID: 902307291}
+  UseAbilityPhaseInstance: {fileID: 902307294}
   MapMetaInstance: {fileID: 198427620}
   MapHolderInstance: {fileID: 2100281716}
   StructureHolderInstance: {fileID: 2100281718}
@@ -3234,6 +3217,7 @@ MonoBehaviour:
   UnitMovementPhaseInstance: {fileID: 902307290}
   InputResolutionPhaseInstance: {fileID: 902307289}
   StructureHolderInstance: {fileID: 2100281718}
+  UseAbilityPhaseInstance: {fileID: 902307294}
 --- !u!114 &902307292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3263,7 +3247,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeutralPhaseInstance: {fileID: 902307292}
   InputResolutionPhaseInstance: {fileID: 902307289}
-  MobHolderInstance: {fileID: 2100281717}
+  WorldContextInstance: {fileID: 2100281720}
+--- !u!114 &902307294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 902307287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83c25dc1fa4e45740a06aa75afbe815b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NeutralPhaseInstance: {fileID: 902307292}
+  InputResolutionPhaseInstance: {fileID: 902307289}
 --- !u!1 &912113228
 GameObject:
   m_ObjectHideFlags: 0
@@ -3556,7 +3554,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1120445399
 GameObject:
@@ -3570,6 +3568,7 @@ GameObject:
   - component: {fileID: 1120445401}
   - component: {fileID: 1120445402}
   - component: {fileID: 1120445403}
+  - component: {fileID: 1120445404}
   m_Layer: 0
   m_Name: Library
   m_TagString: Untagged
@@ -3589,7 +3588,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1120445401
 MonoBehaviour:
@@ -3643,6 +3642,25 @@ MonoBehaviour:
   RangedMobSprite:
   - {fileID: -4436459265350964180, guid: a0a088b2f9edf3146b85f3dbc839cef8, type: 3}
   - {fileID: -429869358869659851, guid: a0a088b2f9edf3146b85f3dbc839cef8, type: 3}
+  EngineerMobSprite:
+  - {fileID: 7223737727636295290, guid: a0a088b2f9edf3146b85f3dbc839cef8, type: 3}
+  - {fileID: 3779164993360873225, guid: a0a088b2f9edf3146b85f3dbc839cef8, type: 3}
+--- !u!114 &1120445404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120445399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86754d1238d158b4b880a4a1ea40fc0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Features:
+  - {fileID: 6386683235800390737, guid: 39a2ca9a71a730746bf2e08744c9133b, type: 3}
+  - {fileID: -5519137696546975165, guid: 9e3165e8952830249a71beeeb1ac448a, type: 3}
+  DefaultFeature: {fileID: -5519137696546975165, guid: 9e3165e8952830249a71beeeb1ac448a, type: 3}
 --- !u!1 &1166089049
 GameObject:
   m_ObjectHideFlags: 0
@@ -4053,7 +4071,7 @@ Transform:
   - {fileID: 2085925678}
   - {fileID: 335620701}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1507032887
 GameObject:
@@ -4118,6 +4136,36 @@ Transform:
   - {fileID: 902307288}
   - {fileID: 322355930}
   - {fileID: 580301483}
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1543551131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1543551132}
+  m_Layer: 0
+  m_Name: Features
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1543551132
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1543551131}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4676,10 +4724,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 519420031}
-  FogHolderController: {fileID: 198427622}
-  MapHolderController: {fileID: 2100281716}
-  MobHolderController: {fileID: 2100281717}
-  StructureHolderInstance: {fileID: 2100281718}
+  WorldContextInstance: {fileID: 2100281720}
   PlayerInputPhaseControllerInstance: {fileID: 198427621}
   AIInputPhaseControllerInstance: {fileID: 2085925680}
   SideStatisticsInstance: {fileID: 183438005}
@@ -4695,9 +4740,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29d8903da810cbe41b58f7405baebd01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MobHolderInstance: {fileID: 2100281717}
-  MapHolderInstance: {fileID: 2100281716}
-  StructureHolderInstance: {fileID: 2100281718}
+  WorldContextInstance: {fileID: 2100281720}
   MapMetaInstance: {fileID: 198427620}
   AISettings:
     ConfigurationType: Configuration.AIConfiguration
@@ -4724,11 +4767,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2100281715}
+  - component: {fileID: 2100281720}
+  - component: {fileID: 2100281718}
   - component: {fileID: 2100281716}
   - component: {fileID: 2100281717}
-  - component: {fileID: 2100281718}
+  - component: {fileID: 2100281719}
+  - component: {fileID: 2100281721}
   m_Layer: 0
-  m_Name: Data
+  m_Name: Holders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4761,9 +4807,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LoadedMap: {fileID: 630442907}
-  MobHolderController: {fileID: 2100281717}
-  FogHolderController: {fileID: 198427622}
-  StructureHolderController: {fileID: 2100281718}
+  WorldContextInstance: {fileID: 2100281720}
 --- !u!114 &2100281717
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4776,8 +4820,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86262575cc7a0f64ab51184b7e9b712b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapHolderInstance: {fileID: 2100281716}
-  StructureHolderInstance: {fileID: 2100281718}
+  WorldContextInstance: {fileID: 2100281720}
   MovementHandlerInstance: {fileID: 322355931}
   AttackAnimationHandlerInstance: {fileID: 322355932}
   MobParent: {fileID: 912113229}
@@ -4793,8 +4836,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9342191b2c32f2c4bb512336e724997f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapHolderInstance: {fileID: 2100281716}
   StructuresParent: {fileID: 1549947365}
+--- !u!114 &2100281719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100281714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 594b3c7c42db82346ae8c05d7d8bd791, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WorldContextInstance: {fileID: 2100281720}
+  FeaturesParent: {fileID: 1543551132}
+--- !u!114 &2100281720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100281714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca0ae63e14b89d24d9bba25ee187945a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MapHolder: {fileID: 2100281716}
+  MobHolder: {fileID: 2100281717}
+  StructureHolder: {fileID: 2100281718}
+  FeatureHolder: {fileID: 2100281719}
+  FogHolder: {fileID: 2100281721}
+--- !u!114 &2100281721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100281714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d985900f8f1d4442b61904eff8a7e71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FogTileMap: {fileID: 1180671774}
+  WorldContextInstance: {fileID: 2100281720}
+  HiddenTile: {fileID: 11400000, guid: 562d6aab84d488740984537f8e18e956, type: 2}
+  HasBeenSeenTile: {fileID: 11400000, guid: f3777bae83fad314e9c8bd7ced3d6aa1, type: 2}
+  VisibleTile: {fileID: 11400000, guid: 08a3579b622cc7249bdf33d8a24d0667, type: 2}
 --- !u!1 &2122848601
 GameObject:
   m_ObjectHideFlags: 0

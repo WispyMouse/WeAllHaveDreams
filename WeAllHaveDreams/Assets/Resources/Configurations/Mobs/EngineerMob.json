@@ -1,0 +1,19 @@
+{
+  "ConfigurationType": "Configuration.MobConfiguration",
+  "Name": "EngineerMob",
+  "DevelopmentName": "EngineerMob",
+  "ResourceCost": 100,
+  "MoveRange": 2,
+  "SightRange": 2,
+  "AttackRange": 1,
+  "DamageOutputRatio": 0.3,
+  "DamageReductionRatio": 1.2,
+  "Appearance": "EngineerMobSprite",
+  "Abilities": 
+  [
+	{
+		"AbilityName": "BuildsAbility",
+		"Arguments": [ "Buildable" ]
+	}
+  ]
+}

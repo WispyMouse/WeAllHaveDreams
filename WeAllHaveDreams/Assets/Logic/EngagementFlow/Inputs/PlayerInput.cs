@@ -4,9 +4,9 @@ using UnityEngine;
 
 public abstract class PlayerInput
 {
-    public abstract IEnumerator Execute(MapHolder mapHolder, MobHolder mobHolder);
+    public abstract IEnumerator Execute(WorldContext worldContext);
 
-    public virtual bool IsPossible()
+    public virtual bool IsPossible(WorldContext givenContext)
     {
         return true;
     }

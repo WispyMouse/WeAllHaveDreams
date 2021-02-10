@@ -6,7 +6,7 @@ public class BellStructure : MapStructure
 {
     public List<string> SoldUnits;
 
-    public override IEnumerable<PlayerInput> GetPossiblePlayerInputs(MobHolder mobHolderInstance)
+    public override IEnumerable<PlayerInput> GetPossiblePlayerInputs(WorldContext worldContext)
     {
         List<PlayerInput> possibleInputs = new List<PlayerInput>();
         foreach (string soldUnit in SoldUnits)
