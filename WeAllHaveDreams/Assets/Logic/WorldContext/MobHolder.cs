@@ -64,6 +64,7 @@ public class MobHolder : MonoBehaviour
             yield break;
         }
 
+        toMove.RestingPosition = toMove.Position;
         WorldContextInstance.StructureHolder.MobRemovedFromPoint(toMove.Position);
         yield return MovementHandlerInstance.UnitWalks(toMove, to);
 

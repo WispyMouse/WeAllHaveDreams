@@ -21,13 +21,13 @@ public class MobCapturesStructurePlayerInput : PlayerInput
         {
             if (!Capturing.CanMove)
             {
-                DebugTextLog.AddTextToLog($"A unit tried to move to capture {Target.Position.x}, {Target.Position.y}, but can't move");
+                DebugTextLog.AddTextToLog($"A unit tried to move to capture {Target.Position.x}, {Target.Position.y}, but can't move", DebugTextLogChannel.RuntimeError);
                 yield break;
             }
 
             if (worldContext.MobHolder.MobOnPoint(Target.Position))
             {
-                DebugTextLog.AddTextToLog($"A unit tried to move to capture {Target.Position.x}, {Target.Position.y}, but there was already a different unit on that point");
+                DebugTextLog.AddTextToLog($"A unit tried to move to capture {Target.Position.x}, {Target.Position.y}, but there was already a different unit on that point", DebugTextLogChannel.RuntimeError);
                 yield break;
             }
 
@@ -49,5 +49,6 @@ public class MobCapturesStructurePlayerInput : PlayerInput
 
         Target.ProceedCapture(Capturing);
         Capturing.ExhaustAllOptions();
+        yield return TurnManager.ResolveEffects();
     }
 }

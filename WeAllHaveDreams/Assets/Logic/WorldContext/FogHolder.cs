@@ -108,7 +108,7 @@ public class FogHolder : MonoBehaviour
 
         foreach (MapMob curMob in WorldContextInstance.MobHolder.MobsOnTeam(player))
         {
-            HashSet<Vector3Int> thisMobsVisibleTiles = CalculateVisibleTiles(curMob);
+            HashSet<Vector3Int> thisMobsVisibleTiles = CalculateVisibleTiles(curMob, curMob.RestingPosition);
             assignedVisibility.IncorporateVisibleTiles(thisMobsVisibleTiles);
         }
 
@@ -118,13 +118,13 @@ public class FogHolder : MonoBehaviour
         }
     }
 
-    public HashSet<Vector3Int> CalculateVisibleTiles(MapMob mob)
+    public HashSet<Vector3Int> CalculateVisibleTiles(MapMob mob, Vector3Int fromPosition)
     {
         var seenPositions = new HashSet<Vector3Int>();
 
         var frontier = new HashSet<Vector3Int>();
-        frontier.Add(mob.Position);
-        seenPositions.Add(mob.Position);
+        frontier.Add(fromPosition);
+        seenPositions.Add(fromPosition);
 
         while (frontier.Any())
         {
@@ -132,7 +132,7 @@ public class FogHolder : MonoBehaviour
             frontier.Remove(thisTile);
 
             // If we've already expended all our range, stop ranging (lol)
-            int distanceFromStart = Mathf.Abs(mob.Position.x - thisTile.x) + Mathf.Abs(mob.Position.y - thisTile.y);
+            int distanceFromStart = Mathf.Abs(fromPosition.x - thisTile.x) + Mathf.Abs(fromPosition.y - thisTile.y);
             if (distanceFromStart >= mob.SightRange)
             {
                 continue;
@@ -145,7 +145,7 @@ public class FogHolder : MonoBehaviour
                     continue;
                 }
 
-                if (ClearLineOfVisibility(mob.Position, neighbor))
+                if (ClearLineOfVisibility(fromPosition, neighbor))
                 {
                     seenPositions.Add(neighbor);
                     frontier.Add(neighbor);

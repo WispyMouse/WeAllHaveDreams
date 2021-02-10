@@ -3215,6 +3215,7 @@ MonoBehaviour:
   MapMetaInstance: {fileID: 198427620}
   MapHolderInstance: {fileID: 2100281716}
   UnitMovementPhaseInstance: {fileID: 902307290}
+  NeutralPhaseInstance: {fileID: 902307292}
   InputResolutionPhaseInstance: {fileID: 902307289}
   StructureHolderInstance: {fileID: 2100281718}
   UseAbilityPhaseInstance: {fileID: 902307294}

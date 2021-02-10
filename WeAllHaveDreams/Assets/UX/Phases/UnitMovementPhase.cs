@@ -39,13 +39,13 @@ public class UnitMovementPhase : InputGameplayPhase
         if (selectedUnit.CanAttack)
         {
             MapMetaInstance.ShowUnitAttackRangePastMovementRange(selectedUnit);
-            DebugTextLog.AddTextToLog("Press 'A' to enter Attack Only mode");
+            DebugTextLog.AddTextToLog("Press 'A' to enter Attack Only mode", DebugTextLogChannel.DebugOperationInputInstructions);
         }
 
         MapStructure onStructure;
         if ((onStructure = StructureHolderInstance.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
         {
-            DebugTextLog.AddTextToLog("Press 'C' to capture this structure");
+            DebugTextLog.AddTextToLog("Press 'C' to capture this structure", DebugTextLogChannel.DebugOperationInputInstructions);
         }
 
         foreach (MobConfigurationAbility curAbility in selectedUnit.Abilities)
@@ -54,12 +54,14 @@ public class UnitMovementPhase : InputGameplayPhase
 
             if (possibleActions.Any())
             {
-                DebugTextLog.AddTextToLog($"Press 'X' to enter {curAbility.AbilityName} mode");
+                DebugTextLog.AddTextToLog($"Press 'X' to enter {curAbility.AbilityName} mode", DebugTextLogChannel.DebugOperationInputInstructions);
                 firstValidAbility = curAbility;
                 // HACK: Give units only one ability for now, so we don't need to sort out what button activates them
                 break;
             }
         }
+
+        DebugTextLog.AddTextToLog("Press 'Z' to end this mob's move.", DebugTextLogChannel.DebugOperationInputInstructions);
     }
 
     public override void EndPhase()
@@ -203,6 +205,12 @@ public class UnitMovementPhase : InputGameplayPhase
         if (Input.GetKeyDown(KeyCode.X) && firstValidAbility != null)
         {
             nextPhase = UseAbilityPhaseInstance.AbilitySelected(selectedUnit, firstValidAbility);
+            return true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            nextPhase = InputResolutionPhaseInstance.ResolveThis(new DoesNothingPlayerInput(selectedUnit), NeutralPhaseInstance);
             return true;
         }
 

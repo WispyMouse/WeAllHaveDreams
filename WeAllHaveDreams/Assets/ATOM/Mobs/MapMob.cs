@@ -98,6 +98,40 @@ public class MapMob : MapObject
         }
     }
 
+    /// <summary>
+    /// Gets a value indicating if this mob is now "at rest", no longer considering undos and such.
+    /// This can be used to determine if vision should be updated.
+    /// </summary>
+    public bool Settled
+    {
+        get
+        {
+            return !CanMove && !CanAttack;
+        }
+    }
+    public Vector3Int RestingPosition
+    {
+        get
+        {
+            if (Settled)
+            {
+                return Position;
+            }
+
+            if (restingPosition.HasValue)
+            {
+                return restingPosition.Value;
+            }
+
+            return Position;
+        }
+        set
+        {
+            restingPosition = value;
+        }
+    }
+    Vector3Int? restingPosition { get; set; }
+
     Dictionary<string, Reminder> Reminders { get; set; } = new Dictionary<string, Reminder>();
 
     public void RefreshForStartOfTurn()
@@ -113,12 +147,12 @@ public class MapMob : MapObject
     {
         CanMove = false;
         CanAttack = false;
+        restingPosition = Position;
     }
 
     public void ClearForEndOfTurn()
     {
-        CanMove = false;
-        CanAttack = false;
+        ExhaustAllOptions();
     }
 
     public void ShowReminder(string reminderTag)
