@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class MovementHandler : MonoBehaviour
 {
-    public MapHolder MapHolderInstance;
+    public WorldContext WorldContextInstance;
 
     public float TimeForUnitToWalkAcrossTile = .12f;
 
     public IEnumerator UnitWalks(MapMob moving, Vector3Int position)
     {
-        List<Vector3Int> path = MapHolderInstance.Path(moving, position);
+        List<Vector3Int> path = WorldContextInstance.MapHolder.Path(moving, position);
 
         if (path == null)
         {
@@ -19,14 +19,17 @@ public class MovementHandler : MonoBehaviour
             yield break;
         }
 
+        Vector3Int startingPosition = moving.Position;
+
         while (path.Any())
         {
             Vector3Int thisPathPart = path[0];
             path.RemoveAt(0);
 
-            Vector3 targetPosition = new Vector3(thisPathPart.x, thisPathPart.y, thisPathPart.z);
-            Vector3 startingPosition = moving.transform.position;
+            Vector3Int targetPosition = new Vector3Int(thisPathPart.x, thisPathPart.y, thisPathPart.z);
             float curTime = 0;
+
+            WorldContextInstance.FogHolder.ManageVisibilityToCurrentPerspective(moving, targetPosition);
 
             while (curTime <= TimeForUnitToWalkAcrossTile)
             {
@@ -36,6 +39,7 @@ public class MovementHandler : MonoBehaviour
             }
 
             moving.transform.position = targetPosition;
+            startingPosition = targetPosition;
         }
     }
 }

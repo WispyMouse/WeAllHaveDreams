@@ -119,6 +119,17 @@ public class FogHolder : MonoBehaviour
             assignedVisibility.IncorporateVisibleTiles(thisMobsVisibleTiles);
         }
 
+        foreach (MapStructure curStructure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => structure.PlayerSideIndex == player && !structure.UnCaptured))
+        {
+            HashSet<Vector3Int> thisStructureVisibleTiles = CalculateVisibleTiles(curStructure);
+            assignedVisibility.IncorporateVisibleTiles(thisStructureVisibleTiles);
+        }
+
+        foreach (MapMob curMob in WorldContextInstance.MobHolder.ActiveMobs)
+        {
+            ManageVisibilityToCurrentPerspective(curMob);
+        }
+
         if (fogVisibilityConfigurations.ShouldShowMapView(player))
         {
             RefreshFogVisuals();
@@ -163,6 +174,11 @@ public class FogHolder : MonoBehaviour
         return seenPositions;
     }
 
+    public HashSet<Vector3Int> CalculateVisibleTiles(MapStructure mapStructure)
+    {
+        return new HashSet<Vector3Int>() { mapStructure.Position };
+    }
+
     public bool ClearLineOfVisibility(Vector3Int pointA, Vector3Int pointB)
     {
         foreach (Vector3Int point in BresenhamLineDrawer.PointsOnLine(pointA, pointB))
@@ -193,6 +209,46 @@ public class FogHolder : MonoBehaviour
 
             DebugTextLog.AddTextToLog($"Changing fog settings from {previousSetting} to {nextSetting}.", DebugTextLogChannel.DebugOperations);
             UpdateVisibilityForPlayers();
+        }
+    }
+
+    public bool PointIsVisibleToPlayer(Vector3Int point, int player)
+    {
+        return TeamVisibilityData[player].VisibleTiles.Contains(point);
+    }
+
+    public bool PointIsVisibleToCurrentPerspective(Vector3Int point)
+    {
+        switch (fogVisibilityConfigurations.FogTurnHandlingMode)
+        {
+            case FogTurnHandlingEnum.ShowAllMap:
+                return true;
+            case FogTurnHandlingEnum.ShowAllVisibility:
+                return TurnManager.GetPlayers().Any(player => PointIsVisibleToPlayer(point, player.PlayerSideIndex));
+            case FogTurnHandlingEnum.SwitchEachTurn:
+                return PointIsVisibleToPlayer(point, TurnManager.CurrentPlayer.PlayerSideIndex);
+            case FogTurnHandlingEnum.StayOnOnePlayer:
+                return PointIsVisibleToPlayer(point, fogVisibilityConfigurations.FactionToShowFogFor);
+            default:
+                DebugTextLog.AddTextToLog($"Unrecognized FogVisibilityConfiguration for PointIsVisibleToCurrentPerspective");
+                return false;
+        }
+    }
+
+    public void ManageVisibilityToCurrentPerspective(MapObject toConsider)
+    {
+        ManageVisibilityToCurrentPerspective(toConsider, toConsider.Position);
+    }
+
+    public void ManageVisibilityToCurrentPerspective(MapObject toConsider, Vector3Int position)
+    {
+        if (!PointIsVisibleToCurrentPerspective(position))
+        {
+            toConsider.HideDueToFog();
+        }
+        else
+        {
+            toConsider.BeVisible();
         }
     }
 }

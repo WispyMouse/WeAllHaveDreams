@@ -461,7 +461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c88f1780e92b5e41bfa5ca8c59c88a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapHolderInstance: {fileID: 2100281716}
+  WorldContextInstance: {fileID: 2100281720}
   TimeForUnitToWalkAcrossTile: 0.12
 --- !u!114 &322355932
 MonoBehaviour:
