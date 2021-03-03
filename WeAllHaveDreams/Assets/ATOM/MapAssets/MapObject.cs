@@ -7,6 +7,8 @@ public class MapObject : MonoBehaviour
     public Vector3Int Position { get; set; }
     public virtual IEnumerable<string> Tags { get; }
 
+    bool shouldBeVisible { get; set; }
+
     public void SettleIntoGrid()
     {
         Vector3Int nearestStartPosition = new Vector3Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y), Mathf.RoundToInt(transform.position.z));
@@ -29,5 +31,17 @@ public class MapObject : MonoBehaviour
     public virtual IEnumerable<StatAdjustment> StatAdjustmentsForMob(MapMob mobOnTile)
     {
         return new List<StatAdjustment>();
+    }
+
+    public virtual void HideDueToFog()
+    {
+        gameObject.SetActive(false);
+        shouldBeVisible = false;
+    }
+
+    public virtual void BeVisible()
+    {
+        gameObject.SetActive(true);
+        shouldBeVisible = true;
     }
 }

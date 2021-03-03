@@ -11,6 +11,7 @@ namespace Configuration
     {
         public int FactionToShowFogFor;
         public bool CoverMapInDarknessInitially;
+        public bool UpdateVisibilityOnlyAfterSettling;
 
         [JsonConverter(typeof(StringEnumConverter))]
         public FogTurnHandlingEnum FogTurnHandlingMode;
@@ -21,7 +22,7 @@ namespace Configuration
 
         public override string GetConfigurationShortReport()
         {
-            return $"Mode: {FogTurnHandlingMode} // Faction: {FactionToShowFogFor} // Initial Darkness: {CoverMapInDarknessInitially}";
+            return $"Mode: {FogTurnHandlingMode} // Faction: {FactionToShowFogFor} // Initial Darkness: {CoverMapInDarknessInitially} // Update Visibility Only After Settling: {UpdateVisibilityOnlyAfterSettling}";
         }
 
         public bool ShouldShowMapView(int player)

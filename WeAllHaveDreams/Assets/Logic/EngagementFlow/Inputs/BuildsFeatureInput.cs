@@ -34,6 +34,7 @@ public class BuildsFeatureInput : PlayerInput
         DebugTextLog.AddTextToLog($"Building {FeatureToBuild} at ({Builder.Position.x}, {Builder.Position.y}");
         TurnManager.CurrentPlayer.TotalResources -= Cost;
         worldContext.FeatureHolder.SetFeature(Builder.Position, FeatureLibrary.GetFeature(FeatureToBuild));
+        yield return TurnManager.ResolveEffects();
         yield break;
     }
 }

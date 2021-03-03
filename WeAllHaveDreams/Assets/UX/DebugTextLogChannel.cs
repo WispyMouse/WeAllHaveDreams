@@ -9,5 +9,7 @@ public enum DebugTextLogChannel
     DebugLogging,
     ConfigurationReport,
     ConfigurationError,
-    RuntimeError
+    RuntimeError,
+    DebugOperations,
+    DebugOperationInputInstructions
 }

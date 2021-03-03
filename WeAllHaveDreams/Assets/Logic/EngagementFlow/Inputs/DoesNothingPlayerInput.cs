@@ -16,6 +16,7 @@ public class DoesNothingPlayerInput : PlayerInput
     public override IEnumerator Execute(WorldContext worldContext)
     {
         notActing.ExhaustAllOptions();
+        yield return TurnManager.ResolveEffects();
         yield break;
     }
 }
