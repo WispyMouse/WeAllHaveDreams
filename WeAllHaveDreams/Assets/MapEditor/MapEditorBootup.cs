@@ -31,6 +31,8 @@ public class MapEditorBootup : MonoBehaviour
         LocationInputInstance.SetTileCursorVisibility(true);
 
         DebugTextLog.AddTextToLog("Press P to enter Play mode", DebugTextLogChannel.DebugOperationInputInstructions);
+        DebugTextLog.AddTextToLog("Press Z to undo and Y to redo", DebugTextLogChannel.DebugOperationInputInstructions);
+
     }
 
     private void Update()

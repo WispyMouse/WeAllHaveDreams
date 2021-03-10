@@ -12,6 +12,11 @@ public class TileLibrary : SingletonBase<TileLibrary>
 
     public static GameplayTile GetTile(string tileName)
     {
+        if (string.IsNullOrEmpty(tileName))
+        {
+            return null;
+        }
+
         if (Singleton.NamesToTiles.TryGetValue(tileName, out GameplayTile foundTile))
         {
             return foundTile;

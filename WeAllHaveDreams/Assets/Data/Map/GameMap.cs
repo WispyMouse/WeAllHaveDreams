@@ -15,7 +15,14 @@ public class GameMap
 
     public GameplayTile GetGameplayTile(Vector3Int position)
     {
-        return GameplayTiles[position];
+        GameplayTile foundTile;
+
+        if (GameplayTiles.TryGetValue(position, out foundTile))
+        {
+            return foundTile;
+        }
+
+        return null;
     }
 
     public static async Task<GameMap> LoadFromRealm(Realm realmData)
@@ -371,6 +378,12 @@ public class GameMap
 
     public void SetTile(Vector3Int position, GameplayTile tile)
     {
+        if (tile == null)
+        {
+            RemoveTile(position);
+            return;
+        }
+
         if (GameplayTiles.ContainsKey(position))
         {
             GameplayTiles[position] = tile;
@@ -391,6 +404,20 @@ public class GameMap
             }
 
             Neighbors.Add(position, newNeighbors);
+        }
+    }
+
+    public void RemoveTile(Vector3Int position)
+    {
+        GameplayTiles.Remove(position);
+        Neighbors.Remove(position);
+
+        foreach (Vector3Int curNeighbor in GetPotentialNeighbors(position))
+        {
+            if (GameplayTiles.ContainsKey(curNeighbor))
+            {
+                Neighbors[curNeighbor] = Neighbors[curNeighbor].Except(new Vector3Int[] { position });
+            }
         }
     }
 }
