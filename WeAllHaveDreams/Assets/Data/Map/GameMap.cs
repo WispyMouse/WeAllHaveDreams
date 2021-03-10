@@ -93,6 +93,15 @@ public class GameMap
         return newMap;
     }
 
+    public static GameMap LoadEmptyRealm()
+    {
+        GameMap newMap = new GameMap();
+        newMap.loadedRealm = Realm.GetEmptyRealm();
+        newMap.GameplayTiles = new Dictionary<Vector3Int, GameplayTile>();
+        newMap.Neighbors = new Dictionary<Vector3Int, IEnumerable<Vector3Int>>();
+        return newMap;
+    }
+
     public static Vector3Int[] GetPotentialNeighbors(Vector3Int center)
     {
         return new Vector3Int[]
@@ -358,5 +367,30 @@ public class GameMap
     public IEnumerable<Vector3Int> GetAllTiles()
     {
         return GameplayTiles.Keys;
+    }
+
+    public void SetTile(Vector3Int position, GameplayTile tile)
+    {
+        if (GameplayTiles.ContainsKey(position))
+        {
+            GameplayTiles[position] = tile;
+        }
+        else
+        {
+            GameplayTiles.Add(position, tile);
+
+            List<Vector3Int> newNeighbors = new List<Vector3Int>();
+
+            foreach (Vector3Int curNeighbor in GetPotentialNeighbors(position))
+            {
+                if (GameplayTiles.ContainsKey(curNeighbor))
+                {
+                    Neighbors[curNeighbor] = Neighbors[curNeighbor].Union(new Vector3Int[] { position });
+                    newNeighbors.Add(curNeighbor);
+                }
+            }
+
+            Neighbors.Add(position, newNeighbors);
+        }
     }
 }

@@ -33,18 +33,14 @@ public class MapBootup : MonoBehaviour
     private async Task Start()
     {
         DebugTextLog.AddTextToLog("Loading Library");
-
         AsyncOperation libraryHandle = SceneManager.LoadSceneAsync("Library", LoadSceneMode.Additive);
-
         while (!libraryHandle.isDone)
         {
             await Task.Delay(1);
         }
 
         DebugTextLog.AddTextToLog("Loading WorldContext");
-
         AsyncOperation contextHandle = SceneManager.LoadSceneAsync("WorldContext", LoadSceneMode.Additive);
-
         while (!contextHandle.isDone)
         {
             await Task.Delay(1);

@@ -25,6 +25,15 @@ public class Realm
         GenerateNeighbors();
     }
 
+    public static Realm GetEmptyRealm()
+    {
+        Realm newRealm = new Realm();
+        newRealm.AllPositions = new HashSet<Vector3Int>();
+        newRealm.Neighbors = new Dictionary<Vector3Int, IEnumerable<Vector3Int>>();
+        newRealm.KeysAtPositions = new Dictionary<Vector3Int, HashSet<RealmKey>>();
+        return newRealm;
+    }
+
     async Task GenerateMapFromImage()
     {
         KeysAtPositions = new Dictionary<Vector3Int, HashSet<RealmKey>>();

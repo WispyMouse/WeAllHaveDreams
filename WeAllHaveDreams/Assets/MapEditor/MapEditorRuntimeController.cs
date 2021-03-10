@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MapEditorRuntimeController : MonoBehaviour
 {
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
+
     public LocationInput LocationInputController;
 
     private void Update()
@@ -15,7 +17,7 @@ public class MapEditorRuntimeController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3Int? worldpoint = LocationInputController.GetHoveredTilePosition();
+            Vector3Int? worldpoint = LocationInputController.GetHoveredTilePosition(false);
 
             // We didn't click on a position, so do nothing
             if (!worldpoint.HasValue)
@@ -32,6 +34,6 @@ public class MapEditorRuntimeController : MonoBehaviour
 
     void ApplyTilePalette(Vector3Int worldPoint)
     {
-
+        WorldContextInstance.MapHolder.SetTile(worldPoint, TileLibrary.GetTile("Floor"));
     }
 }

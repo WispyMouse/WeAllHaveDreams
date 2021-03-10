@@ -22,6 +22,12 @@ public class MapHolder : MonoBehaviour
     public List<Vector3Int> Path(MapMob moving, Vector3Int to) => activeMap.Path(moving, to, WorldContextInstance);
     public IEnumerable<Vector3Int> CanHitFrom(MapMob attacking, Vector3Int target) => activeMap.CanAttackFrom(attacking, target);
 
+    public async Task LoadEmptyRealm()
+    {
+        activeMap = GameMap.LoadEmptyRealm();
+        LoadedMap.ClearAllTiles();
+    }
+
     public async Task LoadFromRealm(Realm toLoad)
     {
         activeMap = await GameMap.LoadFromRealm(toLoad);
@@ -74,5 +80,11 @@ public class MapHolder : MonoBehaviour
     {
         LoadedMap.ClearAllTiles();
         WorldContextInstance.ClearEverything();
+    }
+
+    public void SetTile(Vector3Int position, GameplayTile toSet)
+    {
+        activeMap.SetTile(position, toSet);
+        LoadedMap.SetTile(position, toSet);
     }
 }
