@@ -11,7 +11,7 @@ public class MapHolder : MonoBehaviour
 
     public Tilemap LoadedMap;
 
-    public WorldContext WorldContextInstance;
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
     public GameplayTile GetGameplayTile(Vector3Int position) => activeMap.GetGameplayTile(position);
     public IEnumerable<Vector3Int> GetAllTiles() => activeMap.GetAllTiles();

@@ -9,7 +9,7 @@ public class FogHolder : MonoBehaviour
 {
     public Tilemap FogTileMap;
 
-    public WorldContext WorldContextInstance;
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
     public Tile HiddenTile;
     public Tile HasBeenSeenTile;

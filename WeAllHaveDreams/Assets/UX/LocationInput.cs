@@ -5,14 +5,15 @@ using UnityEngine.Tilemaps;
 
 public class LocationInput : MonoBehaviour
 {
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
+
     public Camera MapCamera;
-    public Tilemap TerrainTilemap;
 
     public Vector3Int? GetHoveredTilePosition()
     {
-        Vector3Int worldpoint = TerrainTilemap.WorldToCell(MapCamera.ScreenToWorldPoint(Input.mousePosition));
+        Vector3Int worldpoint = WorldContextInstance.MapHolder.LoadedMap.WorldToCell(MapCamera.ScreenToWorldPoint(Input.mousePosition));
 
-        if (!TerrainTilemap.HasTile(worldpoint))
+        if (!WorldContextInstance.MapHolder.LoadedMap.HasTile(worldpoint))
         {
             return null;
         }

@@ -17,7 +17,7 @@ public class TurnManager : SingletonBase<TurnManager>
     // TEMPORARY: This should not be here! But, it is the easiest place to insert for now.
     public Camera MainCamera;
 
-    public WorldContext WorldContextInstance;
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
     public PlayerInputPhaseController PlayerInputPhaseControllerInstance;
     public AIInputPhaseController AIInputPhaseControllerInstance;
@@ -133,9 +133,14 @@ public class TurnManager : SingletonBase<TurnManager>
 
     public static void VictoryIsDeclared(int winner)
     {
+        DebugTextLog.AddTextToLog($"The winner is side #{winner}!");
+        StopAllInputs();
+    }
+
+    public static void StopAllInputs()
+    {
         Singleton.AIInputPhaseControllerInstance.StopAllInputs();
         Singleton.PlayerInputPhaseControllerInstance.StopAllInputs();
-        DebugTextLog.AddTextToLog($"The winner is side #{winner}!");
         GameIsInProgress = false;
     }
 

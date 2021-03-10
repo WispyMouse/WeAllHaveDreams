@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class FeatureHolder : MonoBehaviour
 {
-    public WorldContext WorldContextInstance;
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
     public Transform FeaturesParent;
 
     public List<MapFeature> ActiveFeatures { get; set; } = new List<MapFeature>();

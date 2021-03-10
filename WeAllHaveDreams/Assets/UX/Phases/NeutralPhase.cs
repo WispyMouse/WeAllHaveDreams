@@ -5,7 +5,6 @@ using UnityEngine;
 public class NeutralPhase : InputGameplayPhase
 {
     public UnitMovementPhase UnitMovementPhaseInstance;
-    public MobHolder MobHolderInstance;
     public StructureUsagePhase StructureUsagePhaseInstance;
 
     public override bool TryHandleUnitClicked(MapMob mob, out InputGameplayPhase nextPhase)

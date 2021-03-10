@@ -13,7 +13,7 @@ public class DoesNothingPlayerInput : PlayerInput
 
     public override string LongTitle => $"Do nothing and exhaust all options";
 
-    public override IEnumerator Execute(WorldContext worldContext)
+    public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {
         notActing.ExhaustAllOptions();
         yield return TurnManager.ResolveEffects();

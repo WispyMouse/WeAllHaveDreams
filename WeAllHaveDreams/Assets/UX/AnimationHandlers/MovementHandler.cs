@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MovementHandler : MonoBehaviour
 {
-    public WorldContext WorldContextInstance;
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
     public float TimeForUnitToWalkAcrossTile = .12f;
 

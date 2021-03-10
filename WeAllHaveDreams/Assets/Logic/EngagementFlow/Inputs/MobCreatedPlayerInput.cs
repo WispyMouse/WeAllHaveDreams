@@ -17,7 +17,7 @@ public class MobCreatedPlayerInput : PlayerInput
 
     public override string LongTitle => $"Create {MapMobPf.name} for {ResourceCost} resources";
 
-    public override IEnumerator Execute(WorldContext worldContext)
+    public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {
         if (TurnManager.CurrentPlayer.TotalResources >= ResourceCost)
         {

@@ -4,10 +4,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class MapMeta : MonoBehaviour
+public class MapMetaHolder : MonoBehaviour
 {
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
     public Tilemap MetaMap;
-    public MapHolder MapHolderController;
 
     public Tile MovementTile;
     public Tile AttackTile;
@@ -19,7 +19,7 @@ public class MapMeta : MonoBehaviour
     {
         ClearMetas();
 
-        foreach (Vector3Int tile in MapHolderController.PotentialMoves(toShow))
+        foreach (Vector3Int tile in WorldContextInstance.MapHolder.PotentialMoves(toShow))
         {
             MetaMap.SetTile(tile, MovementTile);
             ActiveMovementTiles.Add(tile);
@@ -33,7 +33,7 @@ public class MapMeta : MonoBehaviour
             ActiveAttackTiles = new HashSet<Vector3Int>();
         }
 
-        foreach (Vector3Int possibleAttackTile in MapHolderController.PotentialAttacks(toShow, toShow.Position))
+        foreach (Vector3Int possibleAttackTile in WorldContextInstance.MapHolder.PotentialAttacks(toShow, toShow.Position))
         {
             ActiveAttackTiles.Add(possibleAttackTile);
         }
@@ -52,7 +52,7 @@ public class MapMeta : MonoBehaviour
 
         foreach (Vector3Int movementTile in ActiveMovementTiles)
         {
-            foreach (Vector3Int possibleAttackTile in MapHolderController.PotentialAttacks(toShow, movementTile))
+            foreach (Vector3Int possibleAttackTile in WorldContextInstance.MapHolder.PotentialAttacks(toShow, movementTile))
             {
                 ActiveAttackTiles.Add(possibleAttackTile);
             }

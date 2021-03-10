@@ -7,8 +7,8 @@ public class AIInputPhaseController : MonoBehaviour
 {
     Coroutine TurnBeingPlayed { get; set; }
 
-    public WorldContext WorldContextInstance;
-    public MapMeta MapMetaInstance;
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
+    public GameplayAnimationHolder GameplayAnimationInstance;
 
     public Configuration.AIConfiguration AISettings;
 
@@ -38,7 +38,7 @@ public class AIInputPhaseController : MonoBehaviour
 
             UnitTurnPlan bestPlan = possiblePlans.OrderByDescending(plan => plan.Score).First();
             DebugTextLog.AddTextToLog($"AI Plan: {bestPlan.DeterminedInput.LongTitle}, score {bestPlan.Score}");
-            yield return bestPlan.DeterminedInput.Execute(WorldContextInstance);
+            yield return bestPlan.DeterminedInput.Execute(WorldContextInstance, GameplayAnimationInstance);
         }
 
         foreach (MapStructure curStructure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => !structure.UnCaptured && structure.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex))
@@ -52,7 +52,7 @@ public class AIInputPhaseController : MonoBehaviour
                 if (possibleInputs.Any())
                 {
                     PlayerInput randomInput = possibleInputs.ToList()[Random.Range(0, possibleInputs.Count())];
-                    yield return randomInput.Execute(WorldContextInstance);
+                    yield return randomInput.Execute(WorldContextInstance, GameplayAnimationInstance);
                 }
             }
         }
@@ -192,6 +192,9 @@ public class AIInputPhaseController : MonoBehaviour
 
     public void StopAllInputs()
     {
-        StopCoroutine(TurnBeingPlayed);
+        if (TurnBeingPlayed != null)
+        {
+            StopCoroutine(TurnBeingPlayed);
+        }
     }
 }

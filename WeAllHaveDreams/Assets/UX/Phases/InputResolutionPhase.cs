@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class InputResolutionPhase : InputGameplayPhase
 {
-    public WorldContext WorldContextInstance;
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
+    public GameplayAnimationHolder GameplayAnimationInstance;
 
     PlayerInput resolving { get; set; }
     InputGameplayPhase nextPhase { get; set; }
@@ -21,7 +22,7 @@ public class InputResolutionPhase : InputGameplayPhase
     public override IEnumerator EnterPhase()
     {
         actionResolved = false;
-        yield return resolving.Execute(WorldContextInstance);
+        yield return resolving.Execute(WorldContextInstance, GameplayAnimationInstance);
         actionResolved = true;
     }
 

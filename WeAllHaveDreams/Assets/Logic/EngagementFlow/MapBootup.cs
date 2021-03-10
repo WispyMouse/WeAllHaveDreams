@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MapBootup : MonoBehaviour
 {
@@ -27,19 +28,45 @@ public class MapBootup : MonoBehaviour
     }
 
     public TurnManager TurnManagerInstance;
-    public MapHolder MapHolderInstance;
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
-    private async void Start()
+    private async Task Start()
     {
-        MapHolderInstance.ClearEverything();
+        DebugTextLog.AddTextToLog("Loading Library");
+
+        AsyncOperation libraryHandle = SceneManager.LoadSceneAsync("Library", LoadSceneMode.Additive);
+
+        while (!libraryHandle.isDone)
+        {
+            await Task.Delay(1);
+        }
+
+        DebugTextLog.AddTextToLog("Loading WorldContext");
+
+        AsyncOperation contextHandle = SceneManager.LoadSceneAsync("WorldContext", LoadSceneMode.Additive);
+
+        while (!contextHandle.isDone)
+        {
+            await Task.Delay(1);
+        }
 
         await ConfigurationLoadingEntrypoint.LoadAllConfigurationData();
         Realm defaultRealm = await GetDefaultRealm();
-        await MapHolderInstance.LoadFromRealm(defaultRealm);
+        await WorldContextInstance.MapHolder.LoadFromRealm(defaultRealm);
         TurnManagerInstance.GameplayReady();
+
+        DebugTextLog.AddTextToLog("Press M to enter Map Editor mode", DebugTextLogChannel.DebugOperationInputInstructions);
     }
 
-    async Task<Realm> GetDefaultRealm()
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            TransitionToMapEditor();
+        }
+    }
+
+    public static async Task<Realm> GetDefaultRealm()
     {
         foreach (string filePath in Directory.GetFiles(MapFolderPath, MapFileSearch, SearchOption.AllDirectories))
         {
@@ -57,5 +84,11 @@ public class MapBootup : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void TransitionToMapEditor()
+    {
+        TurnManager.StopAllInputs();
+        SceneManager.LoadScene("MapEditor", LoadSceneMode.Single);
     }
 }
