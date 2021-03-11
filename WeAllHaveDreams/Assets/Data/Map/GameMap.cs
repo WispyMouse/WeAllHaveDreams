@@ -11,7 +11,7 @@ public class GameMap
     Dictionary<Vector3Int, IEnumerable<Vector3Int>> Neighbors { get; set; }
     Dictionary<Vector3Int, GameplayTile> GameplayTiles { get; set; }
 
-    Realm loadedRealm;
+    public Realm LoadedRealm;
 
     public GameplayTile GetGameplayTile(Vector3Int position)
     {
@@ -30,24 +30,16 @@ public class GameMap
         var gameplayTiles = new Dictionary<Vector3Int, GameplayTile>();
 
         GameMap newMap = new GameMap();
-        newMap.loadedRealm = realmData;
+        newMap.LoadedRealm = realmData;
 
         await realmData.Hydrate();
 
-        foreach (Vector3Int curPosition in realmData.AllPositions)
+        foreach (RealmCoordinate coordinate in realmData.RealmCoordinates)
         {
-            foreach (RealmKey key in realmData.KeysAtPositions[curPosition])
-            {
-                switch (key.Type)
-                {
-                    case RealmKeyType.Tile:
-                        gameplayTiles.Add(curPosition, TileLibrary.GetTile(key.Object));
-                        break;
-                }
-            }
+            gameplayTiles.Add(coordinate.Position, TileLibrary.GetTile(coordinate.Tile));
         }
 
-        newMap.Neighbors = realmData.Neighbors;
+        newMap.Neighbors = GenerateNeighbors(realmData);
         newMap.GameplayTiles = gameplayTiles;
         return newMap;
     }
@@ -103,7 +95,7 @@ public class GameMap
     public static GameMap LoadEmptyRealm()
     {
         GameMap newMap = new GameMap();
-        newMap.loadedRealm = Realm.GetEmptyRealm();
+        newMap.LoadedRealm = Realm.GetEmptyRealm();
         newMap.GameplayTiles = new Dictionary<Vector3Int, GameplayTile>();
         newMap.Neighbors = new Dictionary<Vector3Int, IEnumerable<Vector3Int>>();
         return newMap;
@@ -419,5 +411,32 @@ public class GameMap
                 Neighbors[curNeighbor] = Neighbors[curNeighbor].Except(new Vector3Int[] { position });
             }
         }
+    }
+
+    static Dictionary<Vector3Int, IEnumerable<Vector3Int>> GenerateNeighbors(Realm forRealm)
+    {
+        Dictionary<Vector3Int, IEnumerable<Vector3Int>> neighborsDictionary = new Dictionary<Vector3Int, IEnumerable<Vector3Int>>();
+
+        foreach (RealmCoordinate coordinate in forRealm.RealmCoordinates)
+        {
+            neighborsDictionary.Add(coordinate.Position, new Vector3Int[] { });
+        }
+
+        foreach (RealmCoordinate coordinate in forRealm.RealmCoordinates)
+        {
+            List<Vector3Int> actualNeighbors = new List<Vector3Int>();
+
+            foreach (Vector3Int neighbor in GetPotentialNeighbors(coordinate.Position))
+            {
+                if (neighborsDictionary.ContainsKey(neighbor))
+                {
+                    actualNeighbors.Add(neighbor);
+                }
+            }
+
+            neighborsDictionary[coordinate.Position] = actualNeighbors;
+        }
+
+        return neighborsDictionary;
     }
 }

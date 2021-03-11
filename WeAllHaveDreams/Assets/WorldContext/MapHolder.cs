@@ -34,8 +34,10 @@ public class MapHolder : MonoBehaviour
 
         LoadedMap.ClearAllTiles();
 
-        foreach (Vector3Int position in toLoad.AllPositions)
+        foreach (RealmCoordinate coordinate in toLoad.RealmCoordinates)
         {
+            LoadedMap.SetTile(coordinate.Position, TileLibrary.GetTile(coordinate.Tile));
+            /*
             foreach (RealmKey curKey in toLoad.KeysAtPositions[position].OrderBy(key => (int)key.Type))
             {
                 switch (curKey.Type)
@@ -64,6 +66,7 @@ public class MapHolder : MonoBehaviour
                         break;
                 }
             }
+            */
         }
     }
 

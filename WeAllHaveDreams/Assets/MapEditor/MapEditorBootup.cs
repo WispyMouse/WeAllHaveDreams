@@ -26,7 +26,15 @@ public class MapEditorBootup : MonoBehaviour
         }
 
         await ConfigurationLoadingEntrypoint.LoadAllConfigurationData();
-        await WorldContextInstance.MapHolder.LoadEmptyRealm();
+
+        if (MapBootup.WIPRealm == null)
+        {
+            await WorldContextInstance.MapHolder.LoadEmptyRealm();
+        }
+        else
+        {
+            await WorldContextInstance.MapHolder.LoadFromRealm(MapBootup.WIPRealm);
+        }
 
         LocationInputInstance.SetTileCursorVisibility(true);
 
@@ -45,6 +53,30 @@ public class MapEditorBootup : MonoBehaviour
 
     public void TransitionToGameplay()
     {
+        DebugTextLog.AddTextToLog("Saving map to transition to Gameplay Scene", DebugTextLogChannel.DebugOperations);
+
+        Realm savedRealm = PackUpAndSaveRealm();
+        MapBootup.WIPRealm = savedRealm;
+
+        DebugTextLog.AddTextToLog("Save complete, assigned to WIPRealm", DebugTextLogChannel.DebugOperations);
+
         SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
+    }
+
+    Realm PackUpAndSaveRealm()
+    {
+        Realm newRealm = new Realm();
+
+        List<RealmCoordinate> realmCoordinates = new List<RealmCoordinate>();
+
+        foreach (Vector3Int position in WorldContextInstance.MapHolder.GetAllTiles())
+        {
+            GameplayTile tile = WorldContextInstance.MapHolder.GetGameplayTile(position);
+            realmCoordinates.Add(new RealmCoordinate() { Position = position, Tile = tile.name });
+        }
+
+        newRealm.RealmCoordinates = realmCoordinates;
+
+        return newRealm;
     }
 }

@@ -12,7 +12,8 @@ public abstract class SingletonBase<T> : MonoBehaviour where T : SingletonBase<T
 
                 if (_Singleton == null)
                 {
-                    throw new System.Exception(string.Format("No active {0} found in scene", typeof(T).ToString()));
+                    string errorMessage = string.Format("No active {0} found in scene", typeof(T).ToString());
+                    throw new System.Exception(errorMessage);
                 }
             }
 

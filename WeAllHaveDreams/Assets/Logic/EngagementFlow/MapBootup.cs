@@ -30,6 +30,8 @@ public class MapBootup : MonoBehaviour
     public TurnManager TurnManagerInstance;
     public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
+    public static Realm WIPRealm; // HACK: Putting something in here will make it load up, instead of the Default Realm
+
     private async Task Start()
     {
         DebugTextLog.AddTextToLog("Loading Library");
@@ -47,8 +49,15 @@ public class MapBootup : MonoBehaviour
         }
 
         await ConfigurationLoadingEntrypoint.LoadAllConfigurationData();
-        Realm defaultRealm = await GetDefaultRealm();
-        await WorldContextInstance.MapHolder.LoadFromRealm(defaultRealm);
+
+        Realm realmToLoad = WIPRealm;
+        if (realmToLoad == null)
+        {
+            DebugTextLog.AddTextToLog("Loading default realm", DebugTextLogChannel.DebugLogging);
+            realmToLoad = await GetDefaultRealm();
+        }
+
+        await WorldContextInstance.MapHolder.LoadFromRealm(realmToLoad);
         TurnManagerInstance.GameplayReady();
 
         DebugTextLog.AddTextToLog("Press M to enter Map Editor mode", DebugTextLogChannel.DebugOperationInputInstructions);
@@ -79,7 +88,9 @@ public class MapBootup : MonoBehaviour
             return JsonConvert.DeserializeObject<Realm>(fileText);
         }
 
-        return null;
+        DebugTextLog.AddTextToLog("Attempted to load default realm, but could not find any, returning empty", DebugTextLogChannel.DebugLogging);
+
+        return Realm.GetEmptyRealm();
     }
 
     public void TransitionToMapEditor()
