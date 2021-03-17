@@ -198,7 +198,7 @@ public class FogHolder : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (TurnManager.GameIsInProgress && Input.GetKeyDown(KeyCode.F))
         {
             FogTurnHandlingEnum previousSetting = fogVisibilityConfigurations.FogTurnHandlingMode;
             List<FogTurnHandlingEnum> allSettings = Enum.GetValues(typeof(FogTurnHandlingEnum)).Cast<FogTurnHandlingEnum>().ToList();

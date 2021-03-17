@@ -11,5 +11,6 @@ public enum DebugTextLogChannel
     ConfigurationError,
     RuntimeError,
     DebugOperations,
-    DebugOperationInputInstructions
+    DebugOperationInputInstructions,
+    MapEditorOperations
 }

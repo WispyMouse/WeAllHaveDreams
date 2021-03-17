@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MapEditorRuntimeController : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class MapEditorRuntimeController : MonoBehaviour
 
     bool HandleClick()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             Vector3Int? worldpoint = LocationInputController.GetHoveredTilePosition(false);
 
@@ -70,7 +71,7 @@ public class MapEditorRuntimeController : MonoBehaviour
             }
 
             // Likewise, can't redo if we're already at the front
-            if (historyPointer.Value == ActionHistory.Count)
+            if ((historyPointer.Value + 1) == ActionHistory.Count)
             {
                 return false;
             }
@@ -106,7 +107,14 @@ public class MapEditorRuntimeController : MonoBehaviour
 
         if (historyPointer.HasValue)
         {
-            ActionHistory.RemoveRange(historyPointer.Value, ActionHistory.Count - historyPointer.Value);
+            if (historyPointer.Value < 0)
+            {
+                ActionHistory = new List<TileReplacementAction>();
+            }
+            else
+            {
+                ActionHistory.RemoveRange(historyPointer.Value, ActionHistory.Count - historyPointer.Value);
+            }
         }
 
         ActionHistory.Add(replacementAction);

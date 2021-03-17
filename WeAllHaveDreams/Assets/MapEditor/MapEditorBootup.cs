@@ -38,45 +38,28 @@ public class MapEditorBootup : MonoBehaviour
 
         LocationInputInstance.SetTileCursorVisibility(true);
 
-        DebugTextLog.AddTextToLog("Press P to enter Play mode", DebugTextLogChannel.DebugOperationInputInstructions);
+        // DebugTextLog.AddTextToLog("Press P to enter Play mode", DebugTextLogChannel.DebugOperationInputInstructions);
         DebugTextLog.AddTextToLog("Press Z to undo and Y to redo", DebugTextLogChannel.DebugOperationInputInstructions);
 
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            TransitionToGameplay();
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.P))
+    //    {
+    //        TransitionToGameplay();
+    //    }
+    //}
 
-    public void TransitionToGameplay()
-    {
-        DebugTextLog.AddTextToLog("Saving map to transition to Gameplay Scene", DebugTextLogChannel.DebugOperations);
+    //public void TransitionToGameplay()
+    //{
+    //    DebugTextLog.AddTextToLog("Saving map to transition to Gameplay Scene", DebugTextLogChannel.DebugOperations);
 
-        Realm savedRealm = PackUpAndSaveRealm();
-        MapBootup.WIPRealm = savedRealm;
+    //    Realm savedRealm = PackUpAndSaveRealm();
+    //    MapBootup.WIPRealm = savedRealm;
 
-        DebugTextLog.AddTextToLog("Save complete, assigned to WIPRealm", DebugTextLogChannel.DebugOperations);
+    //    DebugTextLog.AddTextToLog("Save complete, assigned to WIPRealm", DebugTextLogChannel.DebugOperations);
 
-        SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
-    }
-
-    Realm PackUpAndSaveRealm()
-    {
-        Realm newRealm = new Realm();
-
-        List<RealmCoordinate> realmCoordinates = new List<RealmCoordinate>();
-
-        foreach (Vector3Int position in WorldContextInstance.MapHolder.GetAllTiles())
-        {
-            GameplayTile tile = WorldContextInstance.MapHolder.GetGameplayTile(position);
-            realmCoordinates.Add(new RealmCoordinate() { Position = position, Tile = tile.name });
-        }
-
-        newRealm.RealmCoordinates = realmCoordinates;
-
-        return newRealm;
-    }
+    //    SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
+    //}
 }

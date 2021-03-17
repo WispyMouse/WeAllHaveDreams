@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class Realm
 {
+    public string Name = "Default";
     public IEnumerable<RealmCoordinate> RealmCoordinates;
 
     public async Task Hydrate()

@@ -18,7 +18,7 @@ public class MapBootup : MonoBehaviour
         }
     }
 
-    const string MapFileSuffix = ".json";
+    public const string MapFileSuffix = ".json";
     static string MapFileSearch
     {
         get
