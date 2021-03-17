@@ -99,7 +99,7 @@ public class MapEditorRuntimeController : MonoBehaviour
 
         if (tileAtPosition != null)
         {
-            replacedTile = tileAtPosition.name;
+            replacedTile = tileAtPosition.TileName;
         }
 
         TileReplacementAction replacementAction = new TileReplacementAction(worldPoint, replacedTile, "Floor");

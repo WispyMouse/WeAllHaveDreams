@@ -11,16 +11,39 @@ public class DebugTextLog : SingletonBase<DebugTextLog>
     public Text TextLog;
     List<string> ActiveText = new List<string>();
 
+    Queue<string> MessageQueue { get; set; } = new Queue<string>();
+
+    private void Awake()
+    {
+        ExplicitlySetSingleton();
+    }
+
+    private void Update()
+    {
+        lock (MessageQueue)
+        {
+            while (MessageQueue.Count > 0)
+            {
+                string thisText = MessageQueue.Dequeue();
+                Singleton.ActiveText.Add(thisText);
+
+                if (Singleton.ActiveText.Count > TextLogSize)
+                {
+                    Singleton.ActiveText.RemoveRange(0, ActiveText.Count - TextLogSize);
+                }
+
+                Singleton.TextLog.text = string.Join("\n", ActiveText);
+            }
+        }
+    }
+
     public static void AddTextToLog(string text, DebugTextLogChannel channel = DebugTextLogChannel.Generic)
     {
-        Singleton.ActiveText.Add(text);
-
-        if (Singleton.ActiveText.Count > TextLogSize)
+        lock (Singleton.MessageQueue)
         {
-            Singleton.ActiveText.RemoveRange(0, Singleton.ActiveText.Count - TextLogSize);
+            Singleton.MessageQueue.Enqueue(text);
         }
-
-        Singleton.TextLog.text = string.Join("\n", Singleton.ActiveText);
+        
         Debug.Log(text);
     }
 }

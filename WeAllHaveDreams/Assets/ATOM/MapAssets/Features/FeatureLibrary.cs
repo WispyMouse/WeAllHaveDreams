@@ -17,7 +17,7 @@ public class FeatureLibrary : SingletonBase<FeatureLibrary>
             return foundFeature;
         }
 
-        MapFeature matchingFeature = Singleton.Features.FirstOrDefault(feature => feature.name == featureName);
+        MapFeature matchingFeature = Singleton.Features.FirstOrDefault(feature => feature.FeatureName == featureName);
 
         if (matchingFeature == null)
         {

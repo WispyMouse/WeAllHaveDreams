@@ -14,9 +14,11 @@ public class MapBootup : MonoBehaviour
     {
         get
         {
-            return Path.Combine(Application.dataPath, MapFolderPathRelative).Replace("\\", "/");
+            return Path.Combine(applicationDataPath, MapFolderPathRelative).Replace("\\", "/");
         }
     }
+
+    static string applicationDataPath { get; set; }
 
     public const string MapFileSuffix = ".json";
     static string MapFileSearch
@@ -31,6 +33,11 @@ public class MapBootup : MonoBehaviour
     public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
     public static Realm WIPRealm; // HACK: Putting something in here will make it load up, instead of the Default Realm
+
+    private void Awake()
+    {
+        applicationDataPath = Application.dataPath;
+    }
 
     private async Task Start()
     {

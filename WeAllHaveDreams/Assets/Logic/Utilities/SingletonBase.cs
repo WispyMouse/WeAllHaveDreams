@@ -21,4 +21,9 @@ public abstract class SingletonBase<T> : MonoBehaviour where T : SingletonBase<T
         }
     }
     private static T _Singleton { get; set; }
+
+    protected void ExplicitlySetSingleton()
+    {
+        _Singleton = Singleton;
+    }
 }

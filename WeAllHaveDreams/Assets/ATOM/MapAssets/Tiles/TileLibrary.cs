@@ -22,7 +22,7 @@ public class TileLibrary : SingletonBase<TileLibrary>
             return foundTile;
         }
 
-        GameplayTile matchingTile = Singleton.Tiles.FirstOrDefault(tile => tile.name == tileName);
+        GameplayTile matchingTile = Singleton.Tiles.FirstOrDefault(tile => tile.TileName == tileName);
 
         if (matchingTile == null)
         {

@@ -17,7 +17,7 @@ public class StructureLibrary : SingletonBase<StructureLibrary>
             return Instantiate(foundStructure);
         }
 
-        MapStructure matchingStructure = Singleton.Structures.FirstOrDefault(structure => structure.name == structureName);
+        MapStructure matchingStructure = Singleton.Structures.FirstOrDefault(structure => structure.StructureName == structureName);
 
         if (matchingStructure == null)
         {

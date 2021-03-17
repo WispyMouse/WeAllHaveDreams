@@ -33,6 +33,8 @@ public abstract class MapStructure : MapObject
     public SpriteRenderer CapturePointsVisual;
     public Sprite[] CapturePointsNumerics;
 
+    public string StructureName;
+
     private void Awake()
     {
         _curCapturePoints = MaxCapturePoints;

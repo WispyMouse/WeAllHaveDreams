@@ -7,6 +7,7 @@ using UnityEngine.Tilemaps;
 public class GameplayTile : Tile
 {
     public bool CompletelySolid;
+    public string TileName;
 
 #if UNITY_EDITOR
     [MenuItem("Assets/Create/GameplayTile")]

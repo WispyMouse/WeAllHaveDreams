@@ -30,7 +30,7 @@ public class SaveMapDialog : MonoBehaviour
     public void Save()
     {
         MapEditorFileManagement.CurrentMapName = MapNameInput.text;
-        DebugTextLog.AddTextToLog($"Saving realm as ${MapNameInput.text}...", DebugTextLogChannel.MapEditorOperations);
+        DebugTextLog.AddTextToLog($"Saving realm as {MapNameInput.text}...", DebugTextLogChannel.MapEditorOperations);
         Task.Run(MapEditorFileManagementInstance.SaveNewRealm);
         Close();
     }

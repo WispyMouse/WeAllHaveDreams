@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 651fc99d39f8ed341b80b5bdc826efc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FeatureName: WatchTower
 --- !u!1 &4007712617647760950
 GameObject:
   m_ObjectHideFlags: 0

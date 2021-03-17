@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c36f344668a446a43977a06dd47659a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FeatureName: HealTile
 --- !u!1 &2116256688283198419
 GameObject:
   m_ObjectHideFlags: 0

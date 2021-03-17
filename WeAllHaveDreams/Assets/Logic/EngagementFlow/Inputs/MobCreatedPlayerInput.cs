@@ -15,7 +15,7 @@ public class MobCreatedPlayerInput : PlayerInput
         ResourceCost = resourceCost;
     }
 
-    public override string LongTitle => $"Create {MapMobPf.name} for {ResourceCost} resources";
+    public override string LongTitle => $"Create {MapMobPf.Name} for {ResourceCost} resources";
 
     public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {

@@ -22,7 +22,7 @@ public class AttackWithMobInput : PlayerInput
         MoveTo = moveTo;
     }
 
-    public override string LongTitle => $"Attack with {Attacking.name} at {Target.name}" + (MoveTo.HasValue ? $" after moving to ({MoveTo.Value.x}, {MoveTo.Value.y})" : "");
+    public override string LongTitle => $"Attack with {Attacking.Name} at {Target.Name}" + (MoveTo.HasValue ? $" after moving to ({MoveTo.Value.x}, {MoveTo.Value.y})" : "");
 
     public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {
