@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -13,6 +14,15 @@ public class MapEditorFileManagement : MonoBehaviour
         get
         {
             return Path.Combine(applicationDataPath, MapFolderPathRelative).Replace("\\", "/");
+        }
+    }
+
+    public const string MapFileSuffix = ".json";
+    static string MapFileSearch
+    {
+        get
+        {
+            return $"*{MapFileSuffix}";
         }
     }
 
@@ -110,5 +120,28 @@ public class MapEditorFileManagement : MonoBehaviour
         newRealm.RealmCoordinates = realmCoordinates;
 
         return newRealm;
+    }
+
+    public async Task<List<Realm>> GetAllRealms()
+    {
+        List<Realm> realms = new List<Realm>();
+
+        foreach (string filePath in Directory.GetFiles(MapFolderPath, MapFileSearch, SearchOption.AllDirectories))
+        {
+            string sanitizedFilePath = filePath.Replace("\\", "/");
+
+            // HACK TODO: This just gets the first one it finds and calls it good
+            string fileText;
+
+            using (var reader = File.OpenText(sanitizedFilePath))
+            {
+                fileText = await reader.ReadToEndAsync();
+            }
+
+            Realm thisRealm = JsonConvert.DeserializeObject<Realm>(fileText);
+            realms.Add(thisRealm);
+        }
+
+        return realms;
     }
 }

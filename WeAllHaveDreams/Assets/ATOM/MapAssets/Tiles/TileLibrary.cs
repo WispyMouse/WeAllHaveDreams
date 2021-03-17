@@ -10,6 +10,11 @@ public class TileLibrary : SingletonBase<TileLibrary>
 
     public GameplayTile DefaultTile;
 
+    void Awake()
+    {
+        ExplicitlySetSingleton();
+    }
+
     public static GameplayTile GetTile(string tileName)
     {
         if (string.IsNullOrEmpty(tileName))

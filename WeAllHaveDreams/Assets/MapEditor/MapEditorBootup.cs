@@ -8,6 +8,7 @@ public class MapEditorBootup : MonoBehaviour
 {
     public LocationInput LocationInputInstance;
     public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
+    public LoadMapDialog LoadMapDialogInstance;
 
     private async Task Start()
     {
@@ -39,5 +40,18 @@ public class MapEditorBootup : MonoBehaviour
         LocationInputInstance.SetTileCursorVisibility(true);
 
         DebugTextLog.AddTextToLog("Press Z to undo and Y to redo", DebugTextLogChannel.DebugOperationInputInstructions);
+
+        LoadMapDialogInstance.Open();
+    }
+
+    public IEnumerator LoadRealm(Realm toLoad)
+    {
+        DebugTextLog.AddTextToLog($"Loading realm from file: {toLoad.Name}");
+        Task mapLoadingTask = Task.Run(async () => await WorldContextInstance.MapHolder.LoadFromRealm(toLoad));
+        while (!mapLoadingTask.IsCompleted)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        DebugTextLog.AddTextToLog("Loaded realm");
     }
 }
