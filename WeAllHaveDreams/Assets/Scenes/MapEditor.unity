@@ -422,7 +422,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: "Converting to Configuration.MobConfiguration\nUnable to process file!
+    No active ConfigurationLoadingEntrypoint found in scene, \nFound C:/Users/frost/Desktop/SourceControlled/WeAllHaveDreams/WeAllHaveDreams/Assets/Resources/Configurations/Mobs/SimpleMob.json\nLoaded
+    text\nConverting to ConfigurationData\nGetting type (Configuration.MobConfiguration)\nConverting
+    to Configuration.MobConfiguration\nUnable to process file! No active ConfigurationLoadingEntrypoint
+    found in scene, "
 --- !u!222 &746387920
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -522,6 +526,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LocationInputController: {fileID: 653014463}
+  MapEditorFileManagementInstance: {fileID: 1633979597}
+  MapEditorRibbonInstance: {fileID: 1774921656}
 --- !u!114 &1633979597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -579,6 +585,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MapEditorFileManagementInstance: {fileID: 1633979597}
   SaveMapDialogInstance: {fileID: 1950983099}
+  PlayButton: {fileID: 2100740709}
 --- !u!1 &1802516883
 GameObject:
   m_ObjectHideFlags: 0
@@ -854,6 +861,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2100740709 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 642803006427058593, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+  m_PrefabInstance: {fileID: 348785944253245597}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &97177841002878476
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -949,6 +967,10 @@ PrefabInstance:
       propertyPath: MapEditorFileManagementInstance
       value: 
       objectReference: {fileID: 1633979597}
+    - target: {fileID: 97177840672159159, guid: 4ca77bbd15dd249488afe53f935a2daf, type: 3}
+      propertyPath: MapEditorRibbonInstance
+      value: 
+      objectReference: {fileID: 1774921656}
     - target: {fileID: 97177840672159163, guid: 4ca77bbd15dd249488afe53f935a2daf, type: 3}
       propertyPath: m_Name
       value: SaveMapDialog
@@ -1109,6 +1131,34 @@ PrefabInstance:
     - target: {fileID: 348785944652638951, guid: f7bf543783ed5974d894a8810271a831, type: 3}
       propertyPath: m_Pivot.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 642803006427058593, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1774921656}
+    - target: {fileID: 9195255574096931291, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9195255574096931291, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9195255574096931291, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9195255574096931291, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9195255574096931291, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9195255574096931291, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7bf543783ed5974d894a8810271a831, type: 3}

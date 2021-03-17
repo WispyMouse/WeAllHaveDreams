@@ -8,6 +8,9 @@ public class MapEditorRuntimeController : MonoBehaviour
     public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
     public LocationInput LocationInputController;
+    public MapEditorFileManagement MapEditorFileManagementInstance;
+    public MapEditorRibbon MapEditorRibbonInstance;
+
     List<TileReplacementAction> ActionHistory { get; set; } = new List<TileReplacementAction>();
     int? historyPointer { get; set; } = null;
 
@@ -119,5 +122,6 @@ public class MapEditorRuntimeController : MonoBehaviour
 
         ActionHistory.Add(replacementAction);
         historyPointer = null;
+        MapEditorRibbonInstance.MapMarkedAsDirty();
     }
 }

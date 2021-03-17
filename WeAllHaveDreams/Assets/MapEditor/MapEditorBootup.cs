@@ -38,28 +38,6 @@ public class MapEditorBootup : MonoBehaviour
 
         LocationInputInstance.SetTileCursorVisibility(true);
 
-        // DebugTextLog.AddTextToLog("Press P to enter Play mode", DebugTextLogChannel.DebugOperationInputInstructions);
         DebugTextLog.AddTextToLog("Press Z to undo and Y to redo", DebugTextLogChannel.DebugOperationInputInstructions);
-
     }
-
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.P))
-    //    {
-    //        TransitionToGameplay();
-    //    }
-    //}
-
-    //public void TransitionToGameplay()
-    //{
-    //    DebugTextLog.AddTextToLog("Saving map to transition to Gameplay Scene", DebugTextLogChannel.DebugOperations);
-
-    //    Realm savedRealm = PackUpAndSaveRealm();
-    //    MapBootup.WIPRealm = savedRealm;
-
-    //    DebugTextLog.AddTextToLog("Save complete, assigned to WIPRealm", DebugTextLogChannel.DebugOperations);
-
-    //    SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
-    //}
 }

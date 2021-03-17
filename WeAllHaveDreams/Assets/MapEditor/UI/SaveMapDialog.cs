@@ -10,6 +10,9 @@ public class SaveMapDialog : MonoBehaviour
     public InputField MapNameInput;
 
     public MapEditorFileManagement MapEditorFileManagementInstance;
+    public MapEditorRibbon MapEditorRibbonInstance;
+
+    IEnumerator CurrentSavingRoutine { get; set; }
 
     public void NameChanged()
     {
@@ -23,15 +26,29 @@ public class SaveMapDialog : MonoBehaviour
 
     public void Open()
     {
-        SaveMapButton.interactable = false;
+        SaveMapButton.interactable = !string.IsNullOrWhiteSpace(MapNameInput.text);
         gameObject.SetActive(true);
     }
 
     public void Save()
     {
+        StartCoroutine(ProcessSave());
+    }
+
+    IEnumerator ProcessSave()
+    {
+        SaveMapButton.interactable = false;
         MapEditorFileManagement.CurrentMapName = MapNameInput.text;
         DebugTextLog.AddTextToLog($"Saving realm as {MapNameInput.text}...", DebugTextLogChannel.MapEditorOperations);
-        Task.Run(MapEditorFileManagementInstance.SaveNewRealm);
+        Task saveTask = Task.Run(MapEditorFileManagementInstance.SaveNewRealm);
+
+        while (!saveTask.IsCompleted)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        DebugTextLog.AddTextToLog("Saved!", DebugTextLogChannel.MapEditorOperations);
+        MapEditorRibbonInstance.MapSaved();
         Close();
     }
 }

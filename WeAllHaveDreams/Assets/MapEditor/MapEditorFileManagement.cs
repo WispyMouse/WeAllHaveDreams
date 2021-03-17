@@ -19,6 +19,7 @@ public class MapEditorFileManagement : MonoBehaviour
     static string applicationDataPath { get; set; }
 
     public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
+
     public bool MapHasBeenSavedBefore { get; set; } = false;
 
     // HACK Temporary: This is where we're storing the name of existing realms for this commit, going to change soon
@@ -51,6 +52,7 @@ public class MapEditorFileManagement : MonoBehaviour
 
             DebugTextLog.AddTextToLog($"Realm saved", DebugTextLogChannel.MapEditorOperations);
             MapHasBeenSavedBefore = true;
+            MapBootup.WIPRealm = toSave;
             return toSave;
         }
         catch (System.Exception e)
@@ -82,7 +84,7 @@ public class MapEditorFileManagement : MonoBehaviour
             }
 
             DebugTextLog.AddTextToLog($"Realm saved", DebugTextLogChannel.MapEditorOperations);
-
+            MapBootup.WIPRealm = toSave;
             return toSave;
         }
         catch (System.Exception e)
