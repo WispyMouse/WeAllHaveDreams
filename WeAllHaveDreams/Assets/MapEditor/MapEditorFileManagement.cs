@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -124,24 +126,33 @@ public class MapEditorFileManagement : MonoBehaviour
 
     public async Task<List<Realm>> GetAllRealms()
     {
-        List<Realm> realms = new List<Realm>();
-
-        foreach (string filePath in Directory.GetFiles(MapFolderPath, MapFileSearch, SearchOption.AllDirectories))
+        try
         {
-            string sanitizedFilePath = filePath.Replace("\\", "/");
+            List<Realm> realms = new List<Realm>();
 
-            // HACK TODO: This just gets the first one it finds and calls it good
-            string fileText;
-
-            using (var reader = File.OpenText(sanitizedFilePath))
+            foreach (string filePath in Directory.GetFiles(MapFolderPath, MapFileSearch, SearchOption.AllDirectories))
             {
-                fileText = await reader.ReadToEndAsync();
+                string sanitizedFilePath = filePath.Replace("\\", "/");
+
+                // HACK TODO: This just gets the first one it finds and calls it good
+                string fileText;
+
+                using (var reader = File.OpenText(sanitizedFilePath))
+                {
+                    fileText = await reader.ReadToEndAsync();
+                }
+
+                Realm thisRealm = JsonConvert.DeserializeObject<Realm>(fileText);
+                DebugTextLog.AddTextToLog($"Realm loaded with {thisRealm.RealmCoordinates.Count()} coordinates");
+                realms.Add(thisRealm);
             }
 
-            Realm thisRealm = JsonConvert.DeserializeObject<Realm>(fileText);
-            realms.Add(thisRealm);
+            return realms;
         }
-
-        return realms;
+        catch (Exception e)
+        {
+            DebugTextLog.AddTextToLog(e.Message, DebugTextLogChannel.RuntimeError);
+            throw e;
+        }
     }
 }

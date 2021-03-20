@@ -17,6 +17,7 @@ public class LoadMapDialog : MonoBehaviour
 
     public void Open()
     {
+        gameObject.SetActive(true);
         StartCoroutine(ProcessOpening());
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,52 +23,65 @@ public class MapHolder : MonoBehaviour
     public List<Vector3Int> Path(MapMob moving, Vector3Int to) => activeMap.Path(moving, to, WorldContextInstance);
     public IEnumerable<Vector3Int> CanHitFrom(MapMob attacking, Vector3Int target) => activeMap.CanAttackFrom(attacking, target);
 
-    public async Task LoadEmptyRealm()
+    public void LoadEmptyRealm()
     {
         activeMap = GameMap.LoadEmptyRealm();
         LoadedMap.ClearAllTiles();
     }
 
-    public async Task LoadFromRealm(Realm toLoad)
+    public IEnumerator LoadFromRealm(Realm toLoad)
     {
-        activeMap = await GameMap.LoadFromRealm(toLoad);
-
-        LoadedMap.ClearAllTiles();
-
-        foreach (RealmCoordinate coordinate in toLoad.RealmCoordinates)
+        try
         {
-            LoadedMap.SetTile(coordinate.Position, TileLibrary.GetTile(coordinate.Tile));
-            /*
-            foreach (RealmKey curKey in toLoad.KeysAtPositions[position].OrderBy(key => (int)key.Type))
+            Realm loadingRealm = toLoad;
+            activeMap = GameMap.LoadFromRealm(loadingRealm);
+            DebugTextLog.AddTextToLog($"Loading with {toLoad.RealmCoordinates.Count()} coordinates", DebugTextLogChannel.Verbose);
+
+            LoadedMap.ClearAllTiles();
+
+            foreach (RealmCoordinate coordinate in loadingRealm.RealmCoordinates)
             {
-                switch (curKey.Type)
+                DebugTextLog.AddTextToLog($"Placing {coordinate.Tile} at ({coordinate.Position.x}, {coordinate.Position.y})", DebugTextLogChannel.Verbose);
+                LoadedMap.SetTile(coordinate.Position, TileLibrary.GetTile(coordinate.Tile));
+                /*
+                foreach (RealmKey curKey in toLoad.KeysAtPositions[position].OrderBy(key => (int)key.Type))
                 {
-                    case RealmKeyType.Tile:
-                        LoadedMap.SetTile(position, activeMap.GetGameplayTile(position));
-                        break;
-                    case RealmKeyType.Structure:
-                        WorldContextInstance.StructureHolder.SetStructure(position, curKey.GetStructureInstance());
-                        break;
-                    case RealmKeyType.Mob:
-                        WorldContextInstance.MobHolder.CreateNewUnit(position, curKey.GetMobPrefab());
-                        break;
-                    case RealmKeyType.Feature:
-                        WorldContextInstance.FeatureHolder.SetFeature(position, curKey.GetFeatureInstance());
-                        break;
-                    case RealmKeyType.Ownership:
-                        WorldContextInstance.StructureHolder.SetOwnership(position, curKey.GetTeam());
+                    switch (curKey.Type)
+                    {
+                        case RealmKeyType.Tile:
+                            LoadedMap.SetTile(position, activeMap.GetGameplayTile(position));
+                            break;
+                        case RealmKeyType.Structure:
+                            WorldContextInstance.StructureHolder.SetStructure(position, curKey.GetStructureInstance());
+                            break;
+                        case RealmKeyType.Mob:
+                            WorldContextInstance.MobHolder.CreateNewUnit(position, curKey.GetMobPrefab());
+                            break;
+                        case RealmKeyType.Feature:
+                            WorldContextInstance.FeatureHolder.SetFeature(position, curKey.GetFeatureInstance());
+                            break;
+                        case RealmKeyType.Ownership:
+                            WorldContextInstance.StructureHolder.SetOwnership(position, curKey.GetTeam());
 
-                        MapMob matchingMob = WorldContextInstance.MobHolder.MobOnPoint(position);
+                            MapMob matchingMob = WorldContextInstance.MobHolder.MobOnPoint(position);
 
-                        if (matchingMob != null)
-                        {
-                            matchingMob.SetOwnership(curKey.GetTeam());
-                        }
-                        break;
+                            if (matchingMob != null)
+                            {
+                                matchingMob.SetOwnership(curKey.GetTeam());
+                            }
+                            break;
+                    }
                 }
+                */
             }
-            */
         }
+        catch (Exception e)
+        {
+            DebugTextLog.AddTextToLog($"{e.Message}, {e?.InnerException?.Message}");
+            throw e;
+        }
+
+        yield break;
     }
 
     public void CenterCamera(Camera toCenter)

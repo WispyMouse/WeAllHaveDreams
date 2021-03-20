@@ -39,32 +39,31 @@ public class MapBootup : MonoBehaviour
         applicationDataPath = Application.dataPath;
     }
 
-    private async Task Start()
+    private void Start()
+    {
+        StartCoroutine(Startup());
+    }
+
+    IEnumerator Startup()
     {
         DebugTextLog.AddTextToLog("Loading Library");
-        AsyncOperation libraryHandle = SceneManager.LoadSceneAsync("Library", LoadSceneMode.Additive);
-        while (!libraryHandle.isDone)
-        {
-            await Task.Delay(1);
-        }
+        yield return ThreadDoctor.YieldTask(
+            new Task(() => SceneManager.LoadSceneAsync("Library", LoadSceneMode.Additive)));
 
         DebugTextLog.AddTextToLog("Loading WorldContext");
-        AsyncOperation contextHandle = SceneManager.LoadSceneAsync("WorldContext", LoadSceneMode.Additive);
-        while (!contextHandle.isDone)
-        {
-            await Task.Delay(1);
-        }
+        yield return ThreadDoctor.YieldTask(
+            new Task(() => SceneManager.LoadSceneAsync("WorldContext", LoadSceneMode.Additive)));
 
-        await ConfigurationLoadingEntrypoint.LoadAllConfigurationData();
-
+        
         Realm realmToLoad = WIPRealm;
         if (realmToLoad == null)
         {
             DebugTextLog.AddTextToLog("Loading default realm", DebugTextLogChannel.DebugLogging);
-            realmToLoad = await GetDefaultRealm();
+            yield return ThreadDoctor.YieldTask(GetDefaultRealm());
         }
 
-        await WorldContextInstance.MapHolder.LoadFromRealm(realmToLoad);
+        yield return WorldContextInstance.MapHolder.LoadFromRealm(realmToLoad);
+
         TurnManagerInstance.GameplayReady();
 
         DebugTextLog.AddTextToLog("Press M to enter Map Editor mode", DebugTextLogChannel.DebugOperationInputInstructions);

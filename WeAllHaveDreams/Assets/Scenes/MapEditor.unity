@@ -423,11 +423,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "Converting to Configuration.MobConfiguration\nUnable to process file!
-    No active ConfigurationLoadingEntrypoint found in scene, \nFound C:/Users/frost/Desktop/SourceControlled/WeAllHaveDreams/WeAllHaveDreams/Assets/Resources/Configurations/Mobs/SimpleMob.json\nLoaded
-    text\nConverting to ConfigurationData\nGetting type (Configuration.MobConfiguration)\nConverting
-    to Configuration.MobConfiguration\nUnable to process file! No active ConfigurationLoadingEntrypoint
-    found in scene, "
+  m_Text: ~
 --- !u!222 &746387920
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1241,13 +1237,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: LoadMapDialog
       objectReference: {fileID: 0}
-    - target: {fileID: 3095647052198352190, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 837867997336622551, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3095647052198352190, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3095647052198352190, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5452304801948509133, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
       propertyPath: MapEditorFileManagementInstance
@@ -1311,11 +1311,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5868090635489783317, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 600
+      value: 248
       objectReference: {fileID: 0}
     - target: {fileID: 5868090635489783317, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 400
+      value: 308.7
       objectReference: {fileID: 0}
     - target: {fileID: 5868090635489783317, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
       propertyPath: m_AnchorMin.x
@@ -1343,15 +1343,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8764749607222891384, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8764749607222891384, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8764749607222891384, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
       propertyPath: m_SizeDelta.x
+      value: -17
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079007550441388469, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079007550441388469, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
+      propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079007550441388469, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079007550441388469, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079007550441388469, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4185d135fef8c3946a60312f7d068878, type: 3}

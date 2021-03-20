@@ -10,9 +10,8 @@ public class Realm
     public string Name = "Default";
     public IEnumerable<RealmCoordinate> RealmCoordinates;
 
-    public async Task Hydrate()
+    public void Hydrate()
     {
-        await Task.Delay(0);
     }
 
     public static Realm GetEmptyRealm()

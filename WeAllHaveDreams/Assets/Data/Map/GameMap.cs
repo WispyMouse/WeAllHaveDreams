@@ -25,23 +25,31 @@ public class GameMap
         return null;
     }
 
-    public static async Task<GameMap> LoadFromRealm(Realm realmData)
+    public static GameMap LoadFromRealm(Realm realmData)
     {
-        var gameplayTiles = new Dictionary<Vector3Int, GameplayTile>();
-
-        GameMap newMap = new GameMap();
-        newMap.LoadedRealm = realmData;
-
-        await realmData.Hydrate();
-
-        foreach (RealmCoordinate coordinate in realmData.RealmCoordinates)
+        try
         {
-            gameplayTiles.Add(coordinate.Position, TileLibrary.GetTile(coordinate.Tile));
-        }
+            var gameplayTiles = new Dictionary<Vector3Int, GameplayTile>();
 
-        newMap.Neighbors = GenerateNeighbors(realmData);
-        newMap.GameplayTiles = gameplayTiles;
-        return newMap;
+            GameMap newMap = new GameMap();
+            newMap.LoadedRealm = realmData;
+
+            realmData.Hydrate();
+
+            foreach (RealmCoordinate coordinate in realmData.RealmCoordinates)
+            {
+                gameplayTiles.Add(coordinate.Position, TileLibrary.GetTile(coordinate.Tile));
+            }
+
+            newMap.Neighbors = GenerateNeighbors(realmData);
+            newMap.GameplayTiles = gameplayTiles;
+            return newMap;
+        }
+        catch (Exception e)
+        {
+            DebugTextLog.AddTextToLog(e.Message, DebugTextLogChannel.RuntimeError);
+            throw e;
+        }
     }
 
     public static GameMap InitializeMapFromTilemap(Tilemap tileMap)

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -30,11 +31,11 @@ public class MapEditorBootup : MonoBehaviour
 
         if (MapBootup.WIPRealm == null)
         {
-            await WorldContextInstance.MapHolder.LoadEmptyRealm();
+            WorldContextInstance.MapHolder.LoadEmptyRealm();
         }
         else
         {
-            await WorldContextInstance.MapHolder.LoadFromRealm(MapBootup.WIPRealm);
+            WorldContextInstance.MapHolder.LoadFromRealm(MapBootup.WIPRealm);
         }
 
         LocationInputInstance.SetTileCursorVisibility(true);
@@ -46,12 +47,8 @@ public class MapEditorBootup : MonoBehaviour
 
     public IEnumerator LoadRealm(Realm toLoad)
     {
-        DebugTextLog.AddTextToLog($"Loading realm from file: {toLoad.Name}");
-        Task mapLoadingTask = Task.Run(async () => await WorldContextInstance.MapHolder.LoadFromRealm(toLoad));
-        while (!mapLoadingTask.IsCompleted)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        DebugTextLog.AddTextToLog("Loaded realm");
+        DebugTextLog.AddTextToLog($"Loading realm: {toLoad.Name}, {toLoad.RealmCoordinates.Count()}", DebugTextLogChannel.DebugLogging);
+        yield return WorldContextInstance.MapHolder.LoadFromRealm(toLoad);
+        DebugTextLog.AddTextToLog("Loaded realm", DebugTextLogChannel.DebugLogging);
     }
 }

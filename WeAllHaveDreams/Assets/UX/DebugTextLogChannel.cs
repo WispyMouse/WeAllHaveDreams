@@ -12,5 +12,6 @@ public enum DebugTextLogChannel
     RuntimeError,
     DebugOperations,
     DebugOperationInputInstructions,
-    MapEditorOperations
+    MapEditorOperations,
+    Verbose
 }
