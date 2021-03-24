@@ -38,4 +38,9 @@ public class TileLibrary : SingletonBase<TileLibrary>
         Singleton.NamesToTiles.Add(tileName, matchingTile);
         return matchingTile;
     }
+
+    public static IEnumerable<GameplayTile> GetAllTiles()
+    {
+        return Singleton.Tiles;
+    }
 }

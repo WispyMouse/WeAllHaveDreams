@@ -10,24 +10,34 @@ public class MapEditorBootup : MonoBehaviour
     public LocationInput LocationInputInstance;
     public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
     public LoadMapDialog LoadMapDialogInstance;
+    public MapEditorRuntimeController MapEditorRuntimeControllerInstance;
 
-    private async Task Start()
+    private void Start()
+    {
+        StartCoroutine(StartInternal());
+    }
+
+    IEnumerator StartInternal()
     {
         DebugTextLog.AddTextToLog("Loading Library");
         AsyncOperation libraryHandle = SceneManager.LoadSceneAsync("Library", LoadSceneMode.Additive);
         while (!libraryHandle.isDone)
         {
-            await Task.Delay(1);
+            yield return new WaitForEndOfFrame();
         }
 
         DebugTextLog.AddTextToLog("Loading WorldContext");
         AsyncOperation contextHandle = SceneManager.LoadSceneAsync("WorldContext", LoadSceneMode.Additive);
         while (!contextHandle.isDone)
         {
-            await Task.Delay(1);
+            yield return new WaitForEndOfFrame();
         }
 
-        await ConfigurationLoadingEntrypoint.LoadAllConfigurationData();
+        Task configurationLoading = Task.Run(async() => await ConfigurationLoadingEntrypoint.LoadAllConfigurationData());
+        while (!configurationLoading.IsCompleted)
+        {
+            yield return new WaitForEndOfFrame();
+        }
 
         if (MapBootup.WIPRealm == null)
         {
@@ -43,6 +53,7 @@ public class MapEditorBootup : MonoBehaviour
         DebugTextLog.AddTextToLog("Press Z to undo and Y to redo", DebugTextLogChannel.DebugOperationInputInstructions);
 
         LoadMapDialogInstance.Open();
+        MapEditorRuntimeControllerInstance.Startup();
     }
 
     public IEnumerator LoadRealm(Realm toLoad)

@@ -10,6 +10,9 @@ public class MapEditorRuntimeController : MonoBehaviour
     public LocationInput LocationInputController;
     public MapEditorFileManagement MapEditorFileManagementInstance;
     public MapEditorRibbon MapEditorRibbonInstance;
+    public MapEditorPalette MapEditorPaletteInstance;
+
+    GameplayTile ActivePaletteOption;
 
     List<TileReplacementAction> ActionHistory { get; set; } = new List<TileReplacementAction>();
     int? historyPointer { get; set; } = null;
@@ -18,6 +21,13 @@ public class MapEditorRuntimeController : MonoBehaviour
     {
         bool inputHandled = HandleClick();
         inputHandled |= HandleRedoUndo();
+    }
+
+    public void Startup()
+    {
+        ActivePaletteOption = TileLibrary.GetTile("Floor");
+
+        MapEditorPaletteInstance.Open();
     }
 
     bool HandleClick()
@@ -105,8 +115,8 @@ public class MapEditorRuntimeController : MonoBehaviour
             replacedTile = tileAtPosition.TileName;
         }
 
-        TileReplacementAction replacementAction = new TileReplacementAction(worldPoint, replacedTile, "Floor");
-        WorldContextInstance.MapHolder.SetTile(worldPoint, TileLibrary.GetTile("Floor"));
+        TileReplacementAction replacementAction = new TileReplacementAction(worldPoint, replacedTile, ActivePaletteOption.TileName);
+        WorldContextInstance.MapHolder.SetTile(worldPoint, ActivePaletteOption);
 
         if (historyPointer.HasValue)
         {
@@ -123,5 +133,10 @@ public class MapEditorRuntimeController : MonoBehaviour
         ActionHistory.Add(replacementAction);
         historyPointer = null;
         MapEditorRibbonInstance.MapMarkedAsDirty();
+    }
+
+    public void SetPalette(GameplayTile toTile)
+    {
+        ActivePaletteOption = toTile;
     }
 }
