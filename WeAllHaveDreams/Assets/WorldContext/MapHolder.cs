@@ -103,5 +103,10 @@ public class MapHolder : MonoBehaviour
     {
         activeMap.SetTile(position, toSet);
         LoadedMap.SetTile(position, toSet);
+
+        foreach (Vector3Int neighbor in GetNeighbors(position))
+        {
+            LoadedMap.RefreshTile(neighbor);
+        }
     }
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4763ef2a47105d34c9a40c810c980ce2, type: 3}
   m_Name: Floor
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 1894871204932323924, guid: d03ac4cf0ac93e5458ca076685f36f7a, type: 3}
+  m_Sprite: {fileID: -3833478462882320837, guid: 12dafe7877249cb43956397946a05682, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -36,3 +36,23 @@ MonoBehaviour:
   m_ColliderType: 1
   CompletelySolid: 0
   TileName: Floor
+  SpriteSettings:
+  - SameNeighborDirections: 0200000001000000
+    SpriteToUse: {fileID: 5942584959973846182, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 030000000100000002000000
+    SpriteToUse: {fileID: 1234524214877155107, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 0200000003000000
+    SpriteToUse: {fileID: 8899578048343374581, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 000000000300000002000000
+    SpriteToUse: {fileID: 5469862738200725035, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 0000000003000000
+    SpriteToUse: {fileID: 3650074961117702702, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 000000000300000001000000
+    SpriteToUse: {fileID: 4826696252708882608, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 0000000001000000
+    SpriteToUse: {fileID: -1442254322777050588, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 000000000100000002000000
+    SpriteToUse: {fileID: -3146954379063113054, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 00000000010000000200000003000000
+    SpriteToUse: {fileID: -3833478462882320837, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  DefaultSprite: {fileID: -3833478462882320837, guid: 12dafe7877249cb43956397946a05682, type: 3}
