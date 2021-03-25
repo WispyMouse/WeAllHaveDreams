@@ -12,9 +12,9 @@ public class MapEditorRuntimeController : MonoBehaviour
     public MapEditorRibbon MapEditorRibbonInstance;
     public MapEditorPalette MapEditorPaletteInstance;
 
-    GameplayTile ActivePaletteOption;
+    PaletteSettings ActivePaletteSettings;
 
-    List<TileReplacementAction> ActionHistory { get; set; } = new List<TileReplacementAction>();
+    List<MapEditorInput> ActionHistory { get; set; } = new List<MapEditorInput>();
     int? historyPointer { get; set; } = null;
 
     private void Update()
@@ -25,9 +25,16 @@ public class MapEditorRuntimeController : MonoBehaviour
 
     public void Startup()
     {
-        ActivePaletteOption = TileLibrary.GetTile("Floor");
+        ActivePaletteSettings = new TilePlacementPalette(TileLibrary.GetTile("Floor"));
 
-        MapEditorPaletteInstance.Open();
+        List<PaletteSettings> tileSettings = new List<PaletteSettings>();
+
+        foreach (GameplayTile curTile in TileLibrary.GetAllTiles())
+        {
+            tileSettings.Add(new TilePlacementPalette(curTile));
+        }
+
+        MapEditorPaletteInstance.Open(tileSettings);
     }
 
     bool HandleClick()
@@ -67,8 +74,8 @@ public class MapEditorRuntimeController : MonoBehaviour
                 return false;
             }
 
-            TileReplacementAction replacementAction = ActionHistory[historyPointer.Value];
-            WorldContextInstance.MapHolder.SetTile(replacementAction.Position, TileLibrary.GetTile(replacementAction.Removed));
+            MapEditorInput replacementAction = ActionHistory[historyPointer.Value];
+            replacementAction.Undo(WorldContextInstance);
             historyPointer--;
 
             return true;
@@ -90,8 +97,8 @@ public class MapEditorRuntimeController : MonoBehaviour
             }
 
             historyPointer++;
-            TileReplacementAction replacementAction = ActionHistory[historyPointer.Value];
-            WorldContextInstance.MapHolder.SetTile(replacementAction.Position, TileLibrary.GetTile(replacementAction.Added));
+            MapEditorInput replacementAction = ActionHistory[historyPointer.Value];
+            replacementAction.Invoke(WorldContextInstance);
 
             // If we've caught up, we don't need to track our pointer anymore
             if (historyPointer > ActionHistory.Count)
@@ -115,14 +122,14 @@ public class MapEditorRuntimeController : MonoBehaviour
             replacedTile = tileAtPosition.TileName;
         }
 
-        TileReplacementAction replacementAction = new TileReplacementAction(worldPoint, replacedTile, ActivePaletteOption.TileName);
-        WorldContextInstance.MapHolder.SetTile(worldPoint, ActivePaletteOption);
+        MapEditorInput input = ActivePaletteSettings.ApplyPalette(WorldContextInstance, worldPoint);
+        input.Invoke(WorldContextInstance);
 
         if (historyPointer.HasValue)
         {
             if (historyPointer.Value < 0)
             {
-                ActionHistory = new List<TileReplacementAction>();
+                ActionHistory = new List<MapEditorInput>();
             }
             else
             {
@@ -130,13 +137,13 @@ public class MapEditorRuntimeController : MonoBehaviour
             }
         }
 
-        ActionHistory.Add(replacementAction);
+        ActionHistory.Add(input);
         historyPointer = null;
         MapEditorRibbonInstance.MapMarkedAsDirty();
     }
 
-    public void SetPalette(GameplayTile toTile)
+    public void SetPalette(PaletteSettings toPalette)
     {
-        ActivePaletteOption = toTile;
+        ActivePaletteSettings = toPalette;
     }
 }

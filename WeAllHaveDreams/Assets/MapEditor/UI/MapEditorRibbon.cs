@@ -9,6 +9,7 @@ public class MapEditorRibbon : MonoBehaviour
 {
     public MapEditorFileManagement MapEditorFileManagementInstance;
 
+    public MapEditorPalette MapEditorPaletteInstance;
     public SaveMapDialog SaveMapDialogInstance;
     public Button PlayButton;
 

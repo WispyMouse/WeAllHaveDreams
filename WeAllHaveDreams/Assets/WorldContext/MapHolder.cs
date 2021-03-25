@@ -74,6 +74,8 @@ public class MapHolder : MonoBehaviour
                 }
                 */
             }
+
+            LoadedMap.RefreshAllTiles();
         }
         catch (Exception e)
         {

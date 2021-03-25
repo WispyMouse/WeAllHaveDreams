@@ -9,15 +9,26 @@ public class PaletteButton : MonoBehaviour
     public Image ButtonImage;
     public Text ButtonText;
 
-    public GameplayTile RepresentedOption;
+    public PaletteSettings RepresentedOption;
 
-    public void SetTile(GameplayTile tile, System.Action<PaletteButton> clickCallback)
+    public void SetTile(PaletteSettings settings, System.Action<PaletteButton> clickCallback)
     {
-        RepresentedOption = tile;
+        RepresentedOption = settings;
 
-        ButtonImage.sprite = tile.DefaultSprite;
-        ButtonImage.gameObject.SetActive(true);
-        ButtonText.gameObject.SetActive(false);
+        Sprite buttonImage = settings.GetButtonSprite();
+
+        if (buttonImage != null)
+        {
+            ButtonImage.sprite = buttonImage;
+            ButtonImage.gameObject.SetActive(true);
+            ButtonText.gameObject.SetActive(false);
+        }
+        else
+        {
+            ButtonText.text = settings.GetButtonLabel();
+            ButtonImage.gameObject.SetActive(false);
+            ButtonText.gameObject.SetActive(true);
+        }
 
         ButtonBehavior.onClick.AddListener(() => clickCallback(this));
     }

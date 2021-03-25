@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct TileReplacementAction
+public class TileReplacementAction : MapEditorInput
 {
     public Vector3Int Position;
 
@@ -14,5 +14,15 @@ public struct TileReplacementAction
         Position = position;
         Removed = removed;
         Added = added;
+    }
+
+    public override void Invoke(WorldContext worldContextInstance)
+    {
+        worldContextInstance.MapHolder.SetTile(Position, TileLibrary.GetTile(Added));
+    }
+
+    public override void Undo(WorldContext worldContextInstance)
+    {
+        worldContextInstance.MapHolder.SetTile(Position, TileLibrary.GetTile(Removed));
     }
 }

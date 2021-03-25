@@ -11,12 +11,19 @@ public class MapEditorPalette : MonoBehaviour
 
     List<PaletteButton> ActiveButtons { get; set; } = new List<PaletteButton>();
 
-    public void Open()
+    public void Open(IEnumerable<PaletteSettings> settings)
     {
-        foreach (GameplayTile curTile in TileLibrary.GetAllTiles())
+        foreach (PaletteButton curButton in ActiveButtons)
+        {
+            Destroy(curButton.gameObject);
+        }
+
+        ActiveButtons = new List<PaletteButton>();
+
+        foreach (PaletteSettings curSetting in settings)
         {
             PaletteButton newButton = Instantiate(PaletteButtonPF, PaletteItemHolder);
-            newButton.SetTile(curTile, PaletteButtonClicked);
+            newButton.SetTile(curSetting, PaletteButtonClicked);
             ActiveButtons.Add(newButton);
         }
     }
