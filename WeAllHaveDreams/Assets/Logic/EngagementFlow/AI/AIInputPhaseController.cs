@@ -41,7 +41,7 @@ public class AIInputPhaseController : MonoBehaviour
             yield return bestPlan.DeterminedInput.Execute(WorldContextInstance, GameplayAnimationInstance);
         }
 
-        foreach (MapStructure curStructure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => !structure.UnCaptured && structure.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex))
+        foreach (MapStructure curStructure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => structure.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex))
         {
             if (!WorldContextInstance.MobHolder.MobOnPoint(curStructure.Position))
             {
@@ -111,7 +111,7 @@ public class AIInputPhaseController : MonoBehaviour
         // Are there any structures in our movement range?
         IEnumerable<MapStructure> structuresInRange = WorldContextInstance.StructureHolder.ActiveStructures
             .Where(structure => movementRanges.Contains(structure.Position))
-            .Where(structure => structure.PlayerSideIndex != acting.PlayerSideIndex || structure.UnCaptured)
+            .Where(structure => structure.PlayerSideIndex != acting.PlayerSideIndex)
             .Where(structure => acting.Position == structure.Position || WorldContextInstance.MobHolder.MobOnPoint(structure.Position) == null);
 
         if (structuresInRange.Any())
@@ -127,7 +127,7 @@ public class AIInputPhaseController : MonoBehaviour
         {
             // If the enemy has a base, move towards it
             IEnumerable<MapStructure> enemyStructures = WorldContextInstance.StructureHolder.ActiveStructures
-                .Where(structure => structure.UnCaptured || structure.PlayerSideIndex != TurnManager.CurrentPlayer.PlayerSideIndex)
+                .Where(structure => structure.PlayerSideIndex.HasValue || structure.PlayerSideIndex != TurnManager.CurrentPlayer.PlayerSideIndex)
                 .Except(structuresInRange);
 
             foreach (MapStructure structure in enemyStructures)

@@ -47,7 +47,7 @@ public class TurnManager : SingletonBase<TurnManager>
         playerIndex = index;
         DebugTextLog.AddTextToLog($"START OF TURN: {CurrentPlayer.Name}, engage!");
 
-        foreach (MapStructure structure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => !structure.UnCaptured && structure.PlayerSideIndex == index))
+        foreach (MapStructure structure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => structure.PlayerSideIndex == index))
         {
             CurrentPlayer.TotalResources += structure.ContributedResourcesPerTurn;
         }

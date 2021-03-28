@@ -17,6 +17,11 @@ public abstract class PaletteSettings
         return string.Empty;
     }
 
+    public virtual void PaletteSelected()
+    {
+        DebugTextLog.AddTextToLog($"Selected '{GetButtonLabel()}'", DebugTextLogChannel.MapEditorOperations);
+    }
+
     /// <summary>
     /// Gets the MapEditorInput that represents applying this palette.
     /// Does not actually take action; you'll need to invoke the MapEditorInput.

@@ -209,12 +209,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0523986c60cb8804eb79bd2234c107f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerSideIndex: 0
-  UnCaptured: 1
   Renderer: {fileID: 1730766960836441972}
   SideSprites:
   - {fileID: 8416898281017630943, guid: 34e46206aae16b548bfd165cd47852f9, type: 3}
   - {fileID: 3934902697012066516, guid: 34e46206aae16b548bfd165cd47852f9, type: 3}
+  UnclaimedSprite: {fileID: 8299319516169970853, guid: 34e46206aae16b548bfd165cd47852f9, type: 3}
   ContributedResourcesPerTurn: 20
   CaptureImportance: 1
   CapturePointsVisual: {fileID: 1730766961185032154}

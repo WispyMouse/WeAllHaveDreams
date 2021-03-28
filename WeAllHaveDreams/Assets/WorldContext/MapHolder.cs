@@ -111,4 +111,19 @@ public class MapHolder : MonoBehaviour
             LoadedMap.RefreshTile(neighbor);
         }
     }
+
+    public void SetOwnership(Vector3Int position, int? value)
+    {
+        MapStructure structure;
+        if (structure = WorldContextInstance.StructureHolder.StructureOnPoint(position))
+        {
+            structure.SetOwnership(value);
+        }
+
+        MapMob mob;
+        if (mob = WorldContextInstance.MobHolder.MobOnPoint(position))
+        {
+            mob.SetOwnership(value.Value);
+        }
+    }
 }

@@ -119,7 +119,7 @@ public class FogHolder : MonoBehaviour
             assignedVisibility.IncorporateVisibleTiles(thisMobsVisibleTiles);
         }
 
-        foreach (MapStructure curStructure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => structure.PlayerSideIndex == player && !structure.UnCaptured))
+        foreach (MapStructure curStructure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => structure.PlayerSideIndex == player))
         {
             HashSet<Vector3Int> thisStructureVisibleTiles = CalculateVisibleTiles(curStructure);
             assignedVisibility.IncorporateVisibleTiles(thisStructureVisibleTiles);
