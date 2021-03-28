@@ -11,6 +11,7 @@ public class MapEditorBootup : MonoBehaviour
     public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
     public LoadMapDialog LoadMapDialogInstance;
     public MapEditorRuntimeController MapEditorRuntimeControllerInstance;
+    public MapEditorRibbon MapEditorRibbonInstance;
 
     private void Start()
     {
@@ -20,24 +21,12 @@ public class MapEditorBootup : MonoBehaviour
     IEnumerator StartInternal()
     {
         DebugTextLog.AddTextToLog("Loading Library");
-        AsyncOperation libraryHandle = SceneManager.LoadSceneAsync("Library", LoadSceneMode.Additive);
-        while (!libraryHandle.isDone)
-        {
-            yield return new WaitForEndOfFrame();
-        }
+        yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("Library", LoadSceneMode.Additive));
 
         DebugTextLog.AddTextToLog("Loading WorldContext");
-        AsyncOperation contextHandle = SceneManager.LoadSceneAsync("WorldContext", LoadSceneMode.Additive);
-        while (!contextHandle.isDone)
-        {
-            yield return new WaitForEndOfFrame();
-        }
+        yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("WorldContext", LoadSceneMode.Additive));
 
-        Task configurationLoading = Task.Run(async() => await ConfigurationLoadingEntrypoint.LoadAllConfigurationData());
-        while (!configurationLoading.IsCompleted)
-        {
-            yield return new WaitForEndOfFrame();
-        }
+        yield return ThreadDoctor.YieldTask(ConfigurationLoadingEntrypoint.LoadAllConfigurationData());
 
         if (MapBootup.WIPRealm == null)
         {
@@ -60,6 +49,8 @@ public class MapEditorBootup : MonoBehaviour
     {
         DebugTextLog.AddTextToLog($"Loading realm: {toLoad.Name}, {toLoad.RealmCoordinates.Count()}", DebugTextLogChannel.DebugLogging);
         yield return WorldContextInstance.MapHolder.LoadFromRealm(toLoad);
+        MapBootup.WIPRealm = toLoad;
+        MapEditorRibbonInstance.MapLoaded();
         DebugTextLog.AddTextToLog("Loaded realm", DebugTextLogChannel.DebugLogging);
     }
 }

@@ -16,6 +16,11 @@ public class TilePlacementPalette : PaletteSettings
         return RepresentedTile.sprite;
     }
 
+    public override string GetButtonLabel()
+    {
+        return RepresentedTile.TileName;
+    }
+
     public override MapEditorInput ApplyPalette(WorldContext worldContext, Vector3Int position)
     {
         return new TileReplacementAction(position, worldContext.MapHolder.GetGameplayTile(position)?.TileName, RepresentedTile.TileName);

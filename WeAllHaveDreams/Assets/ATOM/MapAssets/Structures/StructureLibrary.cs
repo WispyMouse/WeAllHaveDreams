@@ -10,8 +10,18 @@ public class StructureLibrary : SingletonBase<StructureLibrary>
 
     public MapStructure DefaultStructure;
 
+    void Awake()
+    {
+        ExplicitlySetSingleton();
+    }
+
     public static MapStructure GetStructure(string structureName)
     {
+        if (string.IsNullOrEmpty(structureName))
+        {
+            return null;
+        }
+
         if (Singleton.NamesToStructures.TryGetValue(structureName, out MapStructure foundStructure))
         {
             return Instantiate(foundStructure);
@@ -27,5 +37,10 @@ public class StructureLibrary : SingletonBase<StructureLibrary>
 
         Singleton.NamesToStructures.Add(structureName, matchingStructure);
         return Instantiate(matchingStructure);
+    }
+
+    public static IEnumerable<MapStructure> GetAllStructures()
+    {
+        return Singleton.Structures;
     }
 }

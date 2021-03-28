@@ -11,9 +11,20 @@ public class StructureHolder : MonoBehaviour
 
     public void SetStructure(Vector3Int position, MapStructure toSet)
     {
-        toSet.transform.SetParent(StructuresParent);
-        toSet.SetPosition(position);
-        ActiveStructures.Add(toSet);
+        MapStructure existingStructure = StructureOnPoint(position);
+
+        if (existingStructure != null)
+        {
+            ActiveStructures.Remove(existingStructure);
+            Destroy(existingStructure.gameObject);
+        }
+
+        if (toSet != null)
+        {
+            toSet.transform.SetParent(StructuresParent);
+            toSet.SetPosition(position);
+            ActiveStructures.Add(toSet);
+        }
     }
 
     public void LoadStructuresFromScene()

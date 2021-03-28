@@ -513,6 +513,7 @@ MonoBehaviour:
   LocationInputInstance: {fileID: 653014463}
   LoadMapDialogInstance: {fileID: 5452304801948509133}
   MapEditorRuntimeControllerInstance: {fileID: 1633979596}
+  MapEditorRibbonInstance: {fileID: 1774921656}
 --- !u!114 &1633979596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -585,6 +586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MapEditorFileManagementInstance: {fileID: 1633979597}
+  MapEditorPaletteInstance: {fileID: 4760646076270353593}
   SaveMapDialogInstance: {fileID: 1950983099}
   PlayButton: {fileID: 2100740709}
 --- !u!1 &1802516883
@@ -1022,6 +1024,62 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 645109721}
     m_Modifications:
+    - target: {fileID: 1065009811, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1065009811, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1065009811, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1065009811, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1065009811, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1065009811, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1065009813, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1774921656}
+    - target: {fileID: 1560341321, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1560341321, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1560341321, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1560341321, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1560341321, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1560341321, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1560341323, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1774921656}
     - target: {fileID: 348785942612245144, guid: f7bf543783ed5974d894a8810271a831, type: 3}
       propertyPath: m_AnchorMin.y
       value: 0

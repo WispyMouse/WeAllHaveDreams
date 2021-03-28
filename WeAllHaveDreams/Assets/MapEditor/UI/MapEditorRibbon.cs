@@ -32,6 +32,11 @@ public class MapEditorRibbon : MonoBehaviour
         PlayButton.interactable = true;
     }
 
+    public void MapLoaded()
+    {
+        PlayButton.interactable = true;
+    }
+
     public void PlayButtonPressed()
     {
         // HACK: Counting on MapBootup.WIPRealm to be set already
@@ -56,5 +61,29 @@ public class MapEditorRibbon : MonoBehaviour
     public void MapMarkedAsDirty()
     {
         PlayButton.interactable = false;
+    }
+
+    public void TilePaletteClicked()
+    {
+        List<PaletteSettings> tileSettings = new List<PaletteSettings>();
+
+        foreach (GameplayTile curTile in TileLibrary.GetAllTiles())
+        {
+            tileSettings.Add(new TilePlacementPalette(curTile));
+        }
+
+        MapEditorPaletteInstance.Open(tileSettings);
+    }
+
+    public void StructurePaletteClicked()
+    {
+        List<PaletteSettings> structureSettings = new List<PaletteSettings>();
+
+        foreach (MapStructure structure in StructureLibrary.GetAllStructures())
+        {
+            structureSettings.Add(new StructurePlacementPalette(structure));
+        }
+
+        MapEditorPaletteInstance.Open(structureSettings);
     }
 }

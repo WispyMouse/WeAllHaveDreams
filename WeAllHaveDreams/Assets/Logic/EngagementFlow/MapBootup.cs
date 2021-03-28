@@ -47,13 +47,10 @@ public class MapBootup : MonoBehaviour
     IEnumerator Startup()
     {
         DebugTextLog.AddTextToLog("Loading Library");
-        yield return ThreadDoctor.YieldTask(
-            new Task(() => SceneManager.LoadSceneAsync("Library", LoadSceneMode.Additive)));
+        yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("Library", LoadSceneMode.Additive));
 
         DebugTextLog.AddTextToLog("Loading WorldContext");
-        yield return ThreadDoctor.YieldTask(
-            new Task(() => SceneManager.LoadSceneAsync("WorldContext", LoadSceneMode.Additive)));
-
+        yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("WorldContext", LoadSceneMode.Additive));
         
         Realm realmToLoad = WIPRealm;
         if (realmToLoad == null)
@@ -61,6 +58,8 @@ public class MapBootup : MonoBehaviour
             DebugTextLog.AddTextToLog("Loading default realm", DebugTextLogChannel.DebugLogging);
             yield return ThreadDoctor.YieldTask(GetDefaultRealm());
         }
+
+        yield return ThreadDoctor.YieldTask(ConfigurationLoadingEntrypoint.LoadAllConfigurationData());
 
         yield return WorldContextInstance.MapHolder.LoadFromRealm(realmToLoad);
 

@@ -38,4 +38,12 @@ public static class ThreadDoctor
             await Task.Delay(0);
         }
     }
+
+    public static IEnumerator YieldAsyncOperation(AsyncOperation toYield)
+    {
+        while (!toYield.isDone)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+    }
 }
