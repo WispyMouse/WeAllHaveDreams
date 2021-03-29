@@ -6,28 +6,28 @@ public class StructurePlacementAction : MapEditorInput
 {
     public Vector3Int Position;
 
-    public string Removed { get; set; }
-    public string Added { get; set; }
+    public StructureMapData Removed;
+    public StructureMapData Placed;
 
     public StructurePlacementAction(Vector3Int position, string toPlace, WorldContext worldContextInstance)
     {
         Position = position;
-        Added = toPlace;
+        Placed = new StructureMapData() { Position = position, StructureName = toPlace, Ownership = OwnershipPalette.GlobalPlayerSideSetting };
 
         MapStructure removedStructure = null;
         if (removedStructure = worldContextInstance.StructureHolder.StructureOnPoint(Position))
         {
-            Removed = removedStructure.StructureName;
+            Removed = removedStructure.GetMapData();
         }
     }
 
     public override void Invoke(WorldContext worldContextInstance)
     {
-        worldContextInstance.StructureHolder.SetStructure(Position, StructureLibrary.GetStructure(Added));
+        worldContextInstance.StructureHolder.SetStructure(Placed);
     }
 
     public override void Undo(WorldContext worldContextInstance)
     {
-        worldContextInstance.StructureHolder.SetStructure(Position, StructureLibrary.GetStructure(Removed));
+        worldContextInstance.StructureHolder.SetStructure(Removed);
     }
 }

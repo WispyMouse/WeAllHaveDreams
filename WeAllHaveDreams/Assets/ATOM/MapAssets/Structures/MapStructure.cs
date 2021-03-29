@@ -105,4 +105,9 @@ public abstract class MapStructure : MapObject
     {
         CurCapturePoints = MaxCapturePoints;
     }
+
+    public StructureMapData GetMapData()
+    {
+        return new StructureMapData() { Position = this.Position, Ownership = PlayerSideIndex, StructureName = StructureName };
+    }
 }

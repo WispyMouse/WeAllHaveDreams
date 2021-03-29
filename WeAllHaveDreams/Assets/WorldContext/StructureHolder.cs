@@ -9,7 +9,12 @@ public class StructureHolder : MonoBehaviour
 
     public List<MapStructure> ActiveStructures { get; set; } = new List<MapStructure>();
 
-    public void SetStructure(Vector3Int position, MapStructure toSet)
+    public void SetStructure(StructureMapData data)
+    {
+        SetStructure(data.Position, StructureLibrary.GetStructure(data.StructureName), data.Ownership);
+    }
+
+    public void SetStructure(Vector3Int position, MapStructure toSet, int? faction)
     {
         MapStructure existingStructure = StructureOnPoint(position);
 
@@ -25,6 +30,8 @@ public class StructureHolder : MonoBehaviour
             toSet.SetPosition(position);
             ActiveStructures.Add(toSet);
         }
+
+        SetOwnership(position, faction);
     }
 
     public void LoadStructuresFromScene()
@@ -65,9 +72,9 @@ public class StructureHolder : MonoBehaviour
         ActiveStructures = new List<MapStructure>();
     }
 
-    public void SetOwnership(Vector3Int position, int team)
+    public void SetOwnership(Vector3Int position, int? team)
     {
-        MapStructure structureOnPoint = ActiveStructures.FirstOrDefault(structure => structure.Position == position);
+        MapStructure structureOnPoint = StructureOnPoint(position);
 
         if (structureOnPoint != null)
         {

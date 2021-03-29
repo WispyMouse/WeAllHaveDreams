@@ -8,7 +8,8 @@ using UnityEngine;
 public class Realm
 {
     public string Name = "Default";
-    public IEnumerable<RealmCoordinate> RealmCoordinates;
+    public IEnumerable<RealmCoordinate> RealmCoordinates = new RealmCoordinate[] { };
+    public IEnumerable<StructureMapData> Structures = new StructureMapData[] { };
 
     public void Hydrate()
     {

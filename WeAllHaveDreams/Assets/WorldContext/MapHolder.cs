@@ -43,36 +43,12 @@ public class MapHolder : MonoBehaviour
             {
                 DebugTextLog.AddTextToLog($"Placing {coordinate.Tile} at ({coordinate.Position.x}, {coordinate.Position.y})", DebugTextLogChannel.Verbose);
                 LoadedMap.SetTile(coordinate.Position, TileLibrary.GetTile(coordinate.Tile));
-                /*
-                foreach (RealmKey curKey in toLoad.KeysAtPositions[position].OrderBy(key => (int)key.Type))
-                {
-                    switch (curKey.Type)
-                    {
-                        case RealmKeyType.Tile:
-                            LoadedMap.SetTile(position, activeMap.GetGameplayTile(position));
-                            break;
-                        case RealmKeyType.Structure:
-                            WorldContextInstance.StructureHolder.SetStructure(position, curKey.GetStructureInstance());
-                            break;
-                        case RealmKeyType.Mob:
-                            WorldContextInstance.MobHolder.CreateNewUnit(position, curKey.GetMobPrefab());
-                            break;
-                        case RealmKeyType.Feature:
-                            WorldContextInstance.FeatureHolder.SetFeature(position, curKey.GetFeatureInstance());
-                            break;
-                        case RealmKeyType.Ownership:
-                            WorldContextInstance.StructureHolder.SetOwnership(position, curKey.GetTeam());
+            }
 
-                            MapMob matchingMob = WorldContextInstance.MobHolder.MobOnPoint(position);
-
-                            if (matchingMob != null)
-                            {
-                                matchingMob.SetOwnership(curKey.GetTeam());
-                            }
-                            break;
-                    }
-                }
-                */
+            foreach (StructureMapData structureData in loadingRealm.Structures)
+            {
+                DebugTextLog.AddTextToLog($"Placing {structureData.StructureName} at ({structureData.Position.x}, {structureData.Position.y}), owned by {(structureData.Ownership.HasValue ? $"Faction {structureData.Ownership.Value}" : "[unclaimed]")}", DebugTextLogChannel.Verbose);
+                WorldContextInstance.StructureHolder.SetStructure(structureData);
             }
 
             LoadedMap.RefreshAllTiles();

@@ -112,14 +112,22 @@ public class MapEditorFileManagement : MonoBehaviour
         Realm newRealm = new Realm();
 
         List<RealmCoordinate> realmCoordinates = new List<RealmCoordinate>();
+        List<StructureMapData> structures = new List<StructureMapData>();
 
         foreach (Vector3Int position in WorldContextInstance.MapHolder.GetAllTiles())
         {
             GameplayTile tile = WorldContextInstance.MapHolder.GetGameplayTile(position);
             realmCoordinates.Add(new RealmCoordinate() { Position = position, Tile = tile.TileName });
+
+            MapStructure structureOnPoint;
+            if (structureOnPoint = WorldContextInstance.StructureHolder.StructureOnPoint(position))
+            {
+                structures.Add(structureOnPoint.GetMapData());
+            }
         }
 
         newRealm.RealmCoordinates = realmCoordinates;
+        newRealm.Structures = structures;
 
         return newRealm;
     }
