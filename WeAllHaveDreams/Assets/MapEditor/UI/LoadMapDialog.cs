@@ -17,12 +17,23 @@ public class LoadMapDialog : MonoBehaviour
 
     public void Open()
     {
+        if (gameObject.activeInHierarchy)
+        {
+            Close();
+        }
+
         gameObject.SetActive(true);
         StartCoroutine(ProcessOpening());
     }
 
     IEnumerator ProcessOpening()
     {
+        foreach (LoadMapMapNameButton button in ActiveButtons)
+        {
+            Destroy(button);
+        }
+        ActiveButtons = new List<LoadMapMapNameButton>();
+
         Task<List<Realm>> realmsTask = Task.Run(MapEditorFileManagementInstance.GetAllRealms);
         while (!realmsTask.IsCompleted)
         {
@@ -33,6 +44,7 @@ public class LoadMapDialog : MonoBehaviour
         {
             LoadMapMapNameButton newButton = Instantiate(ButtonPF, LoadableMapsList);
             newButton.SetRealm(curRealm, SelectRealm);
+            ActiveButtons.Add(newButton);
         }
     }
 

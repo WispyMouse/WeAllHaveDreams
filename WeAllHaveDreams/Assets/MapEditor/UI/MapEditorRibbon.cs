@@ -10,7 +10,10 @@ public class MapEditorRibbon : MonoBehaviour
     public MapEditorFileManagement MapEditorFileManagementInstance;
 
     public MapEditorPalette MapEditorPaletteInstance;
+
     public SaveMapDialog SaveMapDialogInstance;
+    public LoadMapDialog LoadMapDialogInstance;
+
     public Button PlayButton;
 
     public void SaveButtonPressed()
@@ -99,5 +102,10 @@ public class MapEditorRibbon : MonoBehaviour
         }
 
         MapEditorPaletteInstance.Open(ownershipSettings);
+    }
+
+    public void LoadMapButtonClicked()
+    {
+        LoadMapDialogInstance.Open();
     }
 }

@@ -588,6 +588,7 @@ MonoBehaviour:
   MapEditorFileManagementInstance: {fileID: 1633979597}
   MapEditorPaletteInstance: {fileID: 4760646076270353593}
   SaveMapDialogInstance: {fileID: 1950983099}
+  LoadMapDialogInstance: {fileID: 5452304801948509133}
   PlayButton: {fileID: 2100740709}
 --- !u!1 &1802516883
 GameObject:
@@ -1048,14 +1049,14 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1065009811, guid: f7bf543783ed5974d894a8810271a831, type: 3}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 1065009813, guid: f7bf543783ed5974d894a8810271a831, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1774921656}
+    - target: {fileID: 1065009813, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StructurePaletteClicked
+      objectReference: {fileID: 0}
     - target: {fileID: 1560341321, guid: f7bf543783ed5974d894a8810271a831, type: 3}
       propertyPath: m_AnchorMin.y
       value: 0
@@ -1080,14 +1081,14 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1560341321, guid: f7bf543783ed5974d894a8810271a831, type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 1560341323, guid: f7bf543783ed5974d894a8810271a831, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1774921656}
+    - target: {fileID: 1560341323, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TilePaletteClicked
+      objectReference: {fileID: 0}
     - target: {fileID: 348785942612245144, guid: f7bf543783ed5974d894a8810271a831, type: 3}
       propertyPath: m_AnchorMin.y
       value: 0
@@ -1116,6 +1117,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1774921656}
+    - target: {fileID: 348785942612245146, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SaveButtonPressed
+      objectReference: {fileID: 0}
     - target: {fileID: 348785944652638948, guid: f7bf543783ed5974d894a8810271a831, type: 3}
       propertyPath: m_Name
       value: MapEditorRibbon
@@ -1208,9 +1213,41 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1774921656}
-    - target: {fileID: 5601417858803286646, guid: f7bf543783ed5974d894a8810271a831, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
+    - target: {fileID: 642803006427058593, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayButtonPressed
+      objectReference: {fileID: 0}
+    - target: {fileID: 1934447875835115762, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1934447875835115762, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1934447875835115762, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1934447875835115762, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1934447875835115762, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1934447875835115762, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4332684464151173255, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1774921656}
+    - target: {fileID: 4332684464151173255, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadMapButtonClicked
       objectReference: {fileID: 0}
     - target: {fileID: 5601417858803286646, guid: f7bf543783ed5974d894a8810271a831, type: 3}
       propertyPath: m_AnchorMin.y
@@ -1267,10 +1304,6 @@ PrefabInstance:
     - target: {fileID: 9195255574096931291, guid: f7bf543783ed5974d894a8810271a831, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9195255574096931291, guid: f7bf543783ed5974d894a8810271a831, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7bf543783ed5974d894a8810271a831, type: 3}
