@@ -39,6 +39,12 @@ public class DebugTextLog : SingletonBase<DebugTextLog>
 
     public static void AddTextToLog(string text, DebugTextLogChannel channel = DebugTextLogChannel.Generic)
     {
+        // HACK: For now, toggle this if we want to hide Verbose logging
+        if (channel == DebugTextLogChannel.Verbose)
+        {
+            return;
+        }
+
         lock (Singleton.MessageQueue)
         {
             Singleton.MessageQueue.Enqueue(text);
