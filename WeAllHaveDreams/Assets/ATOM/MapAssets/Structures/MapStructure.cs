@@ -5,11 +5,11 @@ using UnityEngine;
 
 public abstract class MapStructure : MapObject
 {
-    public int PlayerSideIndex;
-    public bool UnCaptured;
+    public int? PlayerSideIndex;
 
     public SpriteRenderer Renderer;
     public Sprite[] SideSprites;
+    public Sprite UnclaimedSprite;
 
     public int MaxCapturePoints { get; set; } = 20;
     public int CurCapturePoints
@@ -33,27 +33,32 @@ public abstract class MapStructure : MapObject
     public SpriteRenderer CapturePointsVisual;
     public Sprite[] CapturePointsNumerics;
 
+    public string StructureName;
+
     private void Awake()
     {
-        _curCapturePoints = MaxCapturePoints;
-
-        if (!UnCaptured)
-        {
-            Renderer.sprite = SideSprites[this.PlayerSideIndex];
-        }
+        SetOwnership(PlayerSideIndex);
     }
     
-    public void SetOwnership(int side)
+    public void SetOwnership(int? side)
     {
         this.PlayerSideIndex = side;
-        Renderer.sprite = SideSprites[side];
-        UnCaptured = false;
+
+        if (side == null)
+        {
+            Renderer.sprite = UnclaimedSprite;
+        }
+        else
+        {
+            Renderer.sprite = SideSprites[side.Value];
+        }
+
         CurCapturePoints = MaxCapturePoints;
     }
 
     public bool IsNotOwnedByMyTeam(int myTeam)
     {
-        return UnCaptured || PlayerSideIndex != myTeam;
+        return PlayerSideIndex != myTeam;
     }
 
     public void ProceedCapture(MapMob capturing)
@@ -99,5 +104,10 @@ public abstract class MapStructure : MapObject
     public void ClearCapture()
     {
         CurCapturePoints = MaxCapturePoints;
+    }
+
+    public StructureMapData GetMapData()
+    {
+        return new StructureMapData() { Position = this.Position, Ownership = PlayerSideIndex, StructureName = StructureName };
     }
 }

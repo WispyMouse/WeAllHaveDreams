@@ -10,7 +10,7 @@ public class BuildsAbility : MobConfigurationAbility
 
         foreach (MapFeature feature in FeatureLibrary.FeaturesWithTags(Arguments))
         {
-            inputs.Add(new BuildsFeatureInput(fromMob, feature.name));
+            inputs.Add(new BuildsFeatureInput(fromMob, feature.FeatureName));
         }
 
         return inputs;

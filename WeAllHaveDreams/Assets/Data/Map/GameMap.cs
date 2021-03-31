@@ -11,38 +11,45 @@ public class GameMap
     Dictionary<Vector3Int, IEnumerable<Vector3Int>> Neighbors { get; set; }
     Dictionary<Vector3Int, GameplayTile> GameplayTiles { get; set; }
 
-    Realm loadedRealm;
+    public Realm LoadedRealm;
 
     public GameplayTile GetGameplayTile(Vector3Int position)
     {
-        return GameplayTiles[position];
-    }
+        GameplayTile foundTile;
 
-    public static async Task<GameMap> LoadFromRealm(Realm realmData)
-    {
-        var gameplayTiles = new Dictionary<Vector3Int, GameplayTile>();
-
-        GameMap newMap = new GameMap();
-        newMap.loadedRealm = realmData;
-
-        await realmData.Hydrate();
-
-        foreach (Vector3Int curPosition in realmData.AllPositions)
+        if (GameplayTiles.TryGetValue(position, out foundTile))
         {
-            foreach (RealmKey key in realmData.KeysAtPositions[curPosition])
-            {
-                switch (key.Type)
-                {
-                    case RealmKeyType.Tile:
-                        gameplayTiles.Add(curPosition, TileLibrary.GetTile(key.Object));
-                        break;
-                }
-            }
+            return foundTile;
         }
 
-        newMap.Neighbors = realmData.Neighbors;
-        newMap.GameplayTiles = gameplayTiles;
-        return newMap;
+        return null;
+    }
+
+    public static GameMap LoadFromRealm(Realm realmData)
+    {
+        try
+        {
+            var gameplayTiles = new Dictionary<Vector3Int, GameplayTile>();
+
+            GameMap newMap = new GameMap();
+            newMap.LoadedRealm = realmData;
+
+            realmData.Hydrate();
+
+            foreach (RealmCoordinate coordinate in realmData.RealmCoordinates)
+            {
+                gameplayTiles.Add(coordinate.Position, TileLibrary.GetTile(coordinate.Tile));
+            }
+
+            newMap.Neighbors = GenerateNeighbors(realmData);
+            newMap.GameplayTiles = gameplayTiles;
+            return newMap;
+        }
+        catch (Exception e)
+        {
+            DebugTextLog.AddTextToLog(e.Message, DebugTextLogChannel.RuntimeError);
+            throw e;
+        }
     }
 
     public static GameMap InitializeMapFromTilemap(Tilemap tileMap)
@@ -90,6 +97,15 @@ public class GameMap
         newMap.Neighbors = neighbors;
         newMap.GameplayTiles = gameplayTiles;
 
+        return newMap;
+    }
+
+    public static GameMap LoadEmptyRealm()
+    {
+        GameMap newMap = new GameMap();
+        newMap.LoadedRealm = Realm.GetEmptyRealm();
+        newMap.GameplayTiles = new Dictionary<Vector3Int, GameplayTile>();
+        newMap.Neighbors = new Dictionary<Vector3Int, IEnumerable<Vector3Int>>();
         return newMap;
     }
 
@@ -352,11 +368,92 @@ public class GameMap
 
     public IEnumerable<Vector3Int> GetNeighbors(Vector3Int point)
     {
-        return Neighbors[point];
+        IEnumerable<Vector3Int> neighbors;
+
+        if (Neighbors.TryGetValue(point, out neighbors))
+        {
+            return neighbors;
+        }
+
+        DebugTextLog.AddTextToLog($"Tried to get neighbors for ({point.x}, {point.y}), but the tile wasn't in the {nameof(Neighbors)} dictionary.", DebugTextLogChannel.Verbose);
+
+        return Array.Empty<Vector3Int>();
     }
 
     public IEnumerable<Vector3Int> GetAllTiles()
     {
         return GameplayTiles.Keys;
+    }
+
+    public void SetTile(Vector3Int position, GameplayTile tile)
+    {
+        if (tile == null)
+        {
+            RemoveTile(position);
+            return;
+        }
+
+        if (GameplayTiles.ContainsKey(position))
+        {
+            GameplayTiles[position] = tile;
+        }
+        else
+        {
+            GameplayTiles.Add(position, tile);
+
+            List<Vector3Int> newNeighbors = new List<Vector3Int>();
+
+            foreach (Vector3Int curNeighbor in GetPotentialNeighbors(position))
+            {
+                if (GameplayTiles.ContainsKey(curNeighbor))
+                {
+                    Neighbors[curNeighbor] = Neighbors[curNeighbor].Union(new Vector3Int[] { position });
+                    newNeighbors.Add(curNeighbor);
+                }
+            }
+
+            Neighbors.Add(position, newNeighbors);
+        }
+    }
+
+    public void RemoveTile(Vector3Int position)
+    {
+        GameplayTiles.Remove(position);
+        Neighbors.Remove(position);
+
+        foreach (Vector3Int curNeighbor in GetPotentialNeighbors(position))
+        {
+            if (GameplayTiles.ContainsKey(curNeighbor))
+            {
+                Neighbors[curNeighbor] = Neighbors[curNeighbor].Except(new Vector3Int[] { position });
+            }
+        }
+    }
+
+    static Dictionary<Vector3Int, IEnumerable<Vector3Int>> GenerateNeighbors(Realm forRealm)
+    {
+        Dictionary<Vector3Int, IEnumerable<Vector3Int>> neighborsDictionary = new Dictionary<Vector3Int, IEnumerable<Vector3Int>>();
+
+        foreach (RealmCoordinate coordinate in forRealm.RealmCoordinates)
+        {
+            neighborsDictionary.Add(coordinate.Position, new Vector3Int[] { });
+        }
+
+        foreach (RealmCoordinate coordinate in forRealm.RealmCoordinates)
+        {
+            List<Vector3Int> actualNeighbors = new List<Vector3Int>();
+
+            foreach (Vector3Int neighbor in GetPotentialNeighbors(coordinate.Position))
+            {
+                if (neighborsDictionary.ContainsKey(neighbor))
+                {
+                    actualNeighbors.Add(neighbor);
+                }
+            }
+
+            neighborsDictionary[coordinate.Position] = actualNeighbors;
+        }
+
+        return neighborsDictionary;
     }
 }

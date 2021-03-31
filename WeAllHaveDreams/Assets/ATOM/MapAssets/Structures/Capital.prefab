@@ -45,12 +45,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a40fc2675aa5ec47bb18937ac0bd82b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerSideIndex: 0
-  UnCaptured: 1
   Renderer: {fileID: 8596382312432593999}
   SideSprites:
   - {fileID: -3854964705595706665, guid: 9f1e1a0a20f34ef48a2e377a68164f5a, type: 3}
   - {fileID: 3796422788609999600, guid: 9f1e1a0a20f34ef48a2e377a68164f5a, type: 3}
+  UnclaimedSprite: {fileID: -9043860729359145966, guid: 9f1e1a0a20f34ef48a2e377a68164f5a, type: 3}
   ContributedResourcesPerTurn: 50
   CaptureImportance: 3
   CapturePointsVisual: {fileID: 8596382312637603041}
@@ -76,6 +75,7 @@ MonoBehaviour:
   - {fileID: -3215136061973271139, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   - {fileID: -1366181965666896206, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   - {fileID: 8060736529220523392, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
+  StructureName: Capital
 --- !u!1 &8596382312432593997
 GameObject:
   m_ObjectHideFlags: 0

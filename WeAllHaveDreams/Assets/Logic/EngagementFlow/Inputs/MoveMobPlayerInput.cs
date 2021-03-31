@@ -13,9 +13,9 @@ public class MoveMobPlayerInput : PlayerInput
         To = to;
     }
 
-    public override string LongTitle => $"Move {Moving.name} to ({To.x}, {To.y})";
+    public override string LongTitle => $"Move {Moving.Name} to ({To.x}, {To.y})";
 
-    public override IEnumerator Execute(WorldContext worldContext)
+    public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {
         if (!Moving.CanMove)
         {
@@ -23,7 +23,7 @@ public class MoveMobPlayerInput : PlayerInput
             yield break;
         }
 
-        yield return worldContext.MobHolder.MoveUnit(Moving, To);
+        yield return animationHolder.MoveUnit(Moving, To);
         Moving.CanMove = false;
 
         yield return TurnManager.ResolveEffects();

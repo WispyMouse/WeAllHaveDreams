@@ -15,13 +15,13 @@ public class MobCreatedPlayerInput : PlayerInput
         ResourceCost = resourceCost;
     }
 
-    public override string LongTitle => $"Create {MapMobPf.name} for {ResourceCost} resources";
+    public override string LongTitle => $"Create {MapMobPf.Name} for {ResourceCost} resources";
 
-    public override IEnumerator Execute(WorldContext worldContext)
+    public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {
         if (TurnManager.CurrentPlayer.TotalResources >= ResourceCost)
         {
-            worldContext.MobHolder.CreateNewUnit(AtStructure.Position, MapMobPf, AtStructure.PlayerSideIndex);
+            worldContext.MobHolder.CreateNewUnit(AtStructure.Position, MapMobPf, AtStructure.PlayerSideIndex.Value);
             TurnManager.CurrentPlayer.TotalResources -= ResourceCost;
         }
         else

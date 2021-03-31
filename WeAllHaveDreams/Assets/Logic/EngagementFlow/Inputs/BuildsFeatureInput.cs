@@ -29,7 +29,7 @@ public class BuildsFeatureInput : PlayerInput
             givenContext.FeatureHolder.FeatureOnPoint(Builder.Position) == null;
     }
 
-    public override IEnumerator Execute(WorldContext worldContext)
+    public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {
         DebugTextLog.AddTextToLog($"Building {FeatureToBuild} at ({Builder.Position.x}, {Builder.Position.y}");
         TurnManager.CurrentPlayer.TotalResources -= Cost;

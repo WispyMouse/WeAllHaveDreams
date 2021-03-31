@@ -7,8 +7,8 @@ public class AIInputPhaseController : MonoBehaviour
 {
     Coroutine TurnBeingPlayed { get; set; }
 
-    public WorldContext WorldContextInstance;
-    public MapMeta MapMetaInstance;
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
+    public GameplayAnimationHolder GameplayAnimationInstance;
 
     public Configuration.AIConfiguration AISettings;
 
@@ -38,10 +38,10 @@ public class AIInputPhaseController : MonoBehaviour
 
             UnitTurnPlan bestPlan = possiblePlans.OrderByDescending(plan => plan.Score).First();
             DebugTextLog.AddTextToLog($"AI Plan: {bestPlan.DeterminedInput.LongTitle}, score {bestPlan.Score}");
-            yield return bestPlan.DeterminedInput.Execute(WorldContextInstance);
+            yield return bestPlan.DeterminedInput.Execute(WorldContextInstance, GameplayAnimationInstance);
         }
 
-        foreach (MapStructure curStructure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => !structure.UnCaptured && structure.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex))
+        foreach (MapStructure curStructure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => structure.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex))
         {
             if (!WorldContextInstance.MobHolder.MobOnPoint(curStructure.Position))
             {
@@ -52,7 +52,7 @@ public class AIInputPhaseController : MonoBehaviour
                 if (possibleInputs.Any())
                 {
                     PlayerInput randomInput = possibleInputs.ToList()[Random.Range(0, possibleInputs.Count())];
-                    yield return randomInput.Execute(WorldContextInstance);
+                    yield return randomInput.Execute(WorldContextInstance, GameplayAnimationInstance);
                 }
             }
         }
@@ -111,7 +111,7 @@ public class AIInputPhaseController : MonoBehaviour
         // Are there any structures in our movement range?
         IEnumerable<MapStructure> structuresInRange = WorldContextInstance.StructureHolder.ActiveStructures
             .Where(structure => movementRanges.Contains(structure.Position))
-            .Where(structure => structure.PlayerSideIndex != acting.PlayerSideIndex || structure.UnCaptured)
+            .Where(structure => structure.PlayerSideIndex != acting.PlayerSideIndex)
             .Where(structure => acting.Position == structure.Position || WorldContextInstance.MobHolder.MobOnPoint(structure.Position) == null);
 
         if (structuresInRange.Any())
@@ -127,7 +127,7 @@ public class AIInputPhaseController : MonoBehaviour
         {
             // If the enemy has a base, move towards it
             IEnumerable<MapStructure> enemyStructures = WorldContextInstance.StructureHolder.ActiveStructures
-                .Where(structure => structure.UnCaptured || structure.PlayerSideIndex != TurnManager.CurrentPlayer.PlayerSideIndex)
+                .Where(structure => structure.PlayerSideIndex.HasValue || structure.PlayerSideIndex != TurnManager.CurrentPlayer.PlayerSideIndex)
                 .Except(structuresInRange);
 
             foreach (MapStructure structure in enemyStructures)
@@ -192,6 +192,9 @@ public class AIInputPhaseController : MonoBehaviour
 
     public void StopAllInputs()
     {
-        StopCoroutine(TurnBeingPlayed);
+        if (TurnBeingPlayed != null)
+        {
+            StopCoroutine(TurnBeingPlayed);
+        }
     }
 }

@@ -22,9 +22,9 @@ public class AttackWithMobInput : PlayerInput
         MoveTo = moveTo;
     }
 
-    public override string LongTitle => $"Attack with {Attacking.name} at {Target.name}" + (MoveTo.HasValue ? $" after moving to ({MoveTo.Value.x}, {MoveTo.Value.y})" : "");
+    public override string LongTitle => $"Attack with {Attacking.Name} at {Target.Name}" + (MoveTo.HasValue ? $" after moving to ({MoveTo.Value.x}, {MoveTo.Value.y})" : "");
 
-    public override IEnumerator Execute(WorldContext worldContext)
+    public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {
         if (!Attacking.CanAttack)
         {
@@ -40,11 +40,11 @@ public class AttackWithMobInput : PlayerInput
                 yield break;
             }
 
-            yield return worldContext.MobHolder.MoveUnit(Attacking, MoveTo.Value);
+            yield return animationHolder.MoveUnit(Attacking, MoveTo.Value);
             Attacking.CanMove = false;
         }
 
-        yield return worldContext.MobHolder.UnitEngagesUnit(Attacking, Target);
+        yield return animationHolder.UnitEngagesUnit(Attacking, Target);
 
         Attacking.CanAttack = false;
 

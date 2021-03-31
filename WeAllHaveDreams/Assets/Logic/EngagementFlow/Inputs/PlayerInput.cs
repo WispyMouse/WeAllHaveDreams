@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class PlayerInput
 {
-    public abstract IEnumerator Execute(WorldContext worldContext);
+    public abstract IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder);
 
     public virtual bool IsPossible(WorldContext givenContext)
     {

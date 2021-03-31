@@ -5,18 +5,41 @@ using UnityEngine.Tilemaps;
 
 public class LocationInput : MonoBehaviour
 {
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
+
+    public TileCursor TileCursorInstance;
+    bool tileCursorVisibility { get; set; }
+
     public Camera MapCamera;
-    public Tilemap TerrainTilemap;
 
-    public Vector3Int? GetHoveredTilePosition()
+    private void Update()
     {
-        Vector3Int worldpoint = TerrainTilemap.WorldToCell(MapCamera.ScreenToWorldPoint(Input.mousePosition));
+        if (tileCursorVisibility)
+        {
+            Vector3Int? tileCursorPosition = GetHoveredTilePosition(false);
 
-        if (!TerrainTilemap.HasTile(worldpoint))
+            if (tileCursorPosition.HasValue)
+            {
+                TileCursorInstance.SetPosition(tileCursorPosition.Value);
+            }
+        }
+    }
+
+    public Vector3Int? GetHoveredTilePosition(bool requireExistingTile = true)
+    {
+        Vector3Int worldpoint = WorldContextInstance.MapHolder.LoadedMap.WorldToCell(MapCamera.ScreenToWorldPoint(Input.mousePosition));
+
+        if (requireExistingTile && !WorldContextInstance.MapHolder.LoadedMap.HasTile(worldpoint))
         {
             return null;
         }
 
         return worldpoint;
+    }
+
+    public void SetTileCursorVisibility(bool toVisible)
+    {
+        tileCursorVisibility = toVisible;
+        TileCursorInstance.gameObject.SetActive(toVisible);
     }
 }

@@ -7,13 +7,11 @@ public class UnitAttackPhase : InputGameplayPhase
 {
     MapMob selectedUnit { get; set; }
 
-    public MapMeta MapMetaInstance;
-    public MapHolder MapHolderInstance;
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
     public UnitMovementPhase UnitMovementPhaseInstance;
     public NeutralPhase NeutralPhaseInstance;
     public InputResolutionPhase InputResolutionPhaseInstance;
-    public StructureHolder StructureHolderInstance;
     public UseAbilityPhase UseAbilityPhaseInstance;
 
     // HACK: Currently only enabling one ability per mob
@@ -34,7 +32,7 @@ public class UnitAttackPhase : InputGameplayPhase
             yield break;
         }
 
-        MapMetaInstance.ShowUnitAttackRange(selectedUnit);
+        WorldContextInstance.MapMetaHolder.ShowUnitAttackRange(selectedUnit);
 
         if (selectedUnit.CanMove)
         {
@@ -42,7 +40,7 @@ public class UnitAttackPhase : InputGameplayPhase
         }
 
         MapStructure onStructure;
-        if ((onStructure = StructureHolderInstance.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
+        if ((onStructure = WorldContextInstance.StructureHolder.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
         {
             DebugTextLog.AddTextToLog("Press 'C' to capture this structure", DebugTextLogChannel.DebugOperationInputInstructions);
         }
@@ -65,12 +63,12 @@ public class UnitAttackPhase : InputGameplayPhase
 
     public override void EndPhase()
     {
-        MapMetaInstance.ClearMetas();
+        WorldContextInstance.MapMetaHolder.ClearMetas();
     }
 
     public override void UpdateAfterInput()
     {
-        MapMetaInstance.ClearMetas();
+        WorldContextInstance.MapMetaHolder.ClearMetas();
 
         // If we can't move, then don't do anything
         if (!selectedUnit.CanAttack)
@@ -78,7 +76,7 @@ public class UnitAttackPhase : InputGameplayPhase
             return;
         }
 
-        MapMetaInstance.ShowUnitAttackRange(selectedUnit);
+        WorldContextInstance.MapMetaHolder.ShowUnitAttackRange(selectedUnit);
     }
 
     public override bool TryHandleUnitClicked(MapMob mob, out InputGameplayPhase nextPhase)
@@ -92,7 +90,7 @@ public class UnitAttackPhase : InputGameplayPhase
             return true;
         }
 
-        IEnumerable<Vector3Int> attackingRanges = MapHolderInstance.CanHitFrom(selectedUnit, mob.Position);
+        IEnumerable<Vector3Int> attackingRanges = WorldContextInstance.MapHolder.CanHitFrom(selectedUnit, mob.Position);
         if (!attackingRanges.Contains(selectedUnit.Position))
         {
             DebugTextLog.AddTextToLog("That unit is out of this units attack range.");
@@ -116,7 +114,7 @@ public class UnitAttackPhase : InputGameplayPhase
         if (Input.GetKeyDown(KeyCode.C))
         {
             MapStructure onStructure;
-            if ((onStructure = StructureHolderInstance.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
+            if ((onStructure = WorldContextInstance.StructureHolder.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
             {
                 nextPhase = InputResolutionPhaseInstance.ResolveThis(new MobCapturesStructurePlayerInput(selectedUnit, onStructure), UnitMovementPhaseInstance.UnitSelected(selectedUnit));
                 return true;

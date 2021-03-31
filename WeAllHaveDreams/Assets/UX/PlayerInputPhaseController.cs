@@ -10,10 +10,7 @@ using UnityEngine;
 public class PlayerInputPhaseController : MonoBehaviour
 {
     public LocationInput LocationInputController;
-    public MapMeta MapMetaController;
-    public MapHolder MapHolderController;
-    public MobHolder MobHolderController;
-    public StructureHolder StructureHolderController;
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
     public InputGameplayPhase StartingPhase;
     InputGameplayPhase currentPhase { get; set; }
@@ -59,16 +56,15 @@ public class PlayerInputPhaseController : MonoBehaviour
                 return false;
             }
 
-
             MapMob mobAtPoint;
             MapStructure structureAtPoint;
 
-            if ((mobAtPoint = MobHolderController.MobOnPoint(worldpoint.Value))
+            if ((mobAtPoint = WorldContextInstance.MobHolder.MobOnPoint(worldpoint.Value))
                 && currentPhase.TryHandleUnitClicked(mobAtPoint, out nextPhase))
             {
                 shouldRefresh = true;
             }
-            else if ((structureAtPoint = StructureHolderController.StructureOnPoint(worldpoint.Value))
+            else if ((structureAtPoint = WorldContextInstance.StructureHolder.StructureOnPoint(worldpoint.Value))
                 && currentPhase.TryHandleStructureClicked(structureAtPoint, out nextPhase))
             {
                 shouldRefresh = true;

@@ -8,7 +8,7 @@ public class StructureUsagePhase : InputGameplayPhase
     public NeutralPhase NeutralPhaseInstance;
     public InputResolutionPhase InputResolutionPhaseInstance;
 
-    public WorldContext WorldContextInstance;
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
     MapStructure selectedStructure { get; set; }
     List<PlayerInput> possibleInputs { get; set; }

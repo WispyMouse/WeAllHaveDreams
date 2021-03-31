@@ -209,12 +209,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cae1c6df6026e164f95d95c1eb365a6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerSideIndex: 0
-  UnCaptured: 1
   Renderer: {fileID: 249596871183619262}
   SideSprites:
   - {fileID: -3571065555159573361, guid: 451ddd0aedb6bd6468edc8be1949d3f4, type: 3}
   - {fileID: 7638030212143318558, guid: 451ddd0aedb6bd6468edc8be1949d3f4, type: 3}
+  UnclaimedSprite: {fileID: -3600462155659023468, guid: 451ddd0aedb6bd6468edc8be1949d3f4, type: 3}
   ContributedResourcesPerTurn: 50
   CaptureImportance: 2
   CapturePointsVisual: {fileID: 249596871456793616}
@@ -240,6 +239,7 @@ MonoBehaviour:
   - {fileID: -3215136061973271139, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   - {fileID: -1366181965666896206, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   - {fileID: 8060736529220523392, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
+  StructureName: Bell
   SoldUnits:
   - SimpleMob
   - RangedMob

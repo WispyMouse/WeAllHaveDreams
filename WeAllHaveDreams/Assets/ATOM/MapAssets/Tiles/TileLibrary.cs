@@ -10,14 +10,24 @@ public class TileLibrary : SingletonBase<TileLibrary>
 
     public GameplayTile DefaultTile;
 
+    void Awake()
+    {
+        ExplicitlySetSingleton();
+    }
+
     public static GameplayTile GetTile(string tileName)
     {
+        if (string.IsNullOrEmpty(tileName))
+        {
+            return null;
+        }
+
         if (Singleton.NamesToTiles.TryGetValue(tileName, out GameplayTile foundTile))
         {
             return foundTile;
         }
 
-        GameplayTile matchingTile = Singleton.Tiles.FirstOrDefault(tile => tile.name == tileName);
+        GameplayTile matchingTile = Singleton.Tiles.FirstOrDefault(tile => tile.TileName == tileName);
 
         if (matchingTile == null)
         {
@@ -27,5 +37,10 @@ public class TileLibrary : SingletonBase<TileLibrary>
 
         Singleton.NamesToTiles.Add(tileName, matchingTile);
         return matchingTile;
+    }
+
+    public static IEnumerable<GameplayTile> GetAllTiles()
+    {
+        return Singleton.Tiles;
     }
 }

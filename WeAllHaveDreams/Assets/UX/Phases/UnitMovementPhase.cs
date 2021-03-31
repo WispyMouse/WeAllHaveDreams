@@ -5,14 +5,12 @@ using UnityEngine;
 
 public class UnitMovementPhase : InputGameplayPhase
 {
+    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
+
     public InputResolutionPhase InputResolutionPhaseInstance;
     public NeutralPhase NeutralPhaseInstance;
     public UnitAttackPhase UnitAttackPhaseInstance;
     public UseAbilityPhase UseAbilityPhaseInstance;
-
-    public MapMeta MapMetaInstance;
-    public MapHolder MapHolderInstance;
-    public StructureHolder StructureHolderInstance;
 
     MapMob selectedUnit { get; set; }
 
@@ -34,16 +32,16 @@ public class UnitMovementPhase : InputGameplayPhase
             yield break;
         }
 
-        MapMetaInstance.ShowUnitMovementRange(selectedUnit);
+        WorldContextInstance.MapMetaHolder.ShowUnitMovementRange(selectedUnit);
 
         if (selectedUnit.CanAttack)
         {
-            MapMetaInstance.ShowUnitAttackRangePastMovementRange(selectedUnit);
+            WorldContextInstance.MapMetaHolder.ShowUnitAttackRangePastMovementRange(selectedUnit);
             DebugTextLog.AddTextToLog("Press 'A' to enter Attack Only mode", DebugTextLogChannel.DebugOperationInputInstructions);
         }
 
         MapStructure onStructure;
-        if ((onStructure = StructureHolderInstance.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
+        if ((onStructure = WorldContextInstance.StructureHolder.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
         {
             DebugTextLog.AddTextToLog("Press 'C' to capture this structure", DebugTextLogChannel.DebugOperationInputInstructions);
         }
@@ -66,12 +64,12 @@ public class UnitMovementPhase : InputGameplayPhase
 
     public override void EndPhase()
     {
-        MapMetaInstance.ClearMetas();
+        WorldContextInstance.MapMetaHolder.ClearMetas();
     }
 
     public override void UpdateAfterInput()
     {
-        MapMetaInstance.ClearMetas();
+        WorldContextInstance.MapMetaHolder.ClearMetas();
 
         // If we can't move, then don't do anything
         if (!selectedUnit.CanMove)
@@ -79,11 +77,11 @@ public class UnitMovementPhase : InputGameplayPhase
             return;
         }
 
-        MapMetaInstance.ShowUnitMovementRange(selectedUnit);
+        WorldContextInstance.MapMetaHolder.ShowUnitMovementRange(selectedUnit);
 
         if (selectedUnit.CanAttack)
         {
-            MapMetaInstance.ShowUnitAttackRangePastMovementRange(selectedUnit);
+            WorldContextInstance.MapMetaHolder.ShowUnitAttackRangePastMovementRange(selectedUnit);
         }
     }
 
@@ -98,7 +96,7 @@ public class UnitMovementPhase : InputGameplayPhase
         }
 
         // If the tile isn't in our move range, then don't do anything
-        if (!MapMetaInstance.TileIsInActiveMovementRange(position))
+        if (!WorldContextInstance.MapMetaHolder.TileIsInActiveMovementRange(position))
         {
             return false;
         }
@@ -119,7 +117,7 @@ public class UnitMovementPhase : InputGameplayPhase
         }
 
         // Can we attack them from where we're standing?
-        IEnumerable<Vector3Int> standingAttacks = MapHolderInstance.PotentialAttacks(selectedUnit, mob.Position);
+        IEnumerable<Vector3Int> standingAttacks = WorldContextInstance.MapHolder.PotentialAttacks(selectedUnit, mob.Position);
         if (standingAttacks.Contains(mob.Position))
         {
             nextPhase = InputResolutionPhaseInstance.ResolveThis(new AttackWithMobInput(selectedUnit, mob), this);
@@ -128,8 +126,8 @@ public class UnitMovementPhase : InputGameplayPhase
 
         // What tile can we attack this unit from?
         // We want to pick the closest one to the target out of our possibilities, that is still in this units movement range
-        IEnumerable<Vector3Int> attackingRanges = MapHolderInstance.CanHitFrom(selectedUnit, mob.Position);
-        IEnumerable<Vector3Int> possibleMoves = MapHolderInstance.PotentialMoves(selectedUnit);
+        IEnumerable<Vector3Int> attackingRanges = WorldContextInstance.MapHolder.CanHitFrom(selectedUnit, mob.Position);
+        IEnumerable<Vector3Int> possibleMoves = WorldContextInstance.MapHolder.PotentialMoves(selectedUnit);
 
         IEnumerable<Vector3Int> overlap = attackingRanges.Intersect(possibleMoves);
 
@@ -195,7 +193,7 @@ public class UnitMovementPhase : InputGameplayPhase
         if (Input.GetKeyDown(KeyCode.C))
         {
             MapStructure onStructure;
-            if ((onStructure = StructureHolderInstance.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
+            if ((onStructure = WorldContextInstance.StructureHolder.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
             {
                 nextPhase = InputResolutionPhaseInstance.ResolveThis(new MobCapturesStructurePlayerInput(selectedUnit, onStructure), this);
                 return true;

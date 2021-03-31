@@ -13,9 +13,9 @@ public class MobCapturesStructurePlayerInput : PlayerInput
         Target = target;
     }
 
-    public override string LongTitle => $"Capture a structure with {Capturing.name} at ({Target.Position.x}, {Target.Position.y}) ";
+    public override string LongTitle => $"Capture a structure with {Capturing.Name} at ({Target.Position.x}, {Target.Position.y}) ";
 
-    public override IEnumerator Execute(WorldContext worldContext)
+    public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {
         if (Capturing.Position != Target.Position)
         {
@@ -31,7 +31,7 @@ public class MobCapturesStructurePlayerInput : PlayerInput
                 yield break;
             }
 
-            yield return worldContext.MobHolder.MoveUnit(Capturing, Target.Position);
+            yield return animationHolder.MoveUnit(Capturing, Target.Position);
             Capturing.CanMove = false;
         }
 
