@@ -7,6 +7,9 @@ public class MapEditorPalette : MonoBehaviour
     public PaletteButton PaletteButtonPF;
     public Transform PaletteItemHolder;
 
+    public ActivePalettePanel LeftActivePalette;
+    public ActivePalettePanel RightActivePalette;
+
     public MapEditorRuntimeController MapEditorRuntimeControllerInstance;
 
     List<PaletteButton> ActiveButtons { get; set; } = new List<PaletteButton>();
@@ -26,10 +29,14 @@ public class MapEditorPalette : MonoBehaviour
             newButton.SetTile(curSetting, PaletteButtonClicked);
             ActiveButtons.Add(newButton);
         }
+
+        LeftActivePalette.SetPalette(MapEditorRuntimeControllerInstance.LeftClickPaletteSettings);
+        RightActivePalette.SetPalette(MapEditorRuntimeControllerInstance.RightClickPaletteSettings);
     }
 
     void PaletteButtonClicked(PaletteButton button)
     {
         MapEditorRuntimeControllerInstance.SetPalette(button.RepresentedOption);
+        LeftActivePalette.SetPalette(MapEditorRuntimeControllerInstance.LeftClickPaletteSettings);
     }
 }

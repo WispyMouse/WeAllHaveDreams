@@ -79,10 +79,20 @@ public class MapHolder : MonoBehaviour
 
     public void SetTile(Vector3Int position, GameplayTile toSet)
     {
+        // Get all neighbors of this tile, that currently exist
+        // We fetch this now in case we're clearing the tile, so it wouldn't be in the Neighbors lookup again
+        IEnumerable<Vector3Int> neighbors = GetNeighbors(position);
+
         activeMap.SetTile(position, toSet);
         LoadedMap.SetTile(position, toSet);
 
-        foreach (Vector3Int neighbor in GetNeighbors(position))
+        // If this was null before, try to get neighbors again
+        if (!neighbors.Any())
+        {
+            neighbors = GetNeighbors(position);
+        }
+
+        foreach (Vector3Int neighbor in neighbors)
         {
             LoadedMap.RefreshTile(neighbor);
         }

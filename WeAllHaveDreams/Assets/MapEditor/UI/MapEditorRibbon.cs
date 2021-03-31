@@ -96,7 +96,7 @@ public class MapEditorRibbon : MonoBehaviour
         ownershipSettings.Add(new OwnershipPalette(null));
 
         // needs a way to add more, later; find a healthy balance between "enables things" and "reasonable for usual use"
-        for (int ii = 0; ii < 10; ii++)
+        for (int ii = 0; ii < 2; ii++)
         {
             ownershipSettings.Add(new OwnershipPalette(ii));
         }

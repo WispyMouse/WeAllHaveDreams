@@ -12,7 +12,8 @@ public class MapEditorRuntimeController : MonoBehaviour
     public MapEditorRibbon MapEditorRibbonInstance;
     public MapEditorPalette MapEditorPaletteInstance;
 
-    PaletteSettings ActivePaletteSettings;
+    public PaletteSettings LeftClickPaletteSettings;
+    public PaletteSettings RightClickPaletteSettings;
 
     List<MapEditorInput> ActionHistory { get; set; } = new List<MapEditorInput>();
     int? historyPointer { get; set; } = null;
@@ -25,7 +26,8 @@ public class MapEditorRuntimeController : MonoBehaviour
 
     public void Startup()
     {
-        ActivePaletteSettings = new TilePlacementPalette(TileLibrary.GetTile("Floor"));
+        LeftClickPaletteSettings = new TilePlacementPalette(TileLibrary.GetTile("Floor"));
+        RightClickPaletteSettings = new ClearTilePalette();
 
         List<PaletteSettings> tileSettings = new List<PaletteSettings>();
 
@@ -39,7 +41,8 @@ public class MapEditorRuntimeController : MonoBehaviour
 
     bool HandleClick()
     {
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        int? click = Input.GetMouseButtonDown(0) ? 0 : Input.GetMouseButtonDown(1) ? (int?)1 : null;
+        if (click.HasValue && !EventSystem.current.IsPointerOverGameObject())
         {
             Vector3Int? worldpoint = LocationInputController.GetHoveredTilePosition(false);
 
@@ -49,7 +52,15 @@ public class MapEditorRuntimeController : MonoBehaviour
                 return false;
             }
 
-            ApplyTilePalette(worldpoint.Value);
+            if (click == 0)
+            {
+                ApplyTilePalette(worldpoint.Value, LeftClickPaletteSettings);
+            }
+            else
+            {
+                ApplyTilePalette(worldpoint.Value, RightClickPaletteSettings);
+            }
+            
             return true;
         }
 
@@ -112,8 +123,14 @@ public class MapEditorRuntimeController : MonoBehaviour
         return false;
     }
 
-    void ApplyTilePalette(Vector3Int worldPoint)
+    void ApplyTilePalette(Vector3Int worldPoint, PaletteSettings toApply)
     {
+        if (toApply == null)
+        {
+            DebugTextLog.AddTextToLog("Tried to apply a palette, but it was null.", DebugTextLogChannel.MapEditorOperations);
+            return;
+        }
+
         GameplayTile tileAtPosition = WorldContextInstance.MapHolder.GetGameplayTile(worldPoint);
         string replacedTile = null;
 
@@ -122,7 +139,7 @@ public class MapEditorRuntimeController : MonoBehaviour
             replacedTile = tileAtPosition.TileName;
         }
 
-        MapEditorInput input = ActivePaletteSettings.ApplyPalette(WorldContextInstance, worldPoint);
+        MapEditorInput input = toApply.ApplyPalette(WorldContextInstance, worldPoint);
         input.Invoke(WorldContextInstance);
 
         if (historyPointer.HasValue)
@@ -144,6 +161,6 @@ public class MapEditorRuntimeController : MonoBehaviour
 
     public void SetPalette(PaletteSettings toPalette)
     {
-        ActivePaletteSettings = toPalette;
+        LeftClickPaletteSettings = toPalette;
     }
 }

@@ -368,7 +368,16 @@ public class GameMap
 
     public IEnumerable<Vector3Int> GetNeighbors(Vector3Int point)
     {
-        return Neighbors[point];
+        IEnumerable<Vector3Int> neighbors;
+
+        if (Neighbors.TryGetValue(point, out neighbors))
+        {
+            return neighbors;
+        }
+
+        DebugTextLog.AddTextToLog($"Tried to get neighbors for ({point.x}, {point.y}), but the tile wasn't in the {nameof(Neighbors)} dictionary.", DebugTextLogChannel.Verbose);
+
+        return Array.Empty<Vector3Int>();
     }
 
     public IEnumerable<Vector3Int> GetAllTiles()

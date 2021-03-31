@@ -16,13 +16,7 @@ public class StructureHolder : MonoBehaviour
 
     public void SetStructure(Vector3Int position, MapStructure toSet, int? faction)
     {
-        MapStructure existingStructure = StructureOnPoint(position);
-
-        if (existingStructure != null)
-        {
-            ActiveStructures.Remove(existingStructure);
-            Destroy(existingStructure.gameObject);
-        }
+        ClearStructure(position);
 
         if (toSet != null)
         {
@@ -32,6 +26,17 @@ public class StructureHolder : MonoBehaviour
         }
 
         SetOwnership(position, faction);
+    }
+
+    public void ClearStructure(Vector3Int position)
+    {
+        MapStructure existingStructure = StructureOnPoint(position);
+
+        if (existingStructure != null)
+        {
+            ActiveStructures.Remove(existingStructure);
+            Destroy(existingStructure.gameObject);
+        }
     }
 
     public void LoadStructuresFromScene()
