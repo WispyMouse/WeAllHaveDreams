@@ -122,13 +122,14 @@ public class TurnManager : SingletonBase<TurnManager>
         {
             Vector3Int position = remove.Position;
 
-            yield return Singleton.WorldContextInstance.MobHolder.RemoveMob(remove);
+            Singleton.WorldContextInstance.MobHolder.RemoveMob(remove);
             Singleton.WorldContextInstance.StructureHolder.MobRemovedFromPoint(position);
         }
 
         Singleton.WorldContextInstance.FogHolder.UpdateVisibilityForPlayers();
 
         Singleton.SideStatisticsInstance.UpdateVisuals();
+        yield break;
     }
 
     public static void VictoryIsDeclared(int winner)

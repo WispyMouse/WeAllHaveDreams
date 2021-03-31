@@ -28,12 +28,6 @@ public class LoadMapDialog : MonoBehaviour
 
     IEnumerator ProcessOpening()
     {
-        foreach (LoadMapMapNameButton button in ActiveButtons)
-        {
-            Destroy(button);
-        }
-        ActiveButtons = new List<LoadMapMapNameButton>();
-
         Task<List<Realm>> realmsTask = Task.Run(MapEditorFileManagementInstance.GetAllRealms);
         while (!realmsTask.IsCompleted)
         {
@@ -57,7 +51,10 @@ public class LoadMapDialog : MonoBehaviour
 
         foreach (LoadMapMapNameButton button in ActiveButtons)
         {
-            Destroy(button.gameObject);
+            button.gameObject.SetActive(false);
+
+            // TODO: Get these in an Object pool, properly; it's throwing an error about drawing deleted RectTransforms
+            // Destroy(button.gameObject);
         }
         ActiveButtons = new List<LoadMapMapNameButton>();
 

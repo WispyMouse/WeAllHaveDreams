@@ -283,4 +283,9 @@ public class MapMob : MapObject
 
         return foundStat.StatValue;
     }
+
+    public MobMapData GetMapData()
+    {
+        return new MobMapData() { Position = Position, MobName = Name, Ownership = PlayerSideIndex };
+    }
 }

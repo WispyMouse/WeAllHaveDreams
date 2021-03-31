@@ -56,4 +56,9 @@ public class MobLibrary : SingletonBase<MobLibrary>
                 return Singleton.BasicMobSprite[side];
         }
     }
+
+    public static IEnumerable<MobConfiguration> GetAllMobs()
+    {
+        return Singleton.MobConfigurations;
+    }
 }

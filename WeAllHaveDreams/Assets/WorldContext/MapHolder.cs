@@ -51,6 +51,12 @@ public class MapHolder : MonoBehaviour
                 WorldContextInstance.StructureHolder.SetStructure(structureData);
             }
 
+            foreach (MobMapData mobData in loadingRealm.Mobs)
+            {
+                DebugTextLog.AddTextToLog($"Placing {mobData.MobName} at ({mobData.Position.x}, {mobData.Position.y}), owned by Faction {mobData.Ownership}", DebugTextLogChannel.Verbose);
+                WorldContextInstance.MobHolder.CreateNewUnit(mobData);
+            }
+
             LoadedMap.RefreshAllTiles();
         }
         catch (Exception e)

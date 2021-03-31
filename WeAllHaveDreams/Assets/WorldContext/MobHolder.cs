@@ -66,12 +66,11 @@ public class MobHolder : MonoBehaviour
         return WorldContextInstance.MapHolder.PotentialAttacks(possibleAttacker, attackerPosition).Contains(defender.Position);
     }
 
-    public IEnumerator RemoveMob(MapMob toRemove)
+    public void RemoveMob(MapMob toRemove)
     {
         DebugTextLog.AddTextToLog($"Removing {toRemove.Name} from the map");
         ActiveMobs.Remove(toRemove);
         Destroy(toRemove.gameObject);
-        yield return new WaitForEndOfFrame();
     }
 
     public MapMob CreateNewUnit(Vector3Int location, MapMob prefab)
@@ -97,6 +96,11 @@ public class MobHolder : MonoBehaviour
         MapMob newMob = CreateNewUnit(location, prefab);
         newMob.SetOwnership(teamIndex);
         newMob.CalculateStandingStatAdjustments(WorldContextInstance.FeatureHolder.FeatureOnPoint(location));
+    }
+
+    public void CreateNewUnit(MobMapData data)
+    {
+        CreateNewUnit(data.Position, MobLibrary.GetMob(data.MobName), data.Ownership);
     }
 
     public void ClearAllMobs()
