@@ -68,15 +68,6 @@ public class MapHolder : MonoBehaviour
         yield break;
     }
 
-    public void CenterCamera(Camera toCenter)
-    {
-        Vector3 center = new Vector3(((float)activeMap.GetAllTiles().Min(tile => tile.x) + (float)activeMap.GetAllTiles().Max(tile => tile.x)) / 2f,
-            ((float)activeMap.GetAllTiles().Min(tile => tile.y) + (float)activeMap.GetAllTiles().Max(tile => tile.y)) / 2f,
-            0);
-
-        toCenter.transform.position = center + Vector3.back * 10;
-    }
-
     public void ClearEverything()
     {
         LoadedMap.ClearAllTiles();

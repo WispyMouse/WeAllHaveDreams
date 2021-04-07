@@ -7,7 +7,6 @@ public class MapEditorRuntimeController : MonoBehaviour
 {
     public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
-    public LocationInput LocationInputController;
     public MapEditorFileManagement MapEditorFileManagementInstance;
     public MapEditorRibbon MapEditorRibbonInstance;
     public MapEditorPalette MapEditorPaletteInstance;
@@ -44,7 +43,7 @@ public class MapEditorRuntimeController : MonoBehaviour
         int? click = Input.GetMouseButtonDown(0) ? 0 : Input.GetMouseButtonDown(1) ? (int?)1 : null;
         if (click.HasValue && !EventSystem.current.IsPointerOverGameObject())
         {
-            Vector3Int? worldpoint = LocationInputController.GetHoveredTilePosition(false);
+            Vector3Int? worldpoint = LocationInput.GetHoveredTilePosition(false);
 
             // We didn't click on a position, so do nothing
             if (!worldpoint.HasValue)

@@ -9,7 +9,6 @@ using UnityEngine;
 /// </summary>
 public class PlayerInputPhaseController : MonoBehaviour
 {
-    public LocationInput LocationInputController;
     public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
     public InputGameplayPhase StartingPhase;
@@ -48,7 +47,7 @@ public class PlayerInputPhaseController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3Int? worldpoint = LocationInputController.GetHoveredTilePosition();
+            Vector3Int? worldpoint = LocationInput.GetHoveredTilePosition();
 
             // We didn't click on a position, so do nothing
             if (!worldpoint.HasValue)

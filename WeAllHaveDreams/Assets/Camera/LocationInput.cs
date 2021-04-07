@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class LocationInput : MonoBehaviour
+public class LocationInput : SingletonBase<LocationInput>
 {
     public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
     public TileCursor TileCursorInstance;
     bool tileCursorVisibility { get; set; }
-
-    public Camera MapCamera;
 
     private void Update()
     {
@@ -25,11 +23,11 @@ public class LocationInput : MonoBehaviour
         }
     }
 
-    public Vector3Int? GetHoveredTilePosition(bool requireExistingTile = true)
+    public static Vector3Int? GetHoveredTilePosition(bool requireExistingTile = true)
     {
-        Vector3Int worldpoint = WorldContextInstance.MapHolder.LoadedMap.WorldToCell(MapCamera.ScreenToWorldPoint(Input.mousePosition));
+        Vector3Int worldpoint = Singleton.WorldContextInstance.MapHolder.LoadedMap.WorldToCell(CameraController.ScreenToWorldPoint(Input.mousePosition));
 
-        if (requireExistingTile && !WorldContextInstance.MapHolder.LoadedMap.HasTile(worldpoint))
+        if (requireExistingTile && !Singleton.WorldContextInstance.MapHolder.LoadedMap.HasTile(worldpoint))
         {
             return null;
         }
@@ -37,9 +35,9 @@ public class LocationInput : MonoBehaviour
         return worldpoint;
     }
 
-    public void SetTileCursorVisibility(bool toVisible)
+    public static void SetTileCursorVisibility(bool toVisible)
     {
-        tileCursorVisibility = toVisible;
-        TileCursorInstance.gameObject.SetActive(toVisible);
+        Singleton.tileCursorVisibility = toVisible;
+        Singleton.TileCursorInstance.gameObject.SetActive(toVisible);
     }
 }

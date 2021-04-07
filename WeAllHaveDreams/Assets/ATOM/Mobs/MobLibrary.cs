@@ -18,6 +18,8 @@ public class MobLibrary : SingletonBase<MobLibrary>
 
     public async static Task LoadMobsFromConfiguration()
     {
+        DebugTextLog.AddTextToLog("Loading mobs from configuration.", DebugTextLogChannel.DebugLogging);
+
         Singleton.MobConfigurations = ConfigurationLoadingEntrypoint.GetConfigurationData<MobConfiguration>();
 
         foreach (MobConfiguration curConfiguration in Singleton.MobConfigurations)
@@ -27,6 +29,9 @@ public class MobLibrary : SingletonBase<MobLibrary>
             thisMob.gameObject.SetActive(false);
             Singleton.NamesToMobs.Add(thisMob.DevelopmentName, thisMob);
         }
+
+        DebugTextLog.AddTextToLog($"Loaded {Singleton.MobConfigurations.Count()} mobs.", DebugTextLogChannel.DebugLogging);
+        DebugTextLog.AddTextToLog($"Loaded mobs: {string.Join(", ", Singleton.MobConfigurations.Select(mob => mob.Name))}", DebugTextLogChannel.Verbose);
     }
 
     public static MapMob GetMob(string mobName)

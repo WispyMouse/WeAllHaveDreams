@@ -35,7 +35,7 @@ public class TurnManager : SingletonBase<TurnManager>
         AIInputPhaseControllerInstance.LoadSettings();
 
         WorldContextInstance.FogHolder.Initialize();
-        WorldContextInstance.MapHolder.CenterCamera(MainCamera);
+        CameraController.CenterCamera();
 
         GameIsInProgress = true;
 
