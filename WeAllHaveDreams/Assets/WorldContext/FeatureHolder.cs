@@ -10,16 +10,32 @@ public class FeatureHolder : MonoBehaviour
 
     public List<MapFeature> ActiveFeatures { get; set; } = new List<MapFeature>();
 
+    public void SetFeature(FeatureMapData mapData)
+    {
+        SetFeature(mapData.Position, FeatureLibrary.GetFeature(mapData.FeatureName));
+    }
+
     public void SetFeature(Vector3Int position, MapFeature toSet)
     {
-        toSet.transform.SetParent(FeaturesParent);
-        toSet.SetPosition(position);
-        ActiveFeatures.Add(toSet);
+        MapFeature existingFeature = FeatureOnPoint(position);
 
-        MapMob onTile = WorldContextInstance.MobHolder.MobOnPoint(position);
-        if (onTile != null)
+        if (existingFeature != null)
         {
-            onTile.CalculateStandingStatAdjustments(toSet);
+            ActiveFeatures.Remove(existingFeature);
+            Destroy(existingFeature.gameObject);
+        }
+
+        if (toSet != null)
+        {
+            toSet.transform.SetParent(FeaturesParent);
+            toSet.SetPosition(position);
+            ActiveFeatures.Add(toSet);
+
+            MapMob onTile = WorldContextInstance.MobHolder.MobOnPoint(position);
+            if (onTile != null)
+            {
+                onTile.CalculateStandingStatAdjustments(toSet);
+            }
         }
 
         if (TurnManager.GameIsInProgress)

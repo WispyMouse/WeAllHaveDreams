@@ -57,6 +57,12 @@ public class MapHolder : MonoBehaviour
                 WorldContextInstance.MobHolder.CreateNewUnit(mobData);
             }
 
+            foreach (FeatureMapData featureData in loadingRealm.Features)
+            {
+                DebugTextLog.AddTextToLog($"Placing {featureData.FeatureName} at ({featureData.Position.x}, {featureData.Position.y})", DebugTextLogChannel.Verbose);
+                WorldContextInstance.FeatureHolder.SetFeature(featureData);
+            }
+
             LoadedMap.RefreshAllTiles();
         }
         catch (Exception e)

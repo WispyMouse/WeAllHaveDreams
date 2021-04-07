@@ -49,6 +49,8 @@ public class MapEditorBootup : MonoBehaviour
 
     public IEnumerator LoadRealm(Realm toLoad)
     {
+        WorldContextInstance.ClearEverything();
+
         DebugTextLog.AddTextToLog($"Loading realm: {toLoad.Name}, {toLoad.RealmCoordinates.Count()}", DebugTextLogChannel.DebugLogging);
         yield return WorldContextInstance.MapHolder.LoadFromRealm(toLoad);
         MapBootup.WIPRealm = toLoad;

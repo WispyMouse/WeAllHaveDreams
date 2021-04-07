@@ -91,6 +91,18 @@ public class MapEditorRibbon : MonoBehaviour
         MapEditorPaletteInstance.Open(structureSettings);
     }
 
+    public void FeaturePaletteClicked()
+    {
+        List<PaletteSettings> featureSettings = new List<PaletteSettings>();
+
+        foreach (MapFeature feature in FeatureLibrary.GetAllFeatures())
+        {
+            featureSettings.Add(new FeaturePlacementPalette(feature));
+        }
+
+        MapEditorPaletteInstance.Open(featureSettings);
+    }
+
     public void OwnershipPaletteClicked()
     {
         List<PaletteSettings> ownershipSettings = new List<PaletteSettings>();

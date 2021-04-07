@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FeatureName: WatchTower
+  Renderer: {fileID: 4007712617647760948}
 --- !u!1 &4007712617647760950
 GameObject:
   m_ObjectHideFlags: 0

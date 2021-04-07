@@ -12,6 +12,7 @@ public class Realm
     public IEnumerable<RealmCoordinate> RealmCoordinates = Array.Empty<RealmCoordinate>();
     public IEnumerable<StructureMapData> Structures = Array.Empty<StructureMapData>();
     public IEnumerable<MobMapData> Mobs = Array.Empty<MobMapData>();
+    public IEnumerable<FeatureMapData> Features = Array.Empty<FeatureMapData>();
 
     public void Hydrate()
     {

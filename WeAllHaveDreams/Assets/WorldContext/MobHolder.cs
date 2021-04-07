@@ -68,6 +68,11 @@ public class MobHolder : MonoBehaviour
 
     public void RemoveMob(MapMob toRemove)
     {
+        if (toRemove == null)
+        {
+            return;
+        }
+
         DebugTextLog.AddTextToLog($"Removing {toRemove.Name} from the map");
         ActiveMobs.Remove(toRemove);
         Destroy(toRemove.gameObject);

@@ -8,6 +8,8 @@ public class ClearAction : MapEditorInput
 
     string PreviousTile;
     StructureMapData PreviousStructureData;
+    MobMapData PreviousMobData;
+    FeatureMapData PreviousFeatureData;
 
     public ClearAction(Vector3Int position, WorldContext context)
     {
@@ -20,21 +22,63 @@ public class ClearAction : MapEditorInput
         {
             PreviousStructureData = structure.GetMapData();
         }
+
+        MapMob mob = context.MobHolder.MobOnPoint(position);
+        if (mob != null)
+        {
+            PreviousMobData = mob.GetMapData();
+        }
+
+        MapFeature feature = context.FeatureHolder.FeatureOnPoint(position);
+        if (feature != null)
+        {
+            PreviousFeatureData = feature.GetMapData();
+        }
     }
 
     public override void Invoke(WorldContext worldContextInstance)
     {
-        worldContextInstance.MapHolder.SetTile(Position, null);
-        worldContextInstance.StructureHolder.ClearStructure(Position);
+        if (PreviousTile != null)
+        {
+            worldContextInstance.MapHolder.SetTile(Position, null);
+        }
+
+        if (PreviousStructureData != null)
+        {
+            worldContextInstance.StructureHolder.ClearStructure(Position);
+        }
+
+        if (PreviousMobData != null)
+        {
+            worldContextInstance.MobHolder.RemoveMob(worldContextInstance.MobHolder.MobOnPoint(Position));
+        }
+
+        if (PreviousFeatureData != null)
+        {
+            worldContextInstance.FeatureHolder.SetFeature(Position, null);
+        }
     }
 
     public override void Undo(WorldContext worldContextInstance)
     {
-        worldContextInstance.MapHolder.SetTile(Position, TileLibrary.GetTile(PreviousTile));
+        if (PreviousTile != null)
+        {
+            worldContextInstance.MapHolder.SetTile(Position, TileLibrary.GetTile(PreviousTile));
+        }
 
         if (PreviousStructureData != null)
         {
             worldContextInstance.StructureHolder.SetStructure(PreviousStructureData);
+        }
+
+        if (PreviousMobData != null)
+        {
+            worldContextInstance.MobHolder.CreateNewUnit(PreviousMobData);
+        }
+
+        if (PreviousFeatureData != null)
+        {
+            worldContextInstance.FeatureHolder.SetFeature(PreviousFeatureData);
         }
     }
 }
