@@ -25,6 +25,8 @@ public class CameraController : SingletonBase<CameraController>
     private void Awake()
     {
         cameraConfiguration = ConfigurationLoadingEntrypoint.GetConfigurationData<Configuration.CameraConfiguration>().First();
+
+        MainCamera.orthographicSize = cameraConfiguration.InitialOrthographicSize;
     }
 
     private void Update()
@@ -36,6 +38,7 @@ public class CameraController : SingletonBase<CameraController>
         }
 
         HandleCameraPanning();
+        HandleCameraZoom();
     }
 
     private void HandleCameraPanning()
@@ -52,5 +55,24 @@ public class CameraController : SingletonBase<CameraController>
         }
 
         MainCamera.transform.position = MainCamera.transform.position + inputDirection * Time.deltaTime * cameraConfiguration.CameraPanningSpeed;
+    }
+
+    private void HandleCameraZoom()
+    {
+        // Take the negative of the axis, so that "scrolling down" is interpreted as "increasing orthographic size", which is like zooming out
+        float scrollTick = -Input.GetAxis("Mouse ScrollWheel");
+
+        // No input, so no scrolling
+        if (scrollTick == 0)
+        {
+            return;
+        }
+
+        float newOrthographicSize = Mathf.Clamp
+            (MainCamera.orthographicSize + scrollTick * cameraConfiguration.OrthographicSizeChangePerScrollTick, 
+            cameraConfiguration.MinimumOrthographicSize, 
+            cameraConfiguration.MaximumOrthographicSize);
+
+        MainCamera.orthographicSize = newOrthographicSize;
     }
 }
