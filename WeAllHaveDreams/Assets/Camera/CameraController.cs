@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraController : SingletonBase<CameraController>
 {
     public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
+    Configuration.CameraConfiguration cameraConfiguration;
 
     public Camera MainCamera;
 
@@ -19,4 +21,36 @@ public class CameraController : SingletonBase<CameraController>
     }
 
     public static Vector3 ScreenToWorldPoint(Vector3 pos) => Singleton.MainCamera.ScreenToWorldPoint(pos);
+
+    private void Awake()
+    {
+        cameraConfiguration = ConfigurationLoadingEntrypoint.GetConfigurationData<Configuration.CameraConfiguration>().First();
+    }
+
+    private void Update()
+    {
+        // Don't process camera controls if we have an input active
+        if (EventSystem.current.currentSelectedGameObject != null)
+        {
+            return;
+        }
+
+        HandleCameraPanning();
+    }
+
+    private void HandleCameraPanning()
+    {
+        Vector3 inputDirection = Vector3.zero;
+
+        inputDirection.x = Input.GetAxis("Horizontal");
+        inputDirection.y = Input.GetAxis("Vertical");
+
+        // No input, so no panning
+        if (inputDirection == Vector3.zero)
+        {
+            return;
+        }
+
+        MainCamera.transform.position = MainCamera.transform.position + inputDirection * Time.deltaTime * cameraConfiguration.CameraPanningSpeed;
+    }
 }
