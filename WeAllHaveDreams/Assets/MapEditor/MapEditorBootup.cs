@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 
 public class MapEditorBootup : MonoBehaviour
 {
-    public LocationInput LocationInputInstance;
     public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
     public LoadMapDialog LoadMapDialogInstance;
     public MapEditorRuntimeController MapEditorRuntimeControllerInstance;
@@ -23,10 +22,13 @@ public class MapEditorBootup : MonoBehaviour
         DebugTextLog.AddTextToLog("Loading Library");
         yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("Library", LoadSceneMode.Additive));
 
+        yield return ThreadDoctor.YieldTask(ConfigurationLoadingEntrypoint.LoadAllConfigurationData());
+
         DebugTextLog.AddTextToLog("Loading WorldContext");
         yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("WorldContext", LoadSceneMode.Additive));
 
-        yield return ThreadDoctor.YieldTask(ConfigurationLoadingEntrypoint.LoadAllConfigurationData());
+        DebugTextLog.AddTextToLog("Loading Camera");
+        yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("Camera", LoadSceneMode.Additive));
 
         if (MapBootup.WIPRealm == null)
         {
@@ -37,7 +39,7 @@ public class MapEditorBootup : MonoBehaviour
             WorldContextInstance.MapHolder.LoadFromRealm(MapBootup.WIPRealm);
         }
 
-        LocationInputInstance.SetTileCursorVisibility(true);
+        LocationInput.SetTileCursorVisibility(true);
 
         DebugTextLog.AddTextToLog("Press Z to undo and Y to redo", DebugTextLogChannel.DebugOperationInputInstructions);
 
@@ -47,6 +49,8 @@ public class MapEditorBootup : MonoBehaviour
 
     public IEnumerator LoadRealm(Realm toLoad)
     {
+        WorldContextInstance.ClearEverything();
+
         DebugTextLog.AddTextToLog($"Loading realm: {toLoad.Name}, {toLoad.RealmCoordinates.Count()}", DebugTextLogChannel.DebugLogging);
         yield return WorldContextInstance.MapHolder.LoadFromRealm(toLoad);
         MapBootup.WIPRealm = toLoad;

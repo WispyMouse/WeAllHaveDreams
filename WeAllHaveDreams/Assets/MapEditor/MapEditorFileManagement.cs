@@ -113,6 +113,7 @@ public class MapEditorFileManagement : MonoBehaviour
 
         List<RealmCoordinate> realmCoordinates = new List<RealmCoordinate>();
         List<StructureMapData> structures = new List<StructureMapData>();
+        List<MobMapData> mobs = new List<MobMapData>();
 
         foreach (Vector3Int position in WorldContextInstance.MapHolder.GetAllTiles())
         {
@@ -124,10 +125,17 @@ public class MapEditorFileManagement : MonoBehaviour
             {
                 structures.Add(structureOnPoint.GetMapData());
             }
+
+            MapMob mobOnPoint;
+            if (mobOnPoint = WorldContextInstance.MobHolder.MobOnPoint(position))
+            {
+                mobs.Add(mobOnPoint.GetMapData());
+            }
         }
 
         newRealm.RealmCoordinates = realmCoordinates;
         newRealm.Structures = structures;
+        newRealm.Mobs = mobs;
 
         return newRealm;
     }

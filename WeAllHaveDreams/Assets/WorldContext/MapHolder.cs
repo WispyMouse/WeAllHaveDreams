@@ -51,6 +51,18 @@ public class MapHolder : MonoBehaviour
                 WorldContextInstance.StructureHolder.SetStructure(structureData);
             }
 
+            foreach (MobMapData mobData in loadingRealm.Mobs)
+            {
+                DebugTextLog.AddTextToLog($"Placing {mobData.MobName} at ({mobData.Position.x}, {mobData.Position.y}), owned by Faction {mobData.Ownership}", DebugTextLogChannel.Verbose);
+                WorldContextInstance.MobHolder.CreateNewUnit(mobData);
+            }
+
+            foreach (FeatureMapData featureData in loadingRealm.Features)
+            {
+                DebugTextLog.AddTextToLog($"Placing {featureData.FeatureName} at ({featureData.Position.x}, {featureData.Position.y})", DebugTextLogChannel.Verbose);
+                WorldContextInstance.FeatureHolder.SetFeature(featureData);
+            }
+
             LoadedMap.RefreshAllTiles();
         }
         catch (Exception e)
@@ -60,15 +72,6 @@ public class MapHolder : MonoBehaviour
         }
 
         yield break;
-    }
-
-    public void CenterCamera(Camera toCenter)
-    {
-        Vector3 center = new Vector3(((float)activeMap.GetAllTiles().Min(tile => tile.x) + (float)activeMap.GetAllTiles().Max(tile => tile.x)) / 2f,
-            ((float)activeMap.GetAllTiles().Min(tile => tile.y) + (float)activeMap.GetAllTiles().Max(tile => tile.y)) / 2f,
-            0);
-
-        toCenter.transform.position = center + Vector3.back * 10;
     }
 
     public void ClearEverything()

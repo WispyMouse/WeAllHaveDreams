@@ -79,7 +79,7 @@ public class ConfigurationLoadingEntrypoint : SingletonBase<ConfigurationLoading
             }
             catch (Exception e)
             {
-                DebugTextLog.AddTextToLog($"Unable to process file! {e.Message}, {e.InnerException?.Message}");
+                DebugTextLog.AddTextToLog($"Unable to process file! {e.Message}, {e.InnerException?.Message}", DebugTextLogChannel.RuntimeError);
             }
         }
 

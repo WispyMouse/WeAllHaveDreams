@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FeatureName: HealTile
+  Renderer: {fileID: 2116256688283198417}
 --- !u!1 &2116256688283198419
 GameObject:
   m_ObjectHideFlags: 0

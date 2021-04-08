@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,8 +9,10 @@ using UnityEngine;
 public class Realm
 {
     public string Name = "Default";
-    public IEnumerable<RealmCoordinate> RealmCoordinates = new RealmCoordinate[] { };
-    public IEnumerable<StructureMapData> Structures = new StructureMapData[] { };
+    public IEnumerable<RealmCoordinate> RealmCoordinates = Array.Empty<RealmCoordinate>();
+    public IEnumerable<StructureMapData> Structures = Array.Empty<StructureMapData>();
+    public IEnumerable<MobMapData> Mobs = Array.Empty<MobMapData>();
+    public IEnumerable<FeatureMapData> Features = Array.Empty<FeatureMapData>();
 
     public void Hydrate()
     {
@@ -18,7 +21,6 @@ public class Realm
     public static Realm GetEmptyRealm()
     {
         Realm newRealm = new Realm();
-        newRealm.RealmCoordinates = new List<RealmCoordinate>();
         return newRealm;
     }
 }

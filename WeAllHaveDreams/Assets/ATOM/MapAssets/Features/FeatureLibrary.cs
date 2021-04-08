@@ -39,4 +39,9 @@ public class FeatureLibrary : SingletonBase<FeatureLibrary>
     {
         return Singleton.Features.Where(feature => tags.All(tag => feature.Tags.Contains(tag)));
     }
+
+    public static IEnumerable<MapFeature> GetAllFeatures()
+    {
+        return Singleton.Features;
+    }
 }

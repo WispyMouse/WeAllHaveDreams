@@ -1,0 +1,8 @@
+﻿{
+  "ConfigurationType": "Configuration.CameraConfiguration",
+  "CameraPanningSpeed": 5,
+  "InitialOrthographicSize": 6,
+  "OrthographicSizeChangePerScrollTick": 5,
+  "MinimumOrthographicSize": 2,
+  "MaximumOrthographicSize": 15
+}

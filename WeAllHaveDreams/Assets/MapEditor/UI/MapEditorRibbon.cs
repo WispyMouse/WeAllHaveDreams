@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Configuration;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -90,6 +91,18 @@ public class MapEditorRibbon : MonoBehaviour
         MapEditorPaletteInstance.Open(structureSettings);
     }
 
+    public void FeaturePaletteClicked()
+    {
+        List<PaletteSettings> featureSettings = new List<PaletteSettings>();
+
+        foreach (MapFeature feature in FeatureLibrary.GetAllFeatures())
+        {
+            featureSettings.Add(new FeaturePlacementPalette(feature));
+        }
+
+        MapEditorPaletteInstance.Open(featureSettings);
+    }
+
     public void OwnershipPaletteClicked()
     {
         List<PaletteSettings> ownershipSettings = new List<PaletteSettings>();
@@ -102,6 +115,18 @@ public class MapEditorRibbon : MonoBehaviour
         }
 
         MapEditorPaletteInstance.Open(ownershipSettings);
+    }
+
+    public void MobPaletteClicked()
+    {
+        List<PaletteSettings> mobSettings = new List<PaletteSettings>();
+
+        foreach (MobConfiguration config in MobLibrary.GetAllMobs())
+        {
+            mobSettings.Add(new MobPalette(config));
+        }
+
+        MapEditorPaletteInstance.Open(mobSettings);
     }
 
     public void LoadMapButtonClicked()
