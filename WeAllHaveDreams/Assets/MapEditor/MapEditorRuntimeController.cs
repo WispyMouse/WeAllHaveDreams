@@ -109,12 +109,16 @@ public class MapEditorRuntimeController : MonoBehaviour
     /// <returns></returns>
     public IEnumerator LoadRealm(Realm toLoad)
     {
+        ActionHistory.Clear();
+        historyPointer = null;
+
         WorldContextInstance = WorldContext.GetWorldContext();
         WorldContextInstance.ClearEverything();
 
         DebugTextLog.AddTextToLog($"Loading realm: {toLoad.Name}, {toLoad.RealmCoordinates.Count()}", DebugTextLogChannel.DebugLogging);
 
         WorldContextInstance.LoadFromRealm(toLoad);
+        currentMapName = toLoad.Name;
         GameplayMapBootup.WIPRealm = toLoad;
 
         // TODO: This should be raised by an event, rather than explicitly in here.
@@ -146,6 +150,18 @@ public class MapEditorRuntimeController : MonoBehaviour
     public void SetCurrentMapName(string name)
     {
         currentMapName = name;
+    }
+
+    /// <summary>
+    /// Sets up for a new Realm, clearing previous contexts.
+    /// </summary>
+    public void NewMap()
+    {
+        GameplayMapBootup.WIPRealm = null;
+        currentMapName = null;
+        WorldContextInstance.ClearEverything();
+        ActionHistory.Clear();
+        historyPointer = null;
     }
 
     /// <summary>

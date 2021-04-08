@@ -122,4 +122,9 @@ public class MapEditorRibbon : MonoBehaviour
     {
         LoadMapDialogInstance.Open();
     }
+
+    public void NewMapButtonPressed()
+    {
+        MapEditorRuntimeControllerInstance.NewMap();
+    }
 }

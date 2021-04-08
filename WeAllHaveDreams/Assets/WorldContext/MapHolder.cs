@@ -47,7 +47,6 @@ public class MapHolder : MonoBehaviour
     public void ClearEverything()
     {
         LoadedMap.ClearAllTiles();
-        WorldContextInstance.ClearEverything();
     }
 
     public void SetTile(Vector3Int position, GameplayTile toSet)

@@ -13,6 +13,7 @@ public class WorldContext : SingletonBase<WorldContext>
 
     public void ClearEverything()
     {
+        MapHolder.ClearEverything();
         MobHolder.ClearAllMobs();
         MapMetaHolder.ClearMetas();
         StructureHolder.ClearAllStructures();

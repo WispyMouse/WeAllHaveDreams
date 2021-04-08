@@ -558,7 +558,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MapEditorPaletteInstance: {fileID: 4760646076270353593}
-  MapEditorRuntimeControllerInstance: {fileID: 0}
+  MapEditorRuntimeControllerInstance: {fileID: 1633979596}
   SaveMapDialogInstance: {fileID: 1950983099}
   LoadMapDialogInstance: {fileID: 5452304801948509133}
   PlayButton: {fileID: 2100740709}
@@ -941,6 +941,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1065009811, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1065009813, guid: f7bf543783ed5974d894a8810271a831, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -975,7 +979,7 @@ PrefabInstance:
       objectReference: {fileID: 1774921656}
     - target: {fileID: 10012872673316933, guid: f7bf543783ed5974d894a8810271a831, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 10012872673316933, guid: f7bf543783ed5974d894a8810271a831, type: 3}
       propertyPath: m_AnchorMin.y
@@ -1144,6 +1148,38 @@ PrefabInstance:
     - target: {fileID: 1934447875835115762, guid: f7bf543783ed5974d894a8810271a831, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2046678107897753593, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2046678107897753593, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2046678107897753593, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2046678107897753593, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2046678107897753593, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2046678107897753593, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2697859708568031491, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1774921656}
+    - target: {fileID: 2697859708568031491, guid: f7bf543783ed5974d894a8810271a831, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: NewMapButtonPressed
       objectReference: {fileID: 0}
     - target: {fileID: 3979808979393470606, guid: f7bf543783ed5974d894a8810271a831, type: 3}
       propertyPath: m_AnchorMin.y
