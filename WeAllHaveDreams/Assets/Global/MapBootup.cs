@@ -44,17 +44,18 @@ public abstract class MapBootup : MonoBehaviour
     /// <returns>Yieldable IEnumerator.<returns>
     private IEnumerator LoadScenesAndConfigurations()
     {
-        DebugTextLog.AddTextToLog("Loading Library");
+        DebugTextLog.AddTextToLog("Loading Library", DebugTextLogChannel.Verbose);
         yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("Library", LoadSceneMode.Additive));
 
+        DebugTextLog.AddTextToLog("Loading Configuration", DebugTextLogChannel.Verbose);
         yield return ThreadDoctor.YieldTask(ConfigurationLoadingEntrypoint.LoadAllConfigurationData());
 
-        DebugTextLog.AddTextToLog("Loading WorldContext");
+        DebugTextLog.AddTextToLog("Loading WorldContext", DebugTextLogChannel.Verbose);
         yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("WorldContext", LoadSceneMode.Additive));
 
         WorldContextInstance = WorldContext.GetWorldContext();
 
-        DebugTextLog.AddTextToLog("Loading Camera");
+        DebugTextLog.AddTextToLog("Loading Camera", DebugTextLogChannel.Verbose);
         yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("Camera", LoadSceneMode.Additive));
     }
 

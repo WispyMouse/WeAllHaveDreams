@@ -465,7 +465,6 @@ GameObject:
   - component: {fileID: 1633979594}
   - component: {fileID: 1633979595}
   - component: {fileID: 1633979596}
-  - component: {fileID: 1633979597}
   m_Layer: 0
   m_Name: Engines
   m_TagString: Untagged
@@ -499,9 +498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97f06bba188c2cb40ba2d50026541d1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LoadMapDialogInstance: {fileID: 5452304801948509133}
   MapEditorRuntimeControllerInstance: {fileID: 1633979596}
-  MapEditorRibbonInstance: {fileID: 1774921656}
 --- !u!114 &1633979596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -514,21 +511,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5894fac035dff8845a746296de632115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapEditorFileManagementInstance: {fileID: 1633979597}
   MapEditorRibbonInstance: {fileID: 1774921656}
   MapEditorPaletteInstance: {fileID: 4760646076270353593}
---- !u!114 &1633979597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1633979593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d5e7f0c09a03654f80218fe64487983, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  LoadMapDialogInstance: {fileID: 5452304801948509133}
 --- !u!1 &1774921654
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,8 +557,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83609880375fe39419f920efa70d0f03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapEditorFileManagementInstance: {fileID: 1633979597}
   MapEditorPaletteInstance: {fileID: 4760646076270353593}
+  MapEditorRuntimeControllerInstance: {fileID: 0}
   SaveMapDialogInstance: {fileID: 1950983099}
   LoadMapDialogInstance: {fileID: 5452304801948509133}
   PlayButton: {fileID: 2100740709}
@@ -878,11 +863,15 @@ PrefabInstance:
     - target: {fileID: 97177840672159159, guid: 4ca77bbd15dd249488afe53f935a2daf, type: 3}
       propertyPath: MapEditorFileManagementInstance
       value: 
-      objectReference: {fileID: 1633979597}
+      objectReference: {fileID: 0}
     - target: {fileID: 97177840672159159, guid: 4ca77bbd15dd249488afe53f935a2daf, type: 3}
       propertyPath: MapEditorRibbonInstance
       value: 
       objectReference: {fileID: 1774921656}
+    - target: {fileID: 97177840672159159, guid: 4ca77bbd15dd249488afe53f935a2daf, type: 3}
+      propertyPath: MapEditorRuntimeControllerInstance
+      value: 
+      objectReference: {fileID: 1633979596}
     - target: {fileID: 97177840672159163, guid: 4ca77bbd15dd249488afe53f935a2daf, type: 3}
       propertyPath: m_Name
       value: SaveMapDialog
@@ -1416,7 +1405,7 @@ PrefabInstance:
     - target: {fileID: 5452304801948509133, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
       propertyPath: MapEditorFileManagementInstance
       value: 
-      objectReference: {fileID: 1633979597}
+      objectReference: {fileID: 0}
     - target: {fileID: 5452304801948509133, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
       propertyPath: MapEditorBootupInstance
       value: 

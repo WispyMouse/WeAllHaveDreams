@@ -11,27 +11,28 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class MapEditorBootup : MapBootup
 {
-    public LoadMapDialog LoadMapDialogInstance;
+    /// <summary>
+    /// Pointer to the <see cref="MapEditorRuntimeController"/> in the scene.
+    /// This class hands off the start of the MapEditor scene to this after it's done loading in.
+    /// </summary>
     public MapEditorRuntimeController MapEditorRuntimeControllerInstance;
-    public MapEditorRibbon MapEditorRibbonInstance;
 
+    /// <inheritdoc />
     protected override IEnumerator Startup()
     {
-        LocationInput.SetTileCursorVisibility(true);
-
-        DebugTextLog.AddTextToLog("Press Z to undo and Y to redo", DebugTextLogChannel.DebugOperationInputInstructions);
-
-        LoadMapDialogInstance.Open();
         MapEditorRuntimeControllerInstance.Startup();
 
         yield break;
     }
 
+    /// <inheritdoc />
     protected override IEnumerator LoadRealm()
     {
+        // Passes the load call to the runtime controller
         yield return MapEditorRuntimeControllerInstance.LoadRealm(GetRealm());
     }
-
+    
+    /// <inheritdoc />
     protected override Realm GetRealm()
     {
         if (GameplayMapBootup.WIPRealm == null)

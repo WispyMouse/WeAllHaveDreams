@@ -30,7 +30,6 @@ public class GameplayMapBootup : MapBootup
     }
 
     public TurnManager TurnManagerInstance;
-    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
     public static Realm WIPRealm; // HACK: Putting something in here will make it load up, instead of the Default Realm
 

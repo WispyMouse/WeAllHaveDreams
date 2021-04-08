@@ -8,9 +8,8 @@ using UnityEngine.UI;
 
 public class MapEditorRibbon : MonoBehaviour
 {
-    public MapEditorFileManagement MapEditorFileManagementInstance;
-
     public MapEditorPalette MapEditorPaletteInstance;
+    public MapEditorRuntimeController MapEditorRuntimeControllerInstance;
 
     public SaveMapDialog SaveMapDialogInstance;
     public LoadMapDialog LoadMapDialogInstance;
@@ -19,7 +18,7 @@ public class MapEditorRibbon : MonoBehaviour
 
     public void SaveButtonPressed()
     {
-        if (MapEditorFileManagementInstance.MapHasBeenSavedBefore)
+        if (GameplayMapBootup.WIPRealm != null)
         {
             StartCoroutine(QuickSave());
         }
@@ -27,13 +26,6 @@ public class MapEditorRibbon : MonoBehaviour
         {
             SaveMapDialogInstance.Open();
         }
-    }
-
-    async Task SaveExistingRealm()
-    {
-        await MapEditorFileManagementInstance.SaveExistingRealm();
-        DebugTextLog.AddTextToLog("Map Saved!", DebugTextLogChannel.MapEditorOperations);
-        PlayButton.interactable = true;
     }
 
     public void MapLoaded()
@@ -49,12 +41,9 @@ public class MapEditorRibbon : MonoBehaviour
 
     IEnumerator QuickSave()
     {
-        Task saveTask = Task.Run(SaveExistingRealm);
-        while (!saveTask.IsCompleted)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        MapSaved();
+        yield return MapEditorRuntimeControllerInstance.SaveRealm();
+        DebugTextLog.AddTextToLog("Map Saved!", DebugTextLogChannel.MapEditorOperations);
+        PlayButton.interactable = true;
     }
 
     public void MapSaved()

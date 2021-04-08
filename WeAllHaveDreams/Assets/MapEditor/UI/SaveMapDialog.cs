@@ -9,8 +9,8 @@ public class SaveMapDialog : MonoBehaviour
     public Button SaveMapButton;
     public InputField MapNameInput;
 
-    public MapEditorFileManagement MapEditorFileManagementInstance;
     public MapEditorRibbon MapEditorRibbonInstance;
+    public MapEditorRuntimeController MapEditorRuntimeControllerInstance;
 
     IEnumerator CurrentSavingRoutine { get; set; }
 
@@ -38,14 +38,9 @@ public class SaveMapDialog : MonoBehaviour
     IEnumerator ProcessSave()
     {
         SaveMapButton.interactable = false;
-        MapEditorFileManagement.CurrentMapName = MapNameInput.text;
+        MapEditorRuntimeControllerInstance.SetCurrentMapName(MapNameInput.text);
         DebugTextLog.AddTextToLog($"Saving realm as {MapNameInput.text}...", DebugTextLogChannel.MapEditorOperations);
-        Task saveTask = Task.Run(MapEditorFileManagementInstance.SaveNewRealm);
-
-        while (!saveTask.IsCompleted)
-        {
-            yield return new WaitForEndOfFrame();
-        }
+        yield return MapEditorRuntimeControllerInstance.SaveRealm();
 
         DebugTextLog.AddTextToLog("Saved!", DebugTextLogChannel.MapEditorOperations);
         MapEditorRibbonInstance.MapSaved();
