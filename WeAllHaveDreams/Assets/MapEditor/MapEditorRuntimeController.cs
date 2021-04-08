@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -161,5 +162,18 @@ public class MapEditorRuntimeController : MonoBehaviour
     public void SetPalette(PaletteSettings toPalette)
     {
         LeftClickPaletteSettings = toPalette;
+    }
+
+    public IEnumerator LoadRealm(Realm toLoad)
+    {
+        WorldContextInstance.ClearEverything();
+
+        DebugTextLog.AddTextToLog($"Loading realm: {toLoad.Name}, {toLoad.RealmCoordinates.Count()}", DebugTextLogChannel.DebugLogging);
+        WorldContextInstance.LoadFromRealm(toLoad);
+        GameplayMapBootup.WIPRealm = toLoad;
+        MapEditorRibbonInstance.MapLoaded();
+        DebugTextLog.AddTextToLog("Loaded realm", DebugTextLogChannel.DebugLogging);
+
+        yield break;
     }
 }

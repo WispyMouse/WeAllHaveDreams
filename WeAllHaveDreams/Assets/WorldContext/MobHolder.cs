@@ -117,4 +117,13 @@ public class MobHolder : MonoBehaviour
 
         ActiveMobs = new List<MapMob>();
     }
+
+    public void LoadFromRealm(Realm toLoad)
+    {
+        foreach (MobMapData mobData in toLoad.Mobs)
+        {
+            DebugTextLog.AddTextToLog($"Placing {mobData.MobName} at ({mobData.Position.x}, {mobData.Position.y}), owned by Faction {mobData.Ownership}", DebugTextLogChannel.Verbose);
+            CreateNewUnit(mobData);
+        }
+    }
 }

@@ -1421,6 +1421,10 @@ PrefabInstance:
       propertyPath: MapEditorBootupInstance
       value: 
       objectReference: {fileID: 1633979595}
+    - target: {fileID: 5452304801948509133, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
+      propertyPath: MapEditorRuntimeControllerInstance
+      value: 
+      objectReference: {fileID: 1633979596}
     - target: {fileID: 5868090635489783317, guid: 4185d135fef8c3946a60312f7d068878, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

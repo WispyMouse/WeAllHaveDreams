@@ -24,4 +24,12 @@ public class WorldContext : SingletonBase<WorldContext>
     {
         return Singleton;
     }
+
+    public void LoadFromRealm(Realm toLoad)
+    {
+        MapHolder.LoadFromRealm(toLoad);
+        StructureHolder.LoadFromRealm(toLoad);
+        MobHolder.LoadFromRealm(toLoad);
+        FeatureHolder.LoadFromRealm(toLoad);
+    }
 }

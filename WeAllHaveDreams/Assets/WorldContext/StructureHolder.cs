@@ -96,4 +96,13 @@ public class StructureHolder : MonoBehaviour
             structure.ClearCapture();
         }
     }
+
+    public void LoadFromRealm(Realm toLoad)
+    {
+        foreach (StructureMapData structureData in toLoad.Structures)
+        {
+            DebugTextLog.AddTextToLog($"Placing {structureData.StructureName} at ({structureData.Position.x}, {structureData.Position.y}), owned by {(structureData.Ownership.HasValue ? $"Faction {structureData.Ownership.Value}" : "[unclaimed]")}", DebugTextLogChannel.Verbose);
+            SetStructure(structureData);
+        }
+    }
 }

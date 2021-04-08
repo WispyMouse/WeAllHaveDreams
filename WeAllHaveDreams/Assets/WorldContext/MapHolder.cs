@@ -23,55 +23,25 @@ public class MapHolder : MonoBehaviour
     public List<Vector3Int> Path(MapMob moving, Vector3Int to) => activeMap.Path(moving, to, WorldContextInstance);
     public IEnumerable<Vector3Int> CanHitFrom(MapMob attacking, Vector3Int target) => activeMap.CanAttackFrom(attacking, target);
 
+    public void LoadFromRealm(Realm toLoad)
+    {
+        LoadedMap.ClearAllTiles();
+        activeMap = GameMap.LoadFromRealm(toLoad);
+        DebugTextLog.AddTextToLog($"Loading with {toLoad.RealmCoordinates.Count()} coordinates", DebugTextLogChannel.Verbose);
+
+        foreach (RealmCoordinate coordinate in toLoad.RealmCoordinates)
+        {
+            DebugTextLog.AddTextToLog($"Placing {coordinate.Tile} at ({coordinate.Position.x}, {coordinate.Position.y})", DebugTextLogChannel.Verbose);
+            LoadedMap.SetTile(coordinate.Position, TileLibrary.GetTile(coordinate.Tile));
+        }
+
+        LoadedMap.RefreshAllTiles();
+    }
+
     public void LoadEmptyRealm()
     {
         activeMap = GameMap.LoadEmptyRealm();
         LoadedMap.ClearAllTiles();
-    }
-
-    public IEnumerator LoadFromRealm(Realm toLoad)
-    {
-        try
-        {
-            Realm loadingRealm = toLoad;
-            activeMap = GameMap.LoadFromRealm(loadingRealm);
-            DebugTextLog.AddTextToLog($"Loading with {toLoad.RealmCoordinates.Count()} coordinates", DebugTextLogChannel.Verbose);
-
-            LoadedMap.ClearAllTiles();
-
-            foreach (RealmCoordinate coordinate in loadingRealm.RealmCoordinates)
-            {
-                DebugTextLog.AddTextToLog($"Placing {coordinate.Tile} at ({coordinate.Position.x}, {coordinate.Position.y})", DebugTextLogChannel.Verbose);
-                LoadedMap.SetTile(coordinate.Position, TileLibrary.GetTile(coordinate.Tile));
-            }
-
-            foreach (StructureMapData structureData in loadingRealm.Structures)
-            {
-                DebugTextLog.AddTextToLog($"Placing {structureData.StructureName} at ({structureData.Position.x}, {structureData.Position.y}), owned by {(structureData.Ownership.HasValue ? $"Faction {structureData.Ownership.Value}" : "[unclaimed]")}", DebugTextLogChannel.Verbose);
-                WorldContextInstance.StructureHolder.SetStructure(structureData);
-            }
-
-            foreach (MobMapData mobData in loadingRealm.Mobs)
-            {
-                DebugTextLog.AddTextToLog($"Placing {mobData.MobName} at ({mobData.Position.x}, {mobData.Position.y}), owned by Faction {mobData.Ownership}", DebugTextLogChannel.Verbose);
-                WorldContextInstance.MobHolder.CreateNewUnit(mobData);
-            }
-
-            foreach (FeatureMapData featureData in loadingRealm.Features)
-            {
-                DebugTextLog.AddTextToLog($"Placing {featureData.FeatureName} at ({featureData.Position.x}, {featureData.Position.y})", DebugTextLogChannel.Verbose);
-                WorldContextInstance.FeatureHolder.SetFeature(featureData);
-            }
-
-            LoadedMap.RefreshAllTiles();
-        }
-        catch (Exception e)
-        {
-            DebugTextLog.AddTextToLog($"{e.Message}, {e?.InnerException?.Message}");
-            throw e;
-        }
-
-        yield break;
     }
 
     public void ClearEverything()

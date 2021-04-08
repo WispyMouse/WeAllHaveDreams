@@ -54,7 +54,7 @@ public class MapEditorFileManagement : MonoBehaviour
             }
 
             string serializedRealm = Newtonsoft.Json.JsonConvert.SerializeObject(toSave);
-            string savePath = Path.Combine(MapFolderPath, $"{CurrentMapName}{MapBootup.MapFileSuffix}");
+            string savePath = Path.Combine(MapFolderPath, $"{CurrentMapName}{MapFileSuffix}");
 
             using (FileStream stream = new FileStream(savePath, FileMode.Create))
             {
@@ -64,7 +64,7 @@ public class MapEditorFileManagement : MonoBehaviour
 
             DebugTextLog.AddTextToLog($"Realm saved", DebugTextLogChannel.MapEditorOperations);
             MapHasBeenSavedBefore = true;
-            MapBootup.WIPRealm = toSave;
+            GameplayMapBootup.WIPRealm = toSave;
             return toSave;
         }
         catch (System.Exception e)
@@ -87,7 +87,7 @@ public class MapEditorFileManagement : MonoBehaviour
             }
 
             string serializedRealm = Newtonsoft.Json.JsonConvert.SerializeObject(toSave);
-            string savePath = Path.Combine(MapFolderPath, $"{toSave.Name}{MapBootup.MapFileSuffix}");
+            string savePath = Path.Combine(MapFolderPath, $"{toSave.Name}{MapFileSuffix}");
 
             using (FileStream stream = new FileStream(savePath, FileMode.Create))
             {
@@ -96,7 +96,7 @@ public class MapEditorFileManagement : MonoBehaviour
             }
 
             DebugTextLog.AddTextToLog($"Realm saved", DebugTextLogChannel.MapEditorOperations);
-            MapBootup.WIPRealm = toSave;
+            GameplayMapBootup.WIPRealm = toSave;
             return toSave;
         }
         catch (System.Exception e)

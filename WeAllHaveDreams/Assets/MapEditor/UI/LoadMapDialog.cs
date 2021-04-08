@@ -12,6 +12,7 @@ public class LoadMapDialog : MonoBehaviour
     public Transform LoadableMapsList;
     public MapEditorFileManagement MapEditorFileManagementInstance;
     public MapEditorBootup MapEditorBootupInstance;
+    public MapEditorRuntimeController MapEditorRuntimeControllerInstance;
 
     Realm SelectedRealm { get; set; }
 
@@ -73,7 +74,7 @@ public class LoadMapDialog : MonoBehaviour
 
     IEnumerator ProcessLoading()
     {
-        yield return MapEditorBootupInstance.LoadRealm(SelectedRealm);
+        yield return MapEditorRuntimeControllerInstance.LoadRealm(SelectedRealm);
         Close();
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MapBootup : MonoBehaviour
+public class GameplayMapBootup : MapBootup
 {
     public const string MapFolderPathRelative = "Resources/Maps";
     public static string MapFolderPath
@@ -39,36 +39,12 @@ public class MapBootup : MonoBehaviour
         applicationDataPath = Application.dataPath;
     }
 
-    private void Start()
+    protected override IEnumerator Startup()
     {
-        StartCoroutine(Startup());
-    }
-
-    IEnumerator Startup()
-    {
-        DebugTextLog.AddTextToLog("Loading Library");
-        yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("Library", LoadSceneMode.Additive));
-
-        yield return ThreadDoctor.YieldTask(ConfigurationLoadingEntrypoint.LoadAllConfigurationData());
-
-        DebugTextLog.AddTextToLog("Loading WorldContext");
-        yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("WorldContext", LoadSceneMode.Additive));
-
-        DebugTextLog.AddTextToLog("Loading Camera");
-        yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("Camera", LoadSceneMode.Additive));
-
-        Realm realmToLoad = WIPRealm;
-        if (realmToLoad == null)
-        {
-            DebugTextLog.AddTextToLog("Loading default realm", DebugTextLogChannel.DebugLogging);
-            yield return ThreadDoctor.YieldTask(GetDefaultRealm());
-        }
-
-        yield return WorldContextInstance.MapHolder.LoadFromRealm(realmToLoad);
-
         TurnManagerInstance.GameplayReady();
 
         DebugTextLog.AddTextToLog("Press M to enter Map Editor mode", DebugTextLogChannel.DebugOperationInputInstructions);
+        yield break;
     }
 
     private void Update()
@@ -79,8 +55,19 @@ public class MapBootup : MonoBehaviour
         }
     }
 
-    public static async Task<Realm> GetDefaultRealm()
+    public void TransitionToMapEditor()
     {
+        TurnManager.StopAllInputs();
+        SceneManager.LoadScene("MapEditor", LoadSceneMode.Single);
+    }
+
+    protected override Realm GetRealm()
+    {
+        if (WIPRealm != null)
+        {
+            return WIPRealm;
+        }
+
         foreach (string filePath in Directory.GetFiles(MapFolderPath, MapFileSearch, SearchOption.AllDirectories))
         {
             string sanitizedFilePath = filePath.Replace("\\", "/");
@@ -90,7 +77,8 @@ public class MapBootup : MonoBehaviour
 
             using (var reader = File.OpenText(sanitizedFilePath))
             {
-                fileText = await reader.ReadToEndAsync();
+                // TODO: This was async, we want to restore this to properly read async so we're not blocking threads as we read
+                fileText = reader.ReadToEnd();
             }
 
             return JsonConvert.DeserializeObject<Realm>(fileText);
@@ -99,11 +87,5 @@ public class MapBootup : MonoBehaviour
         DebugTextLog.AddTextToLog("Attempted to load default realm, but could not find any, returning empty", DebugTextLogChannel.DebugLogging);
 
         return Realm.GetEmptyRealm();
-    }
-
-    public void TransitionToMapEditor()
-    {
-        TurnManager.StopAllInputs();
-        SceneManager.LoadScene("MapEditor", LoadSceneMode.Single);
     }
 }

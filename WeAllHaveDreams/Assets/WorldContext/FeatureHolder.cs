@@ -64,4 +64,13 @@ public class FeatureHolder : MonoBehaviour
         }
         ActiveFeatures = new List<MapFeature>();
     }
+
+    public void LoadFromRealm(Realm toLoad)
+    {
+        foreach (FeatureMapData featureData in toLoad.Features)
+        {
+            DebugTextLog.AddTextToLog($"Placing {featureData.FeatureName} at ({featureData.Position.x}, {featureData.Position.y})", DebugTextLogChannel.Verbose);
+            SetFeature(featureData);
+        }
+    }
 }

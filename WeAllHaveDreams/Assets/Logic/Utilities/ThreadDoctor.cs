@@ -31,6 +31,12 @@ public static class ThreadDoctor
         }
     }
 
+    public static CoroutineTaskReturnWrapper<T> YieldTaskWithWrapper<T>(Task<T> toYield)
+    {
+        CoroutineTaskReturnWrapper<T> wrapper = new CoroutineTaskReturnWrapper<T>(toYield);
+        return wrapper;
+    }
+
     public static async Task AwaitIEnumerator(IEnumerator toAwait)
     {
         while (toAwait.MoveNext())
