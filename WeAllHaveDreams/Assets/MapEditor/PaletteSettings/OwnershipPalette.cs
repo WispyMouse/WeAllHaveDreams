@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Represents painting faction ownership on to tiles.
+/// When <see cref="PaletteSelected"/> is called, sets a global default variable for ownership.
+/// </summary>
 public class OwnershipPalette : PaletteSettings
 {
     /// <summary>
@@ -17,21 +21,24 @@ public class OwnershipPalette : PaletteSettings
     /// </summary>
     public int? PlayerSide { get; set; } = null;
 
+    /// <summary>
+    /// Creates an OwnershipPalette, with the PlayerSide set to null.
+    /// </summary>
     public OwnershipPalette()
     {
         PlayerSide = null;
     }
 
+    /// <summary>
+    /// Creates an OwnershipPalette, with the provided PlayerSide.
+    /// </summary>
+    /// <param name="playerSide">The faction that this Palette should paint as.</param>
     public OwnershipPalette(int? playerSide)
     {
         PlayerSide = playerSide;
     }
 
-    public override Sprite GetButtonSprite()
-    {
-        return null;
-    }
-
+    /// <inheritdoc />
     public override string GetButtonLabel()
     {
         if (PlayerSide.HasValue)
@@ -44,6 +51,9 @@ public class OwnershipPalette : PaletteSettings
         }
     }
 
+    /// <summary>
+    /// When this Palette is selected, it sets a global static variable that indicates what Ownership to paint things.
+    /// </summary>
     public override void PaletteSelected()
     {
         GlobalPlayerSideSetting = PlayerSide;
@@ -51,6 +61,7 @@ public class OwnershipPalette : PaletteSettings
         base.PaletteSelected();
     }
 
+    /// <inheritdoc />
     public override MapEditorInput ApplyPalette(WorldContext worldContext, Vector3Int position)
     {
         return new OwnershipSetAction(position, worldContext, PlayerSide);

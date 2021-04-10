@@ -2,22 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A Palette that represents removing the contents of a position.
+/// TODO: This should be configurable to only remove specified layers, not everything.
+/// </summary>
 public class ClearTilePalette : PaletteSettings
 {
-    public ClearTilePalette()
-    {
-    }
-
-    public override Sprite GetButtonSprite()
-    {
-        return null;
-    }
-
+    /// <inheritdoc />
     public override string GetButtonLabel()
     {
         return "Clear";
     }
 
+    /// <inheritdoc />
     public override MapEditorInput ApplyPalette(WorldContext worldContext, Vector3Int position)
     {
         return new ClearAction(position, worldContext);
