@@ -2,14 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// When invoked, sets all objects on the Position to be Owned by the specified faction.
+/// </summary>
 public class OwnershipSetAction : MapEditorInput
 {
+    /// <summary>
+    /// Position to paint.
+    /// </summary>
     public Vector3Int Position;
 
-    // TODO: storing the values of each element, and painting them back appropriately instead of taking only first found owned thing
-    public int? PreviousValue;
+    /// <summary>
+    /// Ownership value to apply.
+    /// This can be null, which would imply that we're removing Ownership from the tile.
+    /// Not everything can be painted to null.
+    /// </summary>
     public int? Value;
 
+    /// <summary>
+    /// Previous Ownership value of things in the tile.
+    /// // TODO: storing the values of each element, and painting them back appropriately instead of taking only first found owned thing
+    /// </summary>
+    public int? PreviousValue;
+
+    /// <summary>
+    /// Creates a new OwnershipSetAction.
+    /// </summary>
+    /// <param name="position">Position to apply Ownership to.</param>
+    /// <param name="context">The current WorldContext. Used to determine previous contents.</param>
+    /// <param name="value">Value to paint to.</param>
     public OwnershipSetAction(Vector3Int position, WorldContext context, int? value)
     {
         Position = position;
@@ -28,13 +49,15 @@ public class OwnershipSetAction : MapEditorInput
         }
     }
 
+    /// <inheritdoc/>
     public override void Invoke(WorldContext worldContextInstance)
     {
-        worldContextInstance.MapHolder.SetOwnership(Position, Value);
+        worldContextInstance.SetOwnership(Position, Value);
     }
 
+    /// <inheritdoc/>
     public override void Undo(WorldContext worldContextInstance)
     {
-        worldContextInstance.MapHolder.SetOwnership(Position, PreviousValue);
+        worldContextInstance.SetOwnership(Position, PreviousValue);
     }
 }

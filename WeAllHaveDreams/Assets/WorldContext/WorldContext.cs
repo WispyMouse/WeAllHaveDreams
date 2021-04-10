@@ -74,4 +74,20 @@ public class WorldContext : SingletonBase<WorldContext>
 
         return newRealm;
     }
+
+
+    public void SetOwnership(Vector3Int position, int? value)
+    {
+        MapStructure structure;
+        if (structure = StructureHolder.StructureOnPoint(position))
+        {
+            structure.SetOwnership(value);
+        }
+
+        MapMob mob;
+        if (mob = MobHolder.MobOnPoint(position))
+        {
+            mob.SetOwnership(value.Value);
+        }
+    }
 }

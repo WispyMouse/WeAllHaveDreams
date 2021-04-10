@@ -23,6 +23,6 @@ public class TilePlacementPalette : PaletteSettings
 
     public override MapEditorInput ApplyPalette(WorldContext worldContext, Vector3Int position)
     {
-        return new TileReplacementAction(position, worldContext.MapHolder.GetGameplayTile(position)?.TileName, RepresentedTile.TileName);
+        return new TileReplacementAction(position, RepresentedTile.TileName, worldContext);
     }
 }

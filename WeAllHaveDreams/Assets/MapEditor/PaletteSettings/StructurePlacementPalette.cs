@@ -23,6 +23,6 @@ public class StructurePlacementPalette : PaletteSettings
 
     public override MapEditorInput ApplyPalette(WorldContext worldContext, Vector3Int position)
     {
-        return new StructurePlacementAction(position, RepresentedStructure.StructureName, worldContext);
+        return new StructurePlacementAction(position, new StructureMapData() { StructureName = RepresentedStructure.StructureName, Ownership = OwnershipPalette.GlobalPlayerSideSetting, Position = position }, worldContext);
     }
 }

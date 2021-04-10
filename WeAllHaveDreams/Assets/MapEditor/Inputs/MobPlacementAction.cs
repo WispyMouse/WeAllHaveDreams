@@ -3,15 +3,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// When invoked, places a specified <see cref="MapMob"/> in to the world.
+/// </summary>
 public class MobPlacementAction : MapEditorInput
 {
+    /// <summary>
+    /// Position to place the Mob.
+    /// </summary>
     public Vector3Int Position;
 
-    public MobConfiguration Placed;
-    public MobMapData Removed;
-    public int? RemovedFaction;
+    /// <summary>
+    /// Data of the Mob being placed.
+    /// Certainly never null.
+    /// </summary>
+    public MobMapData Placed;
 
-    public MobPlacementAction(Vector3Int position, WorldContext context, MobConfiguration toPlace)
+    /// <summary>
+    /// Data of the Mob that was previously on the tile.
+    /// May be null if no Mob was present.
+    /// </summary>
+    public MobMapData Removed;
+
+    /// <summary>
+    /// Creates a new MobPlacementAction with the provided Mob at the target Position.
+    /// </summary>
+    /// <param name="position">Position to place the Mob.</param>
+    /// <param name="context">The current WorldContext. Used to determine previous contents.</param>
+    /// <param name="toPlace">Mob to place.</param>
+    public MobPlacementAction(Vector3Int position, WorldContext context, MobMapData toPlace)
     {
         Position = position;
         Placed = toPlace;
@@ -20,10 +40,10 @@ public class MobPlacementAction : MapEditorInput
         if (existingMob != null)
         {
             Removed = existingMob.GetMapData();
-            RemovedFaction = existingMob.PlayerSideIndex;
         }
     }
 
+    /// <inheritdoc/>
     public override void Invoke(WorldContext worldContextInstance)
     {
         if (Removed != null)
@@ -31,9 +51,10 @@ public class MobPlacementAction : MapEditorInput
             worldContextInstance.MobHolder.RemoveMob(worldContextInstance.MobHolder.MobOnPoint(Position));
         }
 
-        worldContextInstance.MobHolder.CreateNewUnit(Position, MobLibrary.GetMob(Placed.Name), OwnershipPalette.GlobalPlayerSideSetting.HasValue ? OwnershipPalette.GlobalPlayerSideSetting.Value : 0);
+        worldContextInstance.MobHolder.CreateNewUnit(Placed);
     }
 
+    /// <inheritdoc/>
     public override void Undo(WorldContext worldContextInstance)
     {
         worldContextInstance.MobHolder.RemoveMob(worldContextInstance.MobHolder.MobOnPoint(Position));

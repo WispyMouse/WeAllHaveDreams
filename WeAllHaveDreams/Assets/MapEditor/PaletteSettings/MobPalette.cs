@@ -24,6 +24,6 @@ public class MobPalette : PaletteSettings
 
     public override MapEditorInput ApplyPalette(WorldContext worldContext, Vector3Int position)
     {
-        return new MobPlacementAction(position, worldContext, RepresentedConfiguration);
+        return new MobPlacementAction(position, worldContext, new MobMapData() { MobName = RepresentedConfiguration.Name, Ownership = OwnershipPalette.GlobalPlayerSideSetting.HasValue ? OwnershipPalette.GlobalPlayerSideSetting.Value : 0 });
     }
 }
