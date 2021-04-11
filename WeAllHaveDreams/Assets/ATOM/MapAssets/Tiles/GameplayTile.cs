@@ -62,17 +62,10 @@ public class GameplayTile : Tile
 
     TileNeighborSpriteSetting GetBestNeighborSpriteSetting(HashSet<NeighborDirection> occuppiedNeighbors)
     {
-        TileNeighborSpriteSetting match = SpriteSettings
+        return SpriteSettings
             .Where(setting => setting.SameNeighborDirections.Length == occuppiedNeighbors.Count)
             .Where(setting => setting.SameNeighborDirections.All(snd => occuppiedNeighbors.Contains(snd)))
             .FirstOrDefault();
-
-        if (match != null)
-        {
-            return match;
-        }
-
-        return DefaultSprite;
     }
 
     static MapCoordinates PositionInDirection(MapCoordinates start, NeighborDirection direction)

@@ -56,6 +56,9 @@ TextureImporter:
   - first:
       213: -3209010624193187874
     second: Wall_NWInnerCorner
+  - first:
+      213: -6184459249557712608
+    second: CC_City_Exterior_A2_18
   externalObjects: {}
   serializedVersion: 11
   mipmaps:

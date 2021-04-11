@@ -16,6 +16,13 @@ public class MapEditorRibbon : MonoBehaviour
 
     public Button PlayButton;
 
+    private void Awake()
+    {
+        MapEditorRuntimeControllerInstance.MapSavedEvent += MapSaved;
+        MapEditorRuntimeControllerInstance.MapLoadedEvent += MapLoaded;
+        MapEditorRuntimeControllerInstance.MapChangedEvent += MapChanged;
+    }
+
     public void SaveButtonPressed()
     {
         if (GameplayMapBootup.WIPRealm != null)
@@ -28,9 +35,19 @@ public class MapEditorRibbon : MonoBehaviour
         }
     }
 
-    public void MapLoaded()
+    public void MapLoaded(object sender, Realm realm)
     {
         PlayButton.interactable = true;
+    }
+
+    public void MapSaved(object sender, Realm realm)
+    {
+        PlayButton.interactable = true;
+    }
+
+    public void MapChanged(object sender, Realm realm)
+    {
+        PlayButton.interactable = false;
     }
 
     public void PlayButtonPressed()
@@ -43,11 +60,6 @@ public class MapEditorRibbon : MonoBehaviour
     {
         yield return MapEditorRuntimeControllerInstance.SaveRealm();
         DebugTextLog.AddTextToLog("Map Saved!", DebugTextLogChannel.MapEditorOperations);
-        PlayButton.interactable = true;
-    }
-
-    public void MapSaved()
-    {
         PlayButton.interactable = true;
     }
 

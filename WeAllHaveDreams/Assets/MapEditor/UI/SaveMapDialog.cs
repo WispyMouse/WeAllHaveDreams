@@ -43,7 +43,6 @@ public class SaveMapDialog : MonoBehaviour
         yield return MapEditorRuntimeControllerInstance.SaveRealm();
 
         DebugTextLog.AddTextToLog("Saved!", DebugTextLogChannel.MapEditorOperations);
-        MapEditorRibbonInstance.MapSaved();
         Close();
     }
 }

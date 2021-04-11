@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -72,6 +73,23 @@ public class MapEditorRuntimeController : MonoBehaviour
     string currentMapName { get; set; }
 
     /// <summary>
+    /// An event fired whenever a Map is saved.
+    /// This applies to both newly saved Realms and updated saving ones.
+    /// </summary>
+    public event EventHandler<Realm> MapSavedEvent;
+
+    /// <summary>
+    /// An event fired whenever a Map is loaded.
+    /// </summary>
+    public event EventHandler<Realm> MapLoadedEvent;
+
+    /// <summary>
+    /// An event fired whenever a Map is changed.
+    /// This includes undoing actions. It's up to the listener to determine if the map is "dirty".
+    /// </summary>
+    public event EventHandler<Realm> MapChangedEvent;
+
+    /// <summary>
     /// Function that is called by <see cref="MapEditorBootup"/> when the editor's essential contexts have been loaded in.
     /// By the end of this function, the MapEditor should be ready to use.
     /// </summary>
@@ -87,6 +105,8 @@ public class MapEditorRuntimeController : MonoBehaviour
         RightClickPaletteSettings = new ClearTilePalette();
 
         MapEditorRibbonInstance.TilePaletteClicked();
+
+        NewMap();
 
         StartupComplete = true;
     }
@@ -121,10 +141,8 @@ public class MapEditorRuntimeController : MonoBehaviour
         currentMapName = toLoad.Name;
         GameplayMapBootup.WIPRealm = toLoad;
 
-        // TODO: This should be raised by an event, rather than explicitly in here.
-        MapEditorRibbonInstance.MapLoaded();
-
         DebugTextLog.AddTextToLog("Loaded realm", DebugTextLogChannel.DebugLogging);
+        MapLoadedEvent.Invoke(this, GameplayMapBootup.WIPRealm);
 
         yield break;
     }
@@ -141,15 +159,22 @@ public class MapEditorRuntimeController : MonoBehaviour
         GameplayMapBootup.WIPRealm = WorldContextInstance.GenerateRealm();
         GameplayMapBootup.WIPRealm.Name = currentMapName;
         yield return FileManagement.SaveRealm(GameplayMapBootup.WIPRealm);
+        MapSavedEvent.Invoke(this, GameplayMapBootup.WIPRealm);
     }
 
     /// <summary>
-    /// Sets the current working map's name
+    /// Sets the current working map's name.
+    /// TODO: This is a temporary holding place for this data.
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="name">The name of the map.</param>
     public void SetCurrentMapName(string name)
     {
         currentMapName = name;
+
+        if (GameplayMapBootup.WIPRealm != null)
+        {
+            GameplayMapBootup.WIPRealm.Name = currentMapName;
+        }
     }
 
     /// <summary>
@@ -162,6 +187,8 @@ public class MapEditorRuntimeController : MonoBehaviour
         WorldContextInstance.ClearEverything();
         ActionHistory.Clear();
         historyPointer = null;
+
+        MapChangedEvent.Invoke(this, null);
     }
 
     /// <summary>
@@ -178,6 +205,11 @@ public class MapEditorRuntimeController : MonoBehaviour
 
         bool inputHandled = HandleClick();
         inputHandled |= HandleRedoUndo();
+
+        if (inputHandled)
+        {
+            MapChangedEvent.Invoke(this, GameplayMapBootup.WIPRealm);
+        }
     }
 
     /// <summary>

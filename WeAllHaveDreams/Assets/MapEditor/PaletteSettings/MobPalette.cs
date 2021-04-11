@@ -33,6 +33,6 @@ public class MobPalette : PaletteSettings
     /// <inheritdoc />
     public override MapEditorInput ApplyPalette(WorldContext worldContext, MapCoordinates position)
     {
-        return new MobPlacementAction(position, worldContext, new MobMapData() { MobName = RepresentedConfiguration.Name, Ownership = OwnershipPalette.GlobalPlayerSideSetting.HasValue ? OwnershipPalette.GlobalPlayerSideSetting.Value : 0 });
+        return new MobPlacementAction(position, worldContext, new MobMapData() { MobName = RepresentedConfiguration.Name, Ownership = OwnershipPalette.GlobalPlayerSideSetting.HasValue ? OwnershipPalette.GlobalPlayerSideSetting.Value : 0, Position = position });
     }
 }
