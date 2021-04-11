@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MobMapData
 {
-    public Vector3Int Position;
+    public MapCoordinates Position;
     public string MobName;
     public int Ownership;
 }

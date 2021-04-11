@@ -5,15 +5,15 @@ using UnityEngine;
 public class MoveMobPlayerInput : PlayerInput
 {
     public MapMob Moving;
-    public Vector3Int To;
+    public MapCoordinates To;
 
-    public MoveMobPlayerInput(MapMob toMove, Vector3Int to)
+    public MoveMobPlayerInput(MapMob toMove, MapCoordinates to)
     {
         Moving = toMove;
         To = to;
     }
 
-    public override string LongTitle => $"Move {Moving.Name} to ({To.x}, {To.y})";
+    public override string LongTitle => $"Move {Moving.Name} to {To.ToString()}";
 
     public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {

@@ -15,7 +15,7 @@ public class FeatureHolder : MonoBehaviour
         SetFeature(mapData.Position, FeatureLibrary.GetFeature(mapData.FeatureName));
     }
 
-    public void SetFeature(Vector3Int position, MapFeature toSet)
+    public void SetFeature(MapCoordinates position, MapFeature toSet)
     {
         MapFeature existingFeature = FeatureOnPoint(position);
 
@@ -44,7 +44,7 @@ public class FeatureHolder : MonoBehaviour
         }
     }
 
-    public MapFeature FeatureOnPoint(Vector3Int position)
+    public MapFeature FeatureOnPoint(MapCoordinates position)
     {
         MapFeature featureOnPoint;
 
@@ -69,7 +69,7 @@ public class FeatureHolder : MonoBehaviour
     {
         foreach (FeatureMapData featureData in toLoad.Features)
         {
-            DebugTextLog.AddTextToLog($"Placing {featureData.FeatureName} at ({featureData.Position.x}, {featureData.Position.y})", DebugTextLogChannel.Verbose);
+            DebugTextLog.AddTextToLog($"Placing {featureData.FeatureName} at {featureData.Position.ToString()}", DebugTextLogChannel.Verbose);
             SetFeature(featureData);
         }
     }

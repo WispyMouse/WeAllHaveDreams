@@ -90,7 +90,7 @@ public class UnitAttackPhase : InputGameplayPhase
             return true;
         }
 
-        IEnumerable<Vector3Int> attackingRanges = WorldContextInstance.MapHolder.CanHitFrom(selectedUnit, mob.Position);
+        IEnumerable<MapCoordinates> attackingRanges = WorldContextInstance.MapHolder.CanHitFrom(selectedUnit, mob.Position);
         if (!attackingRanges.Contains(selectedUnit.Position))
         {
             DebugTextLog.AddTextToLog("That unit is out of this units attack range.");

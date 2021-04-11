@@ -43,7 +43,7 @@ public class WorldContext : SingletonBase<WorldContext>
         List<MobMapData> mobs = new List<MobMapData>();
         List<FeatureMapData> features = new List<FeatureMapData>();
 
-        foreach (Vector3Int position in MapHolder.GetAllTiles())
+        foreach (MapCoordinates position in MapHolder.GetAllTiles())
         {
             GameplayTile tile = MapHolder.GetGameplayTile(position);
             realmCoordinates.Add(new RealmCoordinate() { Position = position, Tile = tile.TileName });
@@ -76,7 +76,7 @@ public class WorldContext : SingletonBase<WorldContext>
     }
 
 
-    public void SetOwnership(Vector3Int position, int? value)
+    public void SetOwnership(MapCoordinates position, int? value)
     {
         MapStructure structure;
         if (structure = StructureHolder.StructureOnPoint(position))

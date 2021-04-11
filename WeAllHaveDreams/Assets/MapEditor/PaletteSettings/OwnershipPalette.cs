@@ -62,7 +62,7 @@ public class OwnershipPalette : PaletteSettings
     }
 
     /// <inheritdoc />
-    public override MapEditorInput ApplyPalette(WorldContext worldContext, Vector3Int position)
+    public override MapEditorInput ApplyPalette(WorldContext worldContext, MapCoordinates position)
     {
         return new OwnershipSetAction(position, worldContext, PlayerSide);
     }

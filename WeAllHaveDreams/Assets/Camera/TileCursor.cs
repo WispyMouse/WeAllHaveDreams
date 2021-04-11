@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TileCursor : MonoBehaviour
 {
-    public void SetPosition(Vector3Int position)
+    public void SetPosition(MapCoordinates position)
     {
-        transform.position = position;
+        transform.position = new Vector3(position.X, position.Y, 0);
     }
 }

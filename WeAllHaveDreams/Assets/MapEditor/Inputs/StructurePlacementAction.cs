@@ -10,7 +10,7 @@ public class StructurePlacementAction : MapEditorInput
     /// <summary>
     /// Position to place the Structure.
     /// </summary>
-    public Vector3Int Position;
+    public MapCoordinates Position;
 
     /// <summary>
     /// Data of the Structure to place.
@@ -30,7 +30,7 @@ public class StructurePlacementAction : MapEditorInput
     /// <param name="position">Position to place the Structure.</param>
     /// <param name="toPlace">Data of the Structure to place.</param>
     /// <param name="worldContextInstance">The current WorldContext. Used to determine previous contents.</param>
-    public StructurePlacementAction(Vector3Int position, StructureMapData toPlace, WorldContext worldContextInstance)
+    public StructurePlacementAction(MapCoordinates position, StructureMapData toPlace, WorldContext worldContextInstance)
     {
         Position = position;
         Placed = toPlace;

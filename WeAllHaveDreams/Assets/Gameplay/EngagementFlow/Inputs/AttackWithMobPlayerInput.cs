@@ -6,7 +6,7 @@ public class AttackWithMobInput : PlayerInput
 {
     public MapMob Attacking;
     public MapMob Target;
-    public Vector3Int? MoveTo;
+    public MapCoordinates? MoveTo;
 
     public AttackWithMobInput(MapMob attacking, MapMob target)
     {
@@ -15,14 +15,14 @@ public class AttackWithMobInput : PlayerInput
         MoveTo = null; // Explicitly not moving
     }
 
-    public AttackWithMobInput(MapMob attacking, MapMob target, Vector3Int moveTo)
+    public AttackWithMobInput(MapMob attacking, MapMob target, MapCoordinates moveTo)
     {
         Attacking = attacking;
         Target = target;
         MoveTo = moveTo;
     }
 
-    public override string LongTitle => $"Attack with {Attacking.Name} at {Target.Name}" + (MoveTo.HasValue ? $" after moving to ({MoveTo.Value.x}, {MoveTo.Value.y})" : "");
+    public override string LongTitle => $"Attack with {Attacking.Name} at {Target.Name}" + (MoveTo.HasValue ? $" after moving to ({MoveTo.Value.ToString()})" : "");
 
     public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {

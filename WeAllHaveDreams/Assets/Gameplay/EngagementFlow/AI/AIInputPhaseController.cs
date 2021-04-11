@@ -66,12 +66,12 @@ public class AIInputPhaseController : MonoBehaviour
         possiblePlans.Add(new UnitTurnPlan(new DoesNothingPlayerInput(acting), -100));
 
         // Get our current movement and possible hurt ranges
-        IEnumerable<Vector3Int> movementRanges = WorldContextInstance.MapHolder.PotentialMoves(acting);
-        IEnumerable<Vector3Int> hurtRanges = movementRanges.SelectMany(mr => WorldContextInstance.MapHolder.PotentialAttacks(acting, mr));
+        IEnumerable<MapCoordinates> movementRanges = WorldContextInstance.MapHolder.PotentialMoves(acting);
+        IEnumerable<MapCoordinates> hurtRanges = movementRanges.SelectMany(mr => WorldContextInstance.MapHolder.PotentialAttacks(acting, mr));
 
         if (!acting.CanMove)
         {
-            movementRanges = new List<Vector3Int>() { acting.Position };
+            movementRanges = new List<MapCoordinates>() { acting.Position };
         }
 
         if (acting.CanAttack)
@@ -85,7 +85,7 @@ public class AIInputPhaseController : MonoBehaviour
             {
                 foreach (MapMob inRange in opponentsInRange)
                 {
-                    IEnumerable<Vector3Int> engagementTiles = WorldContextInstance.MapHolder.CanHitFrom(acting, inRange.Position)
+                    IEnumerable<MapCoordinates> engagementTiles = WorldContextInstance.MapHolder.CanHitFrom(acting, inRange.Position)
                         .Intersect(movementRanges);
 
                     if (!engagementTiles.Any())
@@ -93,14 +93,14 @@ public class AIInputPhaseController : MonoBehaviour
                         continue;
                     }
 
-                    IEnumerable<Vector3Int> emptyEngagementTiles = engagementTiles.Where(tile => acting.Position == tile || WorldContextInstance.MobHolder.MobOnPoint(tile) == null);
+                    IEnumerable<MapCoordinates> emptyEngagementTiles = engagementTiles.Where(tile => acting.Position == tile || WorldContextInstance.MobHolder.MobOnPoint(tile) == null);
 
                     if (!emptyEngagementTiles.Any())
                     {
                         continue;
                     }
 
-                    foreach (Vector3Int validEngagementTile in emptyEngagementTiles)
+                    foreach (MapCoordinates validEngagementTile in emptyEngagementTiles)
                     {
                         possiblePlans.Add(new UnitTurnPlan(new AttackWithMobInput(acting, inRange, emptyEngagementTiles.First()), ScoreEngagement(acting, inRange, validEngagementTile)));
                     }
@@ -132,7 +132,7 @@ public class AIInputPhaseController : MonoBehaviour
 
             foreach (MapStructure structure in enemyStructures)
             {
-                List<Vector3Int> path = WorldContextInstance.MapHolder.Path(acting, structure.Position);
+                List<MapCoordinates> path = WorldContextInstance.MapHolder.Path(acting, structure.Position);
 
                 if (path == null)
                 {
@@ -141,7 +141,7 @@ public class AIInputPhaseController : MonoBehaviour
 
                 for (int ii = Mathf.Min(path.Count - 1, acting.MoveRange); ii >= 0; ii--)
                 {
-                    List<Vector3Int> pathToSpot = WorldContextInstance.MapHolder.Path(acting, path[ii]);
+                    List<MapCoordinates> pathToSpot = WorldContextInstance.MapHolder.Path(acting, path[ii]);
 
                     if (pathToSpot == null)
                     {
@@ -159,7 +159,7 @@ public class AIInputPhaseController : MonoBehaviour
         return possiblePlans.OrderByDescending(plan => plan.Score).First();
     }
 
-    decimal ScoreEngagement(MapMob acting, MapMob defending, Vector3Int attackFrom)
+    decimal ScoreEngagement(MapMob acting, MapMob defending, MapCoordinates attackFrom)
     {
         decimal projectedOutgoingDamage = WorldContextInstance.MobHolder.ProjectedDamages(acting, defending);
 

@@ -14,7 +14,7 @@ public class StructureHolder : MonoBehaviour
         SetStructure(data.Position, StructureLibrary.GetStructure(data.StructureName), data.Ownership);
     }
 
-    public void SetStructure(Vector3Int position, MapStructure toSet, int? faction)
+    public void SetStructure(MapCoordinates position, MapStructure toSet, int? faction)
     {
         RemoveStructure(position);
 
@@ -28,7 +28,7 @@ public class StructureHolder : MonoBehaviour
         SetOwnership(position, faction);
     }
 
-    public void RemoveStructure(Vector3Int position)
+    public void RemoveStructure(MapCoordinates position)
     {
         MapStructure existingStructure = StructureOnPoint(position);
 
@@ -39,7 +39,7 @@ public class StructureHolder : MonoBehaviour
         }
     }
 
-    public MapStructure StructureOnPoint(Vector3Int position)
+    public MapStructure StructureOnPoint(MapCoordinates position)
     {
         MapStructure structureOnPoint;
 
@@ -60,7 +60,7 @@ public class StructureHolder : MonoBehaviour
         ActiveStructures = new List<MapStructure>();
     }
 
-    public void SetOwnership(Vector3Int position, int? team)
+    public void SetOwnership(MapCoordinates position, int? team)
     {
         MapStructure structureOnPoint = StructureOnPoint(position);
 
@@ -70,7 +70,7 @@ public class StructureHolder : MonoBehaviour
         }
     }
 
-    public void MobRemovedFromPoint(Vector3Int position)
+    public void MobRemovedFromPoint(MapCoordinates position)
     {
         MapStructure structure = StructureOnPoint(position);
 
@@ -84,7 +84,7 @@ public class StructureHolder : MonoBehaviour
     {
         foreach (StructureMapData structureData in toLoad.Structures)
         {
-            DebugTextLog.AddTextToLog($"Placing {structureData.StructureName} at ({structureData.Position.x}, {structureData.Position.y}), owned by {(structureData.Ownership.HasValue ? $"Faction {structureData.Ownership.Value}" : "[unclaimed]")}", DebugTextLogChannel.Verbose);
+            DebugTextLog.AddTextToLog($"Placing {structureData.StructureName} at {structureData.Position.ToString()}, owned by {(structureData.Ownership.HasValue ? $"Faction {structureData.Ownership.Value}" : "[unclaimed]")}", DebugTextLogChannel.Verbose);
             SetStructure(structureData);
         }
     }

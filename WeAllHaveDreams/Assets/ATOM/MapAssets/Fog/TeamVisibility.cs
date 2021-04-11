@@ -5,17 +5,17 @@ using UnityEngine;
 
 public class TeamVisibility
 {
-    public HashSet<Vector3Int> VisibleTiles { get; private set; } = new HashSet<Vector3Int>();
-    public HashSet<Vector3Int> HasBeenSeenTiles { get; private set; } = new HashSet<Vector3Int>();
+    public HashSet<MapCoordinates> VisibleCoordinates { get; private set; } = new HashSet<MapCoordinates>();
+    public HashSet<MapCoordinates> HasBeenSeenCoordinates { get; private set; } = new HashSet<MapCoordinates>();
 
     public void ClearVisibleTiles()
     {
-        VisibleTiles = new HashSet<Vector3Int>();
+        VisibleCoordinates = new HashSet<MapCoordinates>();
     }
 
-    public void IncorporateVisibleTiles(IEnumerable<Vector3Int> newlyVisible)
+    public void IncorporateVisibleTiles(IEnumerable<MapCoordinates> newlyVisible)
     {
-        VisibleTiles = new HashSet<Vector3Int>(VisibleTiles.Union(newlyVisible));
-        HasBeenSeenTiles = new HashSet<Vector3Int>(HasBeenSeenTiles.Union(newlyVisible));
+        VisibleCoordinates = new HashSet<MapCoordinates>(VisibleCoordinates.Union(newlyVisible));
+        HasBeenSeenCoordinates = new HashSet<MapCoordinates>(HasBeenSeenCoordinates.Union(newlyVisible));
     }
 }

@@ -31,7 +31,7 @@ public class BuildsFeatureInput : PlayerInput
 
     public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {
-        DebugTextLog.AddTextToLog($"Building {FeatureToBuild} at ({Builder.Position.x}, {Builder.Position.y}");
+        DebugTextLog.AddTextToLog($"Building {FeatureToBuild} at {Builder.Position.ToString()}");
         TurnManager.CurrentPlayer.TotalResources -= Cost;
         worldContext.FeatureHolder.SetFeature(Builder.Position, FeatureLibrary.GetFeature(FeatureToBuild));
         yield return TurnManager.ResolveEffects();

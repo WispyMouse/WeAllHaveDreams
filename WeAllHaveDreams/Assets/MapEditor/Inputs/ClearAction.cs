@@ -11,7 +11,7 @@ public class ClearAction : MapEditorInput
     /// <summary>
     /// Coordinate for this Action.
     /// </summary>
-    public Vector3Int Position;
+    public MapCoordinates Position;
 
     /// <summary>
     /// Name of the <see cref="GameplayTile"/> that was previously at <see cref="Position"/>.
@@ -42,7 +42,7 @@ public class ClearAction : MapEditorInput
     /// </summary>
     /// <param name="position">Position for this to apply to.</param>
     /// <param name="context">The current WorldContext. This is used to store the content that was previously on this position.</param>
-    public ClearAction(Vector3Int position, WorldContext context)
+    public ClearAction(MapCoordinates position, WorldContext context)
     {
         Position = position;
 

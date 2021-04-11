@@ -34,7 +34,7 @@ public class TilePlacementPalette : PaletteSettings
     }
 
     /// <inheritdoc />
-    public override MapEditorInput ApplyPalette(WorldContext worldContext, Vector3Int position)
+    public override MapEditorInput ApplyPalette(WorldContext worldContext, MapCoordinates position)
     {
         return new TileReplacementAction(position, RepresentedTile.TileName, worldContext);
     }

@@ -46,5 +46,5 @@ public abstract class PaletteSettings
     /// <param name="context">The current WorldContext.</param>
     /// <param name="position">The position to apply the Palette.</param>
     /// <returns>An Invoke-able MapEditorInput that applies this Palette.</returns>
-    public abstract MapEditorInput ApplyPalette(WorldContext context, Vector3Int position);
+    public abstract MapEditorInput ApplyPalette(WorldContext context, MapCoordinates position);
 }

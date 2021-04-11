@@ -31,14 +31,14 @@ public class MobHolder : MonoBehaviour
 
             if (ActiveMobs.Any(mob => mob.Position == curMob.Position))
             {
-                Debug.LogWarning($"Multiple mobs are on the same position: {{{curMob.Position.x}, {curMob.Position.y}, {curMob.Position.z}}}");
+                Debug.LogWarning($"Multiple mobs are on the same position: {curMob.Position.ToString()}");
             }
 
             ActiveMobs.Add(curMob);
         }
     }
 
-    public MapMob MobOnPoint(Vector3Int position)
+    public MapMob MobOnPoint(MapCoordinates position)
     {
         MapMob mobOnPoint;
 
@@ -61,7 +61,7 @@ public class MobHolder : MonoBehaviour
         return engaging.AttackPowerAtHitPoints(overrideEngagingHealth) * defending.DamageReductionRatio;
     }
 
-    public bool CanAttackFromPosition(MapMob possibleAttacker, MapMob defender, Vector3Int attackerPosition)
+    public bool CanAttackFromPosition(MapMob possibleAttacker, MapMob defender, MapCoordinates attackerPosition)
     {
         return WorldContextInstance.MapHolder.PotentialAttacks(possibleAttacker, attackerPosition).Contains(defender.Position);
     }
@@ -78,7 +78,7 @@ public class MobHolder : MonoBehaviour
         Destroy(toRemove.gameObject);
     }
 
-    public MapMob CreateNewUnit(Vector3Int location, MapMob prefab)
+    public MapMob CreateNewUnit(MapCoordinates location, MapMob prefab)
     {
         if (ActiveMobs.Any(mob => mob.Position == location))
         {
@@ -96,7 +96,7 @@ public class MobHolder : MonoBehaviour
         return newMob;
     }
 
-    public void CreateNewUnit(Vector3Int location, MapMob prefab, int teamIndex)
+    public void CreateNewUnit(MapCoordinates location, MapMob prefab, int teamIndex)
     {
         MapMob newMob = CreateNewUnit(location, prefab);
         newMob.SetOwnership(teamIndex);
@@ -122,7 +122,7 @@ public class MobHolder : MonoBehaviour
     {
         foreach (MobMapData mobData in toLoad.Mobs)
         {
-            DebugTextLog.AddTextToLog($"Placing {mobData.MobName} at ({mobData.Position.x}, {mobData.Position.y}), owned by Faction {mobData.Ownership}", DebugTextLogChannel.Verbose);
+            DebugTextLog.AddTextToLog($"Placing {mobData.MobName} at {mobData.Position.ToString()}), owned by Faction {mobData.Ownership}", DebugTextLogChannel.Verbose);
             CreateNewUnit(mobData);
         }
     }

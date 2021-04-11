@@ -120,7 +120,7 @@ public class TurnManager : SingletonBase<TurnManager>
 
         foreach (MapMob remove in shouldBeRemoved)
         {
-            Vector3Int position = remove.Position;
+            MapCoordinates position = remove.Position;
 
             Singleton.WorldContextInstance.MobHolder.RemoveMob(remove);
             Singleton.WorldContextInstance.StructureHolder.MobRemovedFromPoint(position);

@@ -11,7 +11,7 @@ public class MobPlacementAction : MapEditorInput
     /// <summary>
     /// Position to place the Mob.
     /// </summary>
-    public Vector3Int Position;
+    public MapCoordinates Position;
 
     /// <summary>
     /// Data of the Mob being placed.
@@ -31,7 +31,7 @@ public class MobPlacementAction : MapEditorInput
     /// <param name="position">Position to place the Mob.</param>
     /// <param name="context">The current WorldContext. Used to determine previous contents.</param>
     /// <param name="toPlace">Mob to place.</param>
-    public MobPlacementAction(Vector3Int position, WorldContext context, MobMapData toPlace)
+    public MobPlacementAction(MapCoordinates position, WorldContext context, MobMapData toPlace)
     {
         Position = position;
         Placed = toPlace;

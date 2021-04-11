@@ -10,7 +10,7 @@ public class OwnershipSetAction : MapEditorInput
     /// <summary>
     /// Position to paint.
     /// </summary>
-    public Vector3Int Position;
+    public MapCoordinates Position;
 
     /// <summary>
     /// Ownership value to apply.
@@ -31,7 +31,7 @@ public class OwnershipSetAction : MapEditorInput
     /// <param name="position">Position to apply Ownership to.</param>
     /// <param name="context">The current WorldContext. Used to determine previous contents.</param>
     /// <param name="value">Value to paint to.</param>
-    public OwnershipSetAction(Vector3Int position, WorldContext context, int? value)
+    public OwnershipSetAction(MapCoordinates position, WorldContext context, int? value)
     {
         Position = position;
         Value = value;

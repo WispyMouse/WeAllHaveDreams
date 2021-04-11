@@ -13,7 +13,7 @@ public class MobCapturesStructurePlayerInput : PlayerInput
         Target = target;
     }
 
-    public override string LongTitle => $"Capture a structure with {Capturing.Name} at ({Target.Position.x}, {Target.Position.y}) ";
+    public override string LongTitle => $"Capture a structure with {Capturing.Name} at {Target.Position.ToString()}";
 
     public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {
@@ -21,13 +21,13 @@ public class MobCapturesStructurePlayerInput : PlayerInput
         {
             if (!Capturing.CanMove)
             {
-                DebugTextLog.AddTextToLog($"A unit tried to move to capture {Target.Position.x}, {Target.Position.y}, but can't move", DebugTextLogChannel.RuntimeError);
+                DebugTextLog.AddTextToLog($"A unit tried to move to capture {Target.Position.ToString()}, but can't move", DebugTextLogChannel.RuntimeError);
                 yield break;
             }
 
             if (worldContext.MobHolder.MobOnPoint(Target.Position))
             {
-                DebugTextLog.AddTextToLog($"A unit tried to move to capture {Target.Position.x}, {Target.Position.y}, but there was already a different unit on that point", DebugTextLogChannel.RuntimeError);
+                DebugTextLog.AddTextToLog($"A unit tried to move to capture {Target.Position.ToString()}, but there was already a different unit on that point", DebugTextLogChannel.RuntimeError);
                 yield break;
             }
 

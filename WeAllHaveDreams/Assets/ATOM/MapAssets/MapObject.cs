@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class MapObject : MonoBehaviour
 {
-    public Vector3Int Position { get; set; }
+    public MapCoordinates Position { get; set; }
     public virtual IEnumerable<string> Tags { get; }
 
     bool shouldBeVisible { get; set; }
 
     public void SettleIntoGrid()
     {
-        Vector3Int nearestStartPosition = new Vector3Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y), Mathf.RoundToInt(transform.position.z));
+        MapCoordinates nearestStartPosition = new MapCoordinates(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
         SetPosition(nearestStartPosition);
     }
 
-    public virtual void SetPosition(Vector3Int toPosition)
+    public virtual void SetPosition(MapCoordinates toPosition)
     {
         Position = toPosition;
-        transform.position = toPosition;
+        transform.position = new Vector3(toPosition.X, toPosition.Y, 0);
     }
 
     public virtual bool HasStartOfTurnEffects => false;

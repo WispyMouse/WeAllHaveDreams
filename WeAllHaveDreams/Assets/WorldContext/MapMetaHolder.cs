@@ -12,14 +12,14 @@ public class MapMetaHolder : MonoBehaviour
     public Tile MovementTile;
     public Tile AttackTile;
 
-    HashSet<Vector3Int> ActiveMovementTiles { get; set; }
-    HashSet<Vector3Int> ActiveAttackTiles { get; set; }
+    HashSet<MapCoordinates> ActiveMovementTiles { get; set; }
+    HashSet<MapCoordinates> ActiveAttackTiles { get; set; }
 
     public void ShowUnitMovementRange(MapMob toShow)
     {
         ClearMetas();
 
-        foreach (Vector3Int tile in WorldContextInstance.MapHolder.PotentialMoves(toShow))
+        foreach (MapCoordinates tile in WorldContextInstance.MapHolder.PotentialMoves(toShow))
         {
             MetaMap.SetTile(tile, MovementTile);
             ActiveMovementTiles.Add(tile);
@@ -30,15 +30,15 @@ public class MapMetaHolder : MonoBehaviour
     {
         if (overrideExisting || ActiveAttackTiles == null)
         {
-            ActiveAttackTiles = new HashSet<Vector3Int>();
+            ActiveAttackTiles = new HashSet<MapCoordinates>();
         }
 
-        foreach (Vector3Int possibleAttackTile in WorldContextInstance.MapHolder.PotentialAttacks(toShow, toShow.Position))
+        foreach (MapCoordinates possibleAttackTile in WorldContextInstance.MapHolder.PotentialAttacks(toShow, toShow.Position))
         {
             ActiveAttackTiles.Add(possibleAttackTile);
         }
 
-        foreach (Vector3Int attackTile in ActiveAttackTiles)
+        foreach (MapCoordinates attackTile in ActiveAttackTiles)
         {
             MetaMap.SetTile(attackTile, AttackTile);
         }
@@ -48,23 +48,23 @@ public class MapMetaHolder : MonoBehaviour
     {
         ShowUnitMovementRange(toShow);
 
-        ActiveAttackTiles = new HashSet<Vector3Int>();
+        ActiveAttackTiles = new HashSet<MapCoordinates>();
 
-        foreach (Vector3Int movementTile in ActiveMovementTiles)
+        foreach (MapCoordinates movementTile in ActiveMovementTiles)
         {
-            foreach (Vector3Int possibleAttackTile in WorldContextInstance.MapHolder.PotentialAttacks(toShow, movementTile))
+            foreach (MapCoordinates possibleAttackTile in WorldContextInstance.MapHolder.PotentialAttacks(toShow, movementTile))
             {
                 ActiveAttackTiles.Add(possibleAttackTile);
             }
         }
 
-        foreach (Vector3Int attackTile in ActiveAttackTiles.Except(ActiveMovementTiles))
+        foreach (MapCoordinates attackTile in ActiveAttackTiles.Except(ActiveMovementTiles))
         {
             MetaMap.SetTile(attackTile, AttackTile);
         }
     }
 
-    public bool TileIsInActiveMovementRange(Vector3Int position)
+    public bool TileIsInActiveMovementRange(MapCoordinates position)
     {
         return ActiveMovementTiles != null
             && ActiveMovementTiles.Contains(position);
@@ -73,7 +73,7 @@ public class MapMetaHolder : MonoBehaviour
     public void ClearMetas()
     {
         MetaMap.ClearAllTiles();
-        ActiveMovementTiles = new HashSet<Vector3Int>();
-        ActiveAttackTiles = new HashSet<Vector3Int>();
+        ActiveMovementTiles = new HashSet<MapCoordinates>();
+        ActiveAttackTiles = new HashSet<MapCoordinates>();
     }
 }

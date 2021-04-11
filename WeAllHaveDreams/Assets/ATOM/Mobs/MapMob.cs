@@ -109,7 +109,7 @@ public class MapMob : MapObject
             return !CanMove && !CanAttack;
         }
     }
-    public Vector3Int RestingPosition
+    public MapCoordinates RestingPosition
     {
         get
         {
@@ -130,7 +130,7 @@ public class MapMob : MapObject
             restingPosition = value;
         }
     }
-    Vector3Int? restingPosition { get; set; }
+    MapCoordinates? restingPosition { get; set; }
 
     Dictionary<string, Reminder> Reminders { get; set; } = new Dictionary<string, Reminder>();
 

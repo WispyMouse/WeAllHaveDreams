@@ -10,7 +10,7 @@ public class FeaturePlacementAction : MapEditorInput
     /// <summary>
     /// Position to place the Feature.
     /// </summary>
-    public Vector3Int Position;
+    public MapCoordinates Position;
 
     /// <summary>
     /// The data of the Feature to be placed.
@@ -30,7 +30,7 @@ public class FeaturePlacementAction : MapEditorInput
     /// <param name="position">Position to place the Feature.</param>
     /// <param name="toPlace">Name of the Feature to place.</param>
     /// <param name="worldContextInstance">Current world context. The current WorldContext. Used to determine previous contents.</param>
-    public FeaturePlacementAction(Vector3Int position, string toPlace, WorldContext worldContextInstance)
+    public FeaturePlacementAction(MapCoordinates position, string toPlace, WorldContext worldContextInstance)
     {
         Position = position;
         Placed = new FeatureMapData() { FeatureName = toPlace, Position = Position };

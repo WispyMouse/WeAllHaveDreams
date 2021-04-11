@@ -37,13 +37,13 @@ public class MapEditorRuntimeController : MonoBehaviour
 
     /// <summary>
     /// The active setting for Left Click.
-    /// When you left click, the <see cref="PaletteSettings.ApplyPalette(WorldContext, Vector3Int)"/> of this setting is applied.
+    /// When you left click, the <see cref="PaletteSettings.ApplyPalette(WorldContext, MapCoordinates)"/> of this setting is applied.
     /// </summary>
     public PaletteSettings LeftClickPaletteSettings;
 
     /// <summary>
     /// The active setting for Right Click.
-    /// When you right click, the <see cref="PaletteSettings.ApplyPalette(WorldContext, Vector3Int)"/> of this setting is applied.
+    /// When you right click, the <see cref="PaletteSettings.ApplyPalette(WorldContext, MapCoordinates)"/> of this setting is applied.
     /// </summary>
     public PaletteSettings RightClickPaletteSettings;
 
@@ -189,7 +189,7 @@ public class MapEditorRuntimeController : MonoBehaviour
         int? click = Input.GetMouseButtonDown(0) ? 0 : Input.GetMouseButtonDown(1) ? (int?)1 : null;
         if (click.HasValue && !EventSystem.current.IsPointerOverGameObject())
         {
-            Vector3Int? worldpoint = LocationInput.GetHoveredTilePosition(false);
+            MapCoordinates? worldpoint = LocationInput.GetHoveredTilePosition(false);
 
             // We didn't click on a position, so do nothing
             if (!worldpoint.HasValue)
@@ -276,8 +276,8 @@ public class MapEditorRuntimeController : MonoBehaviour
     /// Applies <paramref name="toApply"/> to <paramref name="worldPoint"/> on the Map.
     /// </summary>
     /// <param name="worldPoint">Position to paint on.</param>
-    /// <param name="toApply">The PaletteSettings to pull from. The <see cref="MapEditorInput"/> retried from <see cref="PaletteSettings.ApplyPalette(WorldContext, Vector3Int)"/> will be used.</param>
-    void ApplyTilePalette(Vector3Int worldPoint, PaletteSettings toApply)
+    /// <param name="toApply">The PaletteSettings to pull from. The <see cref="MapEditorInput"/> retried from <see cref="PaletteSettings.ApplyPalette(WorldContext, MapCoordinates)"/> will be used.</param>
+    void ApplyTilePalette(MapCoordinates worldPoint, PaletteSettings toApply)
     {
         if (toApply == null)
         {

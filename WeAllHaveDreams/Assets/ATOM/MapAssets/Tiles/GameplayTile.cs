@@ -39,13 +39,13 @@ public class GameplayTile : Tile
         }
     }
 
-    HashSet<NeighborDirection> GetNeighborsDirectionsWithSameTile(Vector3Int position, ITilemap tilemap)
+    HashSet<NeighborDirection> GetNeighborsDirectionsWithSameTile(MapCoordinates position, ITilemap tilemap)
     {
         HashSet<NeighborDirection> occuppiedNeighbors = new HashSet<NeighborDirection>();
 
         foreach (NeighborDirection direction in System.Enum.GetValues(typeof(NeighborDirection)))
         {
-            Vector3Int neighborPosition = PositionInDirection(position, direction);
+            MapCoordinates neighborPosition = PositionInDirection(position, direction);
             GameplayTile neighborTile;
 
             if (neighborTile = tilemap.GetTile<GameplayTile>(neighborPosition))
@@ -62,24 +62,31 @@ public class GameplayTile : Tile
 
     TileNeighborSpriteSetting GetBestNeighborSpriteSetting(HashSet<NeighborDirection> occuppiedNeighbors)
     {
-        return SpriteSettings
+        TileNeighborSpriteSetting match = SpriteSettings
             .Where(setting => setting.SameNeighborDirections.Length == occuppiedNeighbors.Count)
             .Where(setting => setting.SameNeighborDirections.All(snd => occuppiedNeighbors.Contains(snd)))
             .FirstOrDefault();
+
+        if (match != null)
+        {
+            return match;
+        }
+
+        return DefaultSprite;
     }
 
-    static Vector3Int PositionInDirection(Vector3Int start, NeighborDirection direction)
+    static MapCoordinates PositionInDirection(MapCoordinates start, NeighborDirection direction)
     {
         switch (direction)
         {
             case NeighborDirection.North:
-                return start + Vector3Int.up;
+                return start + MapCoordinates.Up;
             case NeighborDirection.East:
-                return start + Vector3Int.right;
+                return start + MapCoordinates.Right;
             case NeighborDirection.South:
-                return start + Vector3Int.down;
+                return start + MapCoordinates.Down;
             case NeighborDirection.West:
-                return start + Vector3Int.left;
+                return start + MapCoordinates.Left;
             default:
                 return start;
         }

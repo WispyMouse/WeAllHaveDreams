@@ -9,7 +9,7 @@ public abstract class InputGameplayPhase : MonoBehaviour
         yield return new WaitForEndOfFrame();
     }
 
-    public virtual bool TryHandleTileClicked(Vector3Int position, out InputGameplayPhase nextPhase)
+    public virtual bool TryHandleTileClicked(MapCoordinates position, out InputGameplayPhase nextPhase)
     {
         nextPhase = this;
         return false;

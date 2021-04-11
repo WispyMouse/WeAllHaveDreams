@@ -85,7 +85,7 @@ public class UnitMovementPhase : InputGameplayPhase
         }
     }
 
-    public override bool TryHandleTileClicked(Vector3Int position, out InputGameplayPhase nextPhase)
+    public override bool TryHandleTileClicked(MapCoordinates position, out InputGameplayPhase nextPhase)
     {
         nextPhase = this;
 
@@ -117,7 +117,7 @@ public class UnitMovementPhase : InputGameplayPhase
         }
 
         // Can we attack them from where we're standing?
-        IEnumerable<Vector3Int> standingAttacks = WorldContextInstance.MapHolder.PotentialAttacks(selectedUnit, mob.Position);
+        IEnumerable<MapCoordinates> standingAttacks = WorldContextInstance.MapHolder.PotentialAttacks(selectedUnit, mob.Position);
         if (standingAttacks.Contains(mob.Position))
         {
             nextPhase = InputResolutionPhaseInstance.ResolveThis(new AttackWithMobInput(selectedUnit, mob), this);
@@ -126,10 +126,10 @@ public class UnitMovementPhase : InputGameplayPhase
 
         // What tile can we attack this unit from?
         // We want to pick the closest one to the target out of our possibilities, that is still in this units movement range
-        IEnumerable<Vector3Int> attackingRanges = WorldContextInstance.MapHolder.CanHitFrom(selectedUnit, mob.Position);
-        IEnumerable<Vector3Int> possibleMoves = WorldContextInstance.MapHolder.PotentialMoves(selectedUnit);
+        IEnumerable<MapCoordinates> attackingRanges = WorldContextInstance.MapHolder.CanHitFrom(selectedUnit, mob.Position);
+        IEnumerable<MapCoordinates> possibleMoves = WorldContextInstance.MapHolder.PotentialMoves(selectedUnit);
 
-        IEnumerable<Vector3Int> overlap = attackingRanges.Intersect(possibleMoves);
+        IEnumerable<MapCoordinates> overlap = attackingRanges.Intersect(possibleMoves);
 
         if (!overlap.Any())
         {
@@ -137,8 +137,8 @@ public class UnitMovementPhase : InputGameplayPhase
             return false;
         }
 
-        Vector3Int closestSpot = overlap.OrderBy(position => Mathf.Abs(position.x - mob.Position.x) + Mathf.Abs(position.y - mob.Position.y)
-                                                             + Mathf.Abs(position.x - selectedUnit.Position.x) + Mathf.Abs(position.y - selectedUnit.Position.y))
+        MapCoordinates closestSpot = overlap.OrderBy(position => Mathf.Abs(position.X - mob.Position.X) + Mathf.Abs(position.Y - mob.Position.Y)
+                                                             + Mathf.Abs(position.X - selectedUnit.Position.X) + Mathf.Abs(position.Y - selectedUnit.Position.Y))
                                         .First();
 
         // We're already there! No need to walk

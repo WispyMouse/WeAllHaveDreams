@@ -10,7 +10,7 @@ public class TileReplacementAction : MapEditorInput
     /// <summary>
     /// Position to apply the Tile.
     /// </summary>
-    public Vector3Int Position;
+    public MapCoordinates Position;
 
     /// <summary>
     /// Name of the Tile to add.
@@ -30,7 +30,7 @@ public class TileReplacementAction : MapEditorInput
     /// <param name="position">Position to apply to.</param>
     /// <param name="added">Name of the tile to add.</param>
     /// <param name="worldContextInstance">The current WorldContext. Used to determine previous contents.</param>
-    public TileReplacementAction(Vector3Int position, string added, WorldContext worldContextInstance)
+    public TileReplacementAction(MapCoordinates position, string added, WorldContext worldContextInstance)
     {
         Position = position;
         Added = added;
