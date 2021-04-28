@@ -1,60 +1,101 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MapEditorPalette : MonoBehaviour
 {
-    public PaletteButton PaletteButtonPF;
-    public Transform PaletteItemHolder;
+    public PaletteSettingsButton PaletteSettingsButtonPF;
+    public Transform PaletteSettingsItemHolder;
+
+    public PaletteOptionsButton PaletteOptionsButtonPF;
+    public Transform PaletteOptionsItemHolder;
 
     public ActivePalettePanel LeftActivePalette;
     public ActivePalettePanel RightActivePalette;
 
     public Text CurrentSelectedPaletteTabLabel;
-    public event EventHandler<string> PaletteTabChanged;
+    public event EventHandler<PaletteTab> PaletteTabChanged;
 
     public MapEditorRuntimeController MapEditorRuntimeControllerInstance;
 
-    List<PaletteButton> ActiveButtons { get; set; } = new List<PaletteButton>();
+    List<PaletteSettingsButton> ActiveSettingsButtons { get; set; } = new List<PaletteSettingsButton>();
+    List<PaletteOptionsButton> ActiveOptionsButtons { get; set; } = new List<PaletteOptionsButton>();
 
     private void Awake()
     {
         PaletteTabChanged += PaletteTabChangedEvent;
     }
 
-    // TODO: Make the settings a class that holds data, rather than passing in all the arguments perhaps
-    public void Open(string paletteTabName, IEnumerable<PaletteSettings> settings)
+    public void OpenTab(PaletteTab toOpen)
     {
-        foreach (PaletteButton curButton in ActiveButtons)
+        PaletteTabChanged.Invoke(this, toOpen);
+    }
+
+    void PaletteSettingsButtonClicked(PaletteSettings pressed)
+    {
+        MapEditorRuntimeControllerInstance.SetPalette(pressed);
+        LeftActivePalette.SetPalette(MapEditorRuntimeControllerInstance.LeftClickPaletteSettings);
+    }
+
+    void PaletteOptionsButtonClicked(PaletteOptions pressed)
+    {
+        DebugTextLog.AddTextToLog("This is where we would set that option.", DebugTextLogChannel.NotImplemented);
+    }
+
+    void PaletteTabChangedEvent(object sender, PaletteTab toOpen)
+    {
+        CurrentSelectedPaletteTabLabel.text = toOpen.TabName;
+
+        foreach (PaletteSettingsButton curButton in ActiveSettingsButtons)
         {
             Destroy(curButton.gameObject);
         }
 
-        ActiveButtons = new List<PaletteButton>();
+        ActiveSettingsButtons = new List<PaletteSettingsButton>();
 
-        foreach (PaletteSettings curSetting in settings)
+        if (!toOpen.Settings.Any())
         {
-            PaletteButton newButton = Instantiate(PaletteButtonPF, PaletteItemHolder);
-            newButton.SetTile(curSetting, PaletteButtonClicked);
-            ActiveButtons.Add(newButton);
+            PaletteOptionsItemHolder.gameObject.SetActive(false);
+        }
+        else
+        {
+            PaletteOptionsItemHolder.gameObject.SetActive(true);
+
+            foreach (PaletteSettings curSetting in toOpen.Settings)
+            {
+                PaletteSettingsButton newButton = Instantiate(PaletteSettingsButtonPF, PaletteSettingsItemHolder);
+                newButton.SetValues(curSetting, PaletteSettingsButtonClicked);
+                ActiveSettingsButtons.Add(newButton);
+            }
+        }
+
+        foreach (PaletteOptionsButton curButton in ActiveOptionsButtons)
+        {
+            Destroy(curButton.gameObject);
+        }
+
+        ActiveOptionsButtons = new List<PaletteOptionsButton>();
+
+        if (!toOpen.Options.Any())
+        {
+            PaletteOptionsItemHolder.gameObject.SetActive(false);
+        }
+        else
+        {
+            PaletteOptionsItemHolder.gameObject.SetActive(true);
+
+            foreach (PaletteOptions curOptions in toOpen.Options)
+            {
+                PaletteOptionsButton newButton = Instantiate(PaletteOptionsButtonPF, PaletteOptionsItemHolder);
+                newButton.SetValues(curOptions, PaletteOptionsButtonClicked);
+                ActiveOptionsButtons.Add(newButton);
+            }
         }
 
         LeftActivePalette.SetPalette(MapEditorRuntimeControllerInstance.LeftClickPaletteSettings);
         RightActivePalette.SetPalette(MapEditorRuntimeControllerInstance.RightClickPaletteSettings);
-
-        PaletteTabChanged.Invoke(this, paletteTabName);
-    }
-
-    void PaletteButtonClicked(PaletteButton button)
-    {
-        MapEditorRuntimeControllerInstance.SetPalette(button.RepresentedOption);
-        LeftActivePalette.SetPalette(MapEditorRuntimeControllerInstance.LeftClickPaletteSettings);
-    }
-
-    void PaletteTabChangedEvent(object sender, string name)
-    {
-        CurrentSelectedPaletteTabLabel.text = name;
     }
 }

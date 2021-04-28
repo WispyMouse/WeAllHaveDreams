@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PaletteButton : MonoBehaviour
+public class PaletteSettingsButton : MonoBehaviour
 {
     public Button ButtonBehavior;
     public Image ButtonImage;
@@ -11,7 +11,7 @@ public class PaletteButton : MonoBehaviour
 
     public PaletteSettings RepresentedOption;
 
-    public void SetTile(PaletteSettings settings, System.Action<PaletteButton> clickCallback)
+    public void SetValues(PaletteSettings settings, System.Action<PaletteSettings> clickCallback)
     {
         RepresentedOption = settings;
 
@@ -30,6 +30,7 @@ public class PaletteButton : MonoBehaviour
             ButtonText.gameObject.SetActive(true);
         }
 
-        ButtonBehavior.onClick.AddListener(() => clickCallback(this));
+        ButtonBehavior.onClick.RemoveAllListeners();
+        ButtonBehavior.onClick.AddListener(() => clickCallback(this.RepresentedOption));
     }
 }

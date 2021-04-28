@@ -10,7 +10,7 @@ using UnityEngine;
 public abstract class PaletteSettings
 {
     /// <summary>
-    /// Gets a Sprite that represents this PaletteSetting, to be displayed in <see cref="PaletteButton"/>.
+    /// Gets a Sprite that represents this PaletteSetting, to be displayed in <see cref="PaletteSettingsButton"/>.
     /// Can be null if there are no graphics that are appropriate.
     /// </summary>
     /// <returns>A Sprite to use on the Button for this.</returns>
@@ -20,7 +20,7 @@ public abstract class PaletteSettings
     }
 
     /// <summary>
-    /// Gets a text that represents this PaletteSetting, to be displayed in <see cref="PaletteButton"/>.
+    /// Gets a text that represents this PaletteSetting, to be displayed in <see cref="PaletteSettingsButton"/>.
     /// Should not be empty or null, as that can make it hard to identify things if there's no sprite for it.
     /// </summary>
     /// <returns>Text to use on the Button for this.</returns>
