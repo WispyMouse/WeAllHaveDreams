@@ -79,6 +79,11 @@ public class MapEditorRuntimeController : MonoBehaviour
     string currentMapName { get; set; }
 
     /// <summary>
+    /// Stores input information, such as where a drag motion started at.
+    /// </summary>
+    Dictionary<int, InputContext> currentInputContexts { get; set; } = new Dictionary<int, InputContext>();
+
+    /// <summary>
     /// An event fired whenever a Map is saved.
     /// This applies to both newly saved Realms and updated saving ones.
     /// </summary>
@@ -109,6 +114,9 @@ public class MapEditorRuntimeController : MonoBehaviour
 
         LeftClickPaletteSettings = new TilePlacementPalette(TileLibrary.GetTile("Floor"));
         RightClickPaletteSettings = new ClearTilePalette();
+
+        SelectedOptions = new PaletteOptionsCollection();
+        SelectedOptions.AddPaletteOption(new SingleClickTilePaintOption());
 
         MapEditorRibbonInstance.TilePaletteClicked();
 
@@ -224,10 +232,25 @@ public class MapEditorRuntimeController : MonoBehaviour
     /// <returns>True if input has been handled, False if nothing has been performed.</returns>
     private bool HandleClick()
     {
-        int? click = Input.GetMouseButtonDown(0) ? 0 : Input.GetMouseButtonDown(1) ? (int?)1 : null;
-        if (click.HasValue && !EventSystem.current.IsPointerOverGameObject())
+        bool handled = HandleMouseButton(0);
+        handled = handled || HandleMouseButton(1);
+        return handled;
+    }
+
+    private bool HandleMouseButton(int index)
+    {
+        // HACK: Should look this up based on index, rather than ternary operator
+        PaletteSettings consideredSettings = index == 0 ? LeftClickPaletteSettings : RightClickPaletteSettings;
+        MapCoordinates? worldpoint = LocationInput.GetHoveredTilePosition(false);
+
+        if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(index))
         {
-            MapCoordinates? worldpoint = LocationInput.GetHoveredTilePosition(false);
+            InputContext existingContext;
+            if (currentInputContexts.TryGetValue(index, out existingContext))
+            {
+                DebugTextLog.AddTextToLog("There was an existing input context on inital click, but there shouldn't be.", DebugTextLogChannel.MapEditorOperations);
+                return false;
+            }
 
             // We didn't click on a position, so do nothing
             if (!worldpoint.HasValue)
@@ -235,16 +258,56 @@ public class MapEditorRuntimeController : MonoBehaviour
                 return false;
             }
 
-            if (click == 0)
+            InputContext newContext = new InputContext(worldpoint.Value);
+            MapEditorInput consideredInput = consideredSettings.ApplyPalette(WorldContextInstance, worldpoint.Value);
+
+            OptionPaintApplication application = SelectedOptions.DetermineApplication(WorldContextInstance, consideredInput, newContext);
+
+            switch (application)
             {
-                ApplyTilePalette(worldpoint.Value, LeftClickPaletteSettings);
+                case OptionPaintApplication.Unmodified:
+                case OptionPaintApplication.Invoke:
+                    ApplyTilePalette(worldpoint.Value, consideredSettings, newContext);
+                    return true;
+                default:
+                    currentInputContexts.Add(index, newContext);
+                    break;
             }
-            else
+        }
+
+        if (Input.GetMouseButton(index))
+        {
+            // TODO: Do dragging stuff
+        }
+
+        if (Input.GetMouseButtonUp(index))
+        {
+            InputContext existingContext;
+            if (!currentInputContexts.TryGetValue(index, out existingContext))
             {
-                ApplyTilePalette(worldpoint.Value, RightClickPaletteSettings);
+                return false;
             }
 
-            return true;
+            currentInputContexts.Remove(index);
+
+            // We aren't somewhere we can determine, so we can't take any operations
+            if (!worldpoint.HasValue)
+            {
+                return false;
+            }
+
+            MapEditorInput consideredInput = consideredSettings.ApplyPalette(WorldContextInstance, worldpoint.Value);
+            existingContext.EndClick = worldpoint.Value;
+            OptionPaintApplication application = SelectedOptions.DetermineApplication(WorldContextInstance, consideredInput, existingContext);
+
+            switch (application)
+            {
+                case OptionPaintApplication.Invoke:
+                    ApplyTilePalette(worldpoint.Value, consideredSettings, existingContext);
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         return false;
@@ -315,7 +378,7 @@ public class MapEditorRuntimeController : MonoBehaviour
     /// </summary>
     /// <param name="worldPoint">Position to paint on.</param>
     /// <param name="toApply">The PaletteSettings to pull from. The <see cref="MapEditorInput"/> retried from <see cref="PaletteSettings.ApplyPalette(WorldContext, MapCoordinates)"/> will be used.</param>
-    void ApplyTilePalette(MapCoordinates worldPoint, PaletteSettings toApply)
+    void ApplyTilePalette(MapCoordinates worldPoint, PaletteSettings toApply, InputContext inputContext)
     {
         if (toApply == null)
         {
@@ -324,7 +387,7 @@ public class MapEditorRuntimeController : MonoBehaviour
         }
 
         MapEditorInput input = toApply.ApplyPalette(WorldContextInstance, worldPoint);
-        SelectedOptions.ApplyOptions(WorldContextInstance, input);
+        SelectedOptions.ApplyOptions(WorldContextInstance, input, inputContext);
 
         input.Invoke(WorldContextInstance);
 

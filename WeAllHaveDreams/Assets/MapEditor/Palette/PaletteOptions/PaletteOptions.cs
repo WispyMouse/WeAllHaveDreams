@@ -28,5 +28,18 @@ public abstract class PaletteOptions
         return RelevantPaletteSettings.Contains(toCheck.GetType());
     }
 
-    public abstract void Apply(WorldContext context, MapEditorInput toApply);
+    /// <summary>
+    /// Determines what kind of effect this PaletteOption would have on the Input.
+    /// This method can be used to determine if an operation should be taken.
+    /// </summary>
+    /// <param name="worldContextInstance">The current world context.</param>
+    /// <param name="toApply">The rule that would be applied to. This method does not modify the Input.</param>
+    /// <param name="inputContext">The input context for this consideration.</param>
+    /// <returns>An enum indicating what kind of effect this option would have.</returns>
+    public virtual OptionPaintApplication DetermineApplication(WorldContext worldContextInstance, MapEditorInput toApply, InputContext inputContext)
+    {
+        return OptionPaintApplication.Unmodified;
+    }
+
+    public abstract void Apply(WorldContext context, MapEditorInput toApply, InputContext inputContext);
 }

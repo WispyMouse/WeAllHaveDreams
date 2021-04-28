@@ -29,11 +29,36 @@ public class PaletteOptionsCollection
         selectedOptions.Add(toAdd);
     }
 
-    public void ApplyOptions(WorldContext context, MapEditorInput toApplyTo)
+    public OptionPaintApplication DetermineApplication(WorldContext worldContextInstance, MapEditorInput toApplyTo, InputContext inputContext)
     {
+        OptionPaintApplication application = OptionPaintApplication.Unmodified;
+
+        foreach (PaletteOptions option in selectedOptions.Where(option => option.AppliesToInput(toApplyTo)))
+        {
+            application = option.DetermineApplication(worldContextInstance, toApplyTo, inputContext);
+
+            if (application != OptionPaintApplication.Unmodified)
+            {
+                return application;
+            }
+        }
+
+        return application;
+    }
+
+    public void ApplyOptions(WorldContext worldContextInstance, MapEditorInput toApplyTo, InputContext inputContext)
+    {
+        OptionPaintApplication application = OptionPaintApplication.Unmodified;
+
         foreach (PaletteOptions curOption in selectedOptions.Where(option => option.AppliesToInput(toApplyTo)))
         {
-            curOption.Apply(context, toApplyTo);
+            application = curOption.DetermineApplication(worldContextInstance, toApplyTo, inputContext);
+
+            if (application == OptionPaintApplication.Invoke)
+            {
+                curOption.Apply(worldContextInstance, toApplyTo, inputContext);
+                break;
+            }
         }
     }
 

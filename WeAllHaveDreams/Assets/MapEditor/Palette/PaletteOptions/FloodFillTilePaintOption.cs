@@ -16,7 +16,12 @@ public class FloodFillTilePaintOption : PaletteOptions
     public override IEnumerable<string> ExclusiveTags => new string[] { PaletteOptionTags.TilePaintClickOperation };
     public override IEnumerable<Type> RelevantPaletteSettings => new Type[] { typeof(TileReplacementAction) };
 
-    public override void Apply(WorldContext worldContextInstance, MapEditorInput toApply)
+    public override OptionPaintApplication DetermineApplication(WorldContext worldContextInstance, MapEditorInput toApply, InputContext inputContext)
+    {
+        return OptionPaintApplication.Invoke;
+    }
+
+    public override void Apply(WorldContext worldContextInstance, MapEditorInput toApply, InputContext inputContext)
     {
         TileReplacementAction tileReplacement = toApply as TileReplacementAction;
         if (tileReplacement == null)
@@ -79,7 +84,7 @@ public class FloodFillTilePaintOption : PaletteOptions
 
             if (visitedCoordinates.Count > FloodMaxCrawl)
             {
-                DebugTextLog.AddTextToLog($"Flood fill operation cancelled: Exceeded limit of {FloodMaxCrawl} tiles");
+                DebugTextLog.AddTextToLog($"Flood fill operation cancelled: Exceeded limit of {FloodMaxCrawl} tiles.", DebugTextLogChannel.MapEditorOperations);
                 return;
             }
         }
