@@ -42,7 +42,12 @@ public class MapEditorPalette : MonoBehaviour
 
     void PaletteOptionsButtonClicked(PaletteOptions pressed)
     {
-        DebugTextLog.AddTextToLog("This is where we would set that option.", DebugTextLogChannel.NotImplemented);
+        MapEditorRuntimeControllerInstance.SelectedOptions.AddPaletteOption(pressed);
+
+        foreach (PaletteOptionsButton button in ActiveOptionsButtons)
+        {
+            button.SelectedOptionsUpdate(MapEditorRuntimeControllerInstance.SelectedOptions);
+        }
     }
 
     void PaletteTabChangedEvent(object sender, PaletteTab toOpen)
@@ -90,7 +95,7 @@ public class MapEditorPalette : MonoBehaviour
             foreach (PaletteOptions curOptions in toOpen.Options)
             {
                 PaletteOptionsButton newButton = Instantiate(PaletteOptionsButtonPF, PaletteOptionsItemHolder);
-                newButton.SetValues(curOptions, PaletteOptionsButtonClicked);
+                newButton.SetValues(curOptions, MapEditorRuntimeControllerInstance.SelectedOptions, PaletteOptionsButtonClicked);
                 ActiveOptionsButtons.Add(newButton);
             }
         }

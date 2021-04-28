@@ -11,15 +11,32 @@ public class PaletteOptionsButton : MonoBehaviour
 
     PaletteOptions RepresentedOptions { get; set; }
 
-    public void SetValues(PaletteOptions options, System.Action<PaletteOptions> clickCallback)
+    public void SetValues(PaletteOptions options, PaletteOptionsCollection selectedOptions, System.Action<PaletteOptions> clickCallback)
     {
         RepresentedOptions = options;
 
         ButtonImage.gameObject.SetActive(false);
         ButtonText.gameObject.SetActive(true);
-        ButtonText.text = RepresentedOptions.OptionsName;
+        UpdateSelectedState(selectedOptions.Contains(RepresentedOptions));
 
         ButtonBehavior.onClick.RemoveAllListeners();
         ButtonBehavior.onClick.AddListener(() => clickCallback(RepresentedOptions));
+    }
+
+    public void SelectedOptionsUpdate(PaletteOptionsCollection newCollection)
+    {
+        UpdateSelectedState(newCollection.Contains(RepresentedOptions));
+    }
+
+    void UpdateSelectedState(bool selected)
+    {
+        if (selected)
+        {
+            ButtonText.text = $"*{RepresentedOptions.OptionsName}*";
+        }
+        else
+        {
+            ButtonText.text = RepresentedOptions.OptionsName;
+        }
     }
 }

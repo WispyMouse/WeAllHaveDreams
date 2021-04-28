@@ -77,7 +77,13 @@ public class MapEditorRibbon : MonoBehaviour
             tileSettings.Add(new TilePlacementPalette(curTile));
         }
 
-        MapEditorPaletteInstance.OpenTab(new PaletteTab("Tiles", tileSettings));
+        List<PaletteOptions> paletteOptions = new List<PaletteOptions>()
+        {
+            new SingleClickTilePaintOption(),
+            new FloodFillTilePaintOption()
+        };
+
+        MapEditorPaletteInstance.OpenTab(new PaletteTab("Tiles", tileSettings, paletteOptions));
     }
 
     public void StructurePaletteClicked()

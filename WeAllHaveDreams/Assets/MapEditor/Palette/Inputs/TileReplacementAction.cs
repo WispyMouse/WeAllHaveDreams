@@ -8,9 +8,9 @@ using UnityEngine;
 public class TileReplacementAction : MapEditorInput
 {
     /// <summary>
-    /// Position to apply the Tile.
+    /// Positions to paint on.
     /// </summary>
-    public MapCoordinates Position;
+    public HashSet<MapCoordinates> Positions;
 
     /// <summary>
     /// Name of the Tile to add.
@@ -19,10 +19,10 @@ public class TileReplacementAction : MapEditorInput
     public string Added;
 
     /// <summary>
-    /// Name of the Tile that was previously on <see cref="Position"/>.
-    /// May be null if there was no tile present.
+    /// A lookup table of previously coordinates, and what tile was previously there.
+    /// The keys of this should only contain values in <see cref="Positions"/>. Not every value in Positions will be in Removed if the tile was empty before.
     /// </summary>
-    public string Removed;
+    public Dictionary<MapCoordinates, string> Removed;
 
     /// <summary>
     /// Creates a new TileReplacementAction.
@@ -32,21 +32,53 @@ public class TileReplacementAction : MapEditorInput
     /// <param name="worldContextInstance">The current WorldContext. Used to determine previous contents.</param>
     public TileReplacementAction(MapCoordinates position, string added, WorldContext worldContextInstance)
     {
-        Position = position;
+        Positions = new HashSet<MapCoordinates>() { position };
         Added = added;
 
-        Removed = worldContextInstance.MapHolder.GetGameplayTile(position)?.TileName;
+        Removed = GetRemovedTiles(worldContextInstance);
+    }
+
+    public Dictionary<MapCoordinates, string> GetRemovedTiles(WorldContext worldContextInstance)
+    {
+        Dictionary<MapCoordinates, string> removed = new Dictionary<MapCoordinates, string>();
+
+        foreach (MapCoordinates coordinate in Positions)
+        {
+            GameplayTile tile = worldContextInstance.MapHolder.GetGameplayTile(coordinate);
+
+            if (tile != null)
+            {
+                removed.Add(coordinate, tile.TileName);
+            }
+        }
+
+        return removed;
     }
 
     /// <inheritdoc />
     public override void Invoke(WorldContext worldContextInstance)
     {
-        worldContextInstance.MapHolder.SetTile(Position, TileLibrary.GetTile(Added));
+        GameplayTile tilePf = TileLibrary.GetTile(Added);
+
+        foreach (MapCoordinates coordinate in Positions)
+        {
+            worldContextInstance.MapHolder.SetTile(coordinate, tilePf);
+        }
     }
 
     /// <inheritdoc />
     public override void Undo(WorldContext worldContextInstance)
     {
-        worldContextInstance.MapHolder.SetTile(Position, TileLibrary.GetTile(Removed));
+        foreach (MapCoordinates coordinate in Positions)
+        {
+            if (Removed.ContainsKey(coordinate))
+            {
+                worldContextInstance.MapHolder.SetTile(coordinate, TileLibrary.GetTile(Removed[coordinate]));
+            }
+            else
+            {
+                worldContextInstance.MapHolder.SetTile(coordinate, null);
+            }
+        }
     }
 }

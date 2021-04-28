@@ -20,4 +20,15 @@ public abstract class MapEditorInput
     /// </summary>
     /// <param name="worldContextInstance">The current WorldContext.</param>
     public abstract void Undo(WorldContext worldContextInstance);
+
+    /// <summary>
+    /// Applies the provided PaletteOptionsCollection to this Input.
+    /// Expected to be run once, after the constructor. The Input should be able to process without this running, though.
+    /// </summary>
+    /// <param name="worldContextInstance">The current WorldContext.</param>
+    /// <param name="toApply">The Options to apply.</param>
+    public virtual void ApplyOptions(WorldContext worldContextInstance, PaletteOptionsCollection toApply)
+    {
+        toApply.ApplyOptions(worldContextInstance, this);
+    }
 }

@@ -37,6 +37,12 @@ public class MapEditorRuntimeController : MonoBehaviour
     public LoadMapDialog LoadMapDialogInstance;
 
     /// <summary>
+    /// The current collection of options.
+    /// These can modify PaletteSettings when applied.
+    /// </summary>
+    public PaletteOptionsCollection SelectedOptions { get; set; } = new PaletteOptionsCollection();
+
+    /// <summary>
     /// The active setting for Left Click.
     /// When you left click, the <see cref="PaletteSettings.ApplyPalette(WorldContext, MapCoordinates)"/> of this setting is applied.
     /// </summary>
@@ -318,6 +324,8 @@ public class MapEditorRuntimeController : MonoBehaviour
         }
 
         MapEditorInput input = toApply.ApplyPalette(WorldContextInstance, worldPoint);
+        SelectedOptions.ApplyOptions(WorldContextInstance, input);
+
         input.Invoke(WorldContextInstance);
 
         if (historyPointer.HasValue)
