@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MapEditorPalette : MonoBehaviour
 {
@@ -10,11 +12,20 @@ public class MapEditorPalette : MonoBehaviour
     public ActivePalettePanel LeftActivePalette;
     public ActivePalettePanel RightActivePalette;
 
+    public Text CurrentSelectedPaletteTabLabel;
+    public event EventHandler<string> PaletteTabChanged;
+
     public MapEditorRuntimeController MapEditorRuntimeControllerInstance;
 
     List<PaletteButton> ActiveButtons { get; set; } = new List<PaletteButton>();
 
-    public void Open(IEnumerable<PaletteSettings> settings)
+    private void Awake()
+    {
+        PaletteTabChanged += PaletteTabChangedEvent;
+    }
+
+    // TODO: Make the settings a class that holds data, rather than passing in all the arguments perhaps
+    public void Open(string paletteTabName, IEnumerable<PaletteSettings> settings)
     {
         foreach (PaletteButton curButton in ActiveButtons)
         {
@@ -32,11 +43,18 @@ public class MapEditorPalette : MonoBehaviour
 
         LeftActivePalette.SetPalette(MapEditorRuntimeControllerInstance.LeftClickPaletteSettings);
         RightActivePalette.SetPalette(MapEditorRuntimeControllerInstance.RightClickPaletteSettings);
+
+        PaletteTabChanged.Invoke(this, paletteTabName);
     }
 
     void PaletteButtonClicked(PaletteButton button)
     {
         MapEditorRuntimeControllerInstance.SetPalette(button.RepresentedOption);
         LeftActivePalette.SetPalette(MapEditorRuntimeControllerInstance.LeftClickPaletteSettings);
+    }
+
+    void PaletteTabChangedEvent(object sender, string name)
+    {
+        CurrentSelectedPaletteTabLabel.text = name;
     }
 }

@@ -77,7 +77,7 @@ public class MapEditorRibbon : MonoBehaviour
             tileSettings.Add(new TilePlacementPalette(curTile));
         }
 
-        MapEditorPaletteInstance.Open(tileSettings);
+        MapEditorPaletteInstance.Open("Tiles", tileSettings);
     }
 
     public void StructurePaletteClicked()
@@ -89,7 +89,7 @@ public class MapEditorRibbon : MonoBehaviour
             structureSettings.Add(new StructurePlacementPalette(structure));
         }
 
-        MapEditorPaletteInstance.Open(structureSettings);
+        MapEditorPaletteInstance.Open("Structures", structureSettings);
     }
 
     public void FeaturePaletteClicked()
@@ -101,7 +101,7 @@ public class MapEditorRibbon : MonoBehaviour
             featureSettings.Add(new FeaturePlacementPalette(feature));
         }
 
-        MapEditorPaletteInstance.Open(featureSettings);
+        MapEditorPaletteInstance.Open("Features", featureSettings);
     }
 
     public void OwnershipPaletteClicked()
@@ -115,7 +115,7 @@ public class MapEditorRibbon : MonoBehaviour
             ownershipSettings.Add(new OwnershipPalette(ii));
         }
 
-        MapEditorPaletteInstance.Open(ownershipSettings);
+        MapEditorPaletteInstance.Open("Faction", ownershipSettings);
     }
 
     public void MobPaletteClicked()
@@ -127,7 +127,7 @@ public class MapEditorRibbon : MonoBehaviour
             mobSettings.Add(new MobPalette(config));
         }
 
-        MapEditorPaletteInstance.Open(mobSettings);
+        MapEditorPaletteInstance.Open("Mobs", mobSettings);
     }
 
     public void LoadMapButtonClicked()
