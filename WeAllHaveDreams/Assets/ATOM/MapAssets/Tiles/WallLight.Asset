@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4763ef2a47105d34c9a40c810c980ce2, type: 3}
+  m_Name: WallLight
+  m_EditorClassIdentifier: 
+  m_Sprite: {fileID: -711703531216390378, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Transform:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  m_InstancedGameObject: {fileID: 0}
+  m_Flags: 1
+  m_ColliderType: 1
+  CompletelySolid: 1
+  TileName: Wall_Light
+  SpriteSettings:
+  - SameNeighborDirections: 00000000010000000200000003000000
+    SpriteToUse: {fileID: -711703531216390378, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 0000000001000000
+    SpriteToUse: {fileID: -147829496501222605, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 0000000003000000
+    SpriteToUse: {fileID: -8755713731154033368, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 0200000001000000
+    SpriteToUse: {fileID: -6184459249557712608, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 0200000003000000
+    SpriteToUse: {fileID: -1940689843836485284, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 000000000300000001000000
+    SpriteToUse: {fileID: -3107117035037955237, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 020000000300000001000000
+    SpriteToUse: {fileID: -1169877562226253705, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 000000000300000002000000
+    SpriteToUse: {fileID: 5632762443465073877, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  - SameNeighborDirections: 000000000100000002000000
+    SpriteToUse: {fileID: -8414381884186102492, guid: 12dafe7877249cb43956397946a05682, type: 3}
+  DefaultSprite: {fileID: -711703531216390378, guid: 12dafe7877249cb43956397946a05682, type: 3}

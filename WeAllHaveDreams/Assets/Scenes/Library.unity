@@ -172,6 +172,9 @@ MonoBehaviour:
   Tiles:
   - {fileID: 11400000, guid: 4eac625df3f5f80499f928a1025c19c8, type: 2}
   - {fileID: 11400000, guid: b42ca993e29664a41a00bb47008883d9, type: 2}
+  - {fileID: 11400000, guid: fa1756955cc18f74aa39d0be8d677010, type: 2}
+  - {fileID: 11400000, guid: 4b06e762991a7c3498ea5685c09083fd, type: 2}
+  - {fileID: 11400000, guid: 78b60d99348cd654eb461a319bbc3cb4, type: 2}
   DefaultTile: {fileID: 11400000, guid: b42ca993e29664a41a00bb47008883d9, type: 2}
 --- !u!114 &1120445402
 MonoBehaviour:
