@@ -38,7 +38,16 @@ public class AIInputPhaseController : MonoBehaviour
 
             UnitTurnPlan bestPlan = possiblePlans.OrderByDescending(plan => plan.Score).First();
             DebugTextLog.AddTextToLog($"AI Plan: {bestPlan.DeterminedInput.LongTitle}, score {bestPlan.Score}");
-            yield return bestPlan.DeterminedInput.Execute(WorldContextInstance, GameplayAnimationInstance);
+
+            if (!bestPlan.DeterminedInput.IsPossible(WorldContextInstance))
+            {
+                DebugTextLog.AddTextToLog($"AI Plan is not possible to perform. Exhausting next available unit and moving on.", DebugTextLogChannel.AILogging);
+                yield return new DoesNothingPlayerInput(remainingActors.First()).Execute(WorldContextInstance, GameplayAnimationInstance);
+            }
+            else
+            {
+                yield return bestPlan.DeterminedInput.Execute(WorldContextInstance, GameplayAnimationInstance);
+            }
         }
 
         foreach (MapStructure curStructure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => structure.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex))
@@ -52,7 +61,15 @@ public class AIInputPhaseController : MonoBehaviour
                 if (possibleInputs.Any())
                 {
                     PlayerInput randomInput = possibleInputs.ToList()[Random.Range(0, possibleInputs.Count())];
-                    yield return randomInput.Execute(WorldContextInstance, GameplayAnimationInstance);
+
+                    if (!randomInput.IsPossible(WorldContextInstance))
+                    {
+                        DebugTextLog.AddTextToLog($"AI Plan is not possible to perform. Skipping this structure.", DebugTextLogChannel.AILogging);
+                    }
+                    else
+                    {
+                        yield return randomInput.Execute(WorldContextInstance, GameplayAnimationInstance);
+                    }
                 }
             }
         }

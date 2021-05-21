@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Phase for using an ability of a unit.
+/// </summary>
 public class UseAbilityPhase : InputGameplayPhase
 {
     public NeutralPhase NeutralPhaseInstance;

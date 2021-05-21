@@ -190,12 +190,12 @@ public class UnitMovementPhase : InputGameplayPhase
             return true;
         }
 
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) && selectedUnit.CanCapture)
         {
             MapStructure onStructure;
             if ((onStructure = WorldContextInstance.StructureHolder.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
             {
-                nextPhase = InputResolutionPhaseInstance.ResolveThis(new MobCapturesStructurePlayerInput(selectedUnit, onStructure), this);
+                nextPhase = InputResolutionPhaseInstance.ResolveThis(new MobCapturesStructurePlayerInput(selectedUnit, onStructure), NeutralPhaseInstance);
                 return true;
             }
         }

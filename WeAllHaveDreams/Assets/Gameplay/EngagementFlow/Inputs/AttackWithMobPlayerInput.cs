@@ -26,20 +26,8 @@ public class AttackWithMobInput : PlayerInput
 
     public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {
-        if (!Attacking.CanAttack)
-        {
-            DebugTextLog.AddTextToLog("A unit tried to attack, but cannot attack");
-            yield break;
-        }
-
         if (MoveTo.HasValue && MoveTo.Value != Attacking.Position)
         {
-            if (!Attacking.CanMove)
-            {
-                DebugTextLog.AddTextToLog("A unit tried to move and attack, but cannot move");
-                yield break;
-            }
-
             yield return animationHolder.MoveUnit(Attacking, MoveTo.Value);
             Attacking.CanMove = false;
         }
@@ -49,5 +37,20 @@ public class AttackWithMobInput : PlayerInput
         Attacking.CanAttack = false;
 
         yield return TurnManager.ResolveEffects();
+    }
+
+    public override bool IsPossible(WorldContext givenContext)
+    {
+        if (!Attacking.CanAttack)
+        {
+            return false;
+        }
+
+        if (MoveTo.HasValue && MoveTo.Value != Attacking.Position)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

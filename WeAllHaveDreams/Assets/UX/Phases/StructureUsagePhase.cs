@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// Phase for using the services of a structure.
+/// Phase for using the abilities of a structure.
 /// </summary>
 public class StructureUsagePhase : InputGameplayPhase
 {

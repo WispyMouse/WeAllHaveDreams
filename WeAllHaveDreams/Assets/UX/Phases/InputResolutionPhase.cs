@@ -22,6 +22,15 @@ public class InputResolutionPhase : InputGameplayPhase
     public override IEnumerator EnterPhase()
     {
         actionResolved = false;
+
+        if (!resolving.IsPossible(WorldContextInstance))
+        {
+            DebugTextLog.AddTextToLog("Move is not possible to execute. Canceling action.", DebugTextLogChannel.RuntimeError);
+
+            actionResolved = true;
+            yield break;
+        }
+
         yield return resolving.Execute(WorldContextInstance, GameplayAnimationInstance);
         actionResolved = true;
     }
