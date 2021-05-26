@@ -122,8 +122,10 @@ public class MapMob : MapObject
 
     public void RefreshForStartOfTurn()
     {
-        CanMove = true;
-        CanAttack = true;
+        bool refresh = TurnManager.CurrentPlayer.PlayerSideIndex == PlayerSideIndex;
+
+        CanMove = refresh;
+        CanAttack = refresh;
         MobUpdated.Invoke(this);
     }
 

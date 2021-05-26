@@ -52,7 +52,7 @@ public class TurnManager : SingletonBase<TurnManager>
             CurrentPlayer.TotalResources += structure.ContributedResourcesPerTurn;
         }
 
-        foreach (MapMob curMob in WorldContextInstance.MobHolder.MobsOnTeam(CurrentPlayer.PlayerSideIndex))
+        foreach (MapMob curMob in WorldContextInstance.MobHolder.ActiveMobs)
         {
             curMob.RefreshForStartOfTurn();
         }
