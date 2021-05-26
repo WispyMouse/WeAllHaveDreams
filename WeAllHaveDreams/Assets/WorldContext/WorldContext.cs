@@ -87,7 +87,14 @@ public class WorldContext : SingletonBase<WorldContext>
         MapMob mob;
         if (mob = MobHolder.MobOnPoint(position))
         {
-            mob.SetOwnership(value.Value);
+            if (!value.HasValue)
+            {
+                DebugTextLog.AddTextToLog("Tried to set Mob ownership to null. Mobs cannot be unowned.", DebugTextLogChannel.RuntimeError);
+            }
+            else
+            {
+                mob.SetOwnership(value.Value);
+            }
         }
     }
 }
