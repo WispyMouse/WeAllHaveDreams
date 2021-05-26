@@ -79,6 +79,12 @@ public class MapEditorRuntimeController : MonoBehaviour
     string currentMapName { get; set; }
 
     /// <summary>
+    /// Stores what context was previously invoked.
+    /// This is so that ContinueInvoke knows when not to add to the undo history.
+    /// </summary>
+    MapEditorInput lastProcessedInput { get; set; }
+
+    /// <summary>
     /// Stores input information, such as where a drag motion started at.
     /// </summary>
     Dictionary<int, InputContext> currentInputContexts { get; set; } = new Dictionary<int, InputContext>();
@@ -267,7 +273,12 @@ public class MapEditorRuntimeController : MonoBehaviour
             {
                 case OptionPaintApplication.Unmodified:
                 case OptionPaintApplication.Invoke:
-                    ApplyTilePalette(worldpoint.Value, consideredSettings, newContext);
+                case OptionPaintApplication.FinishInvoke:
+                    ApplyTilePalette(worldpoint.Value, consideredSettings, newContext, application);
+                    return true;
+                case OptionPaintApplication.ContinueInvoke:
+                    currentInputContexts.Add(index, newContext);
+                    ApplyTilePalette(worldpoint.Value, consideredSettings, newContext, application);
                     return true;
                 default:
                     currentInputContexts.Add(index, newContext);
@@ -277,7 +288,36 @@ public class MapEditorRuntimeController : MonoBehaviour
 
         if (Input.GetMouseButton(index))
         {
-            // TODO: Do dragging stuff
+            InputContext existingContext;
+            if (!currentInputContexts.TryGetValue(index, out existingContext))
+            {
+                return false;
+            }
+
+            // We haven't actually moved the cursor, so don't consider invoking
+            if (existingContext.CurrentPosition == worldpoint.Value)
+            {
+                return false;
+            }
+
+            existingContext.CurrentPosition = worldpoint.Value;
+            MapEditorInput consideredInput = consideredSettings.ApplyPalette(WorldContextInstance, worldpoint.Value);
+            OptionPaintApplication application = SelectedOptions.DetermineApplication(WorldContextInstance, consideredInput, existingContext);
+
+            switch (application)
+            {
+                case OptionPaintApplication.Invoke:
+                case OptionPaintApplication.FinishInvoke:
+                    existingContext.EndClick = worldpoint.Value;
+                    currentInputContexts.Remove(index);
+                    ApplyTilePalette(worldpoint.Value, consideredSettings, existingContext, application);
+                    return true;
+                case OptionPaintApplication.ContinueInvoke:
+                    ApplyTilePalette(worldpoint.Value, consideredSettings, existingContext, application);
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         if (Input.GetMouseButtonUp(index))
@@ -296,14 +336,15 @@ public class MapEditorRuntimeController : MonoBehaviour
                 return false;
             }
 
-            MapEditorInput consideredInput = consideredSettings.ApplyPalette(WorldContextInstance, worldpoint.Value);
             existingContext.EndClick = worldpoint.Value;
+            MapEditorInput consideredInput = consideredSettings.ApplyPalette(WorldContextInstance, worldpoint.Value);
             OptionPaintApplication application = SelectedOptions.DetermineApplication(WorldContextInstance, consideredInput, existingContext);
 
             switch (application)
             {
+                case OptionPaintApplication.FinishInvoke:
                 case OptionPaintApplication.Invoke:
-                    ApplyTilePalette(worldpoint.Value, consideredSettings, existingContext);
+                    ApplyTilePalette(worldpoint.Value, consideredSettings, existingContext, application);
                     return true;
                 default:
                     return false;
@@ -378,7 +419,7 @@ public class MapEditorRuntimeController : MonoBehaviour
     /// </summary>
     /// <param name="worldPoint">Position to paint on.</param>
     /// <param name="toApply">The PaletteSettings to pull from. The <see cref="MapEditorInput"/> retried from <see cref="PaletteSettings.ApplyPalette(WorldContext, MapCoordinates)"/> will be used.</param>
-    void ApplyTilePalette(MapCoordinates worldPoint, PaletteSettings toApply, InputContext inputContext)
+    void ApplyTilePalette(MapCoordinates worldPoint, PaletteSettings toApply, InputContext inputContext, OptionPaintApplication invokeContext)
     {
         if (toApply == null)
         {
@@ -386,10 +427,26 @@ public class MapEditorRuntimeController : MonoBehaviour
             return;
         }
 
-        MapEditorInput input = toApply.ApplyPalette(WorldContextInstance, worldPoint);
-        SelectedOptions.ApplyOptions(WorldContextInstance, input, inputContext);
+        // If we're meant to continue the previous invoke, and there isn't a context, set it and flag that we've set it
+        bool setContext = false;
+        MapEditorInput toInvoke;
 
-        input.Invoke(WorldContextInstance);
+        if (invokeContext == OptionPaintApplication.ContinueInvoke && lastProcessedInput != null)
+        {
+            toInvoke = lastProcessedInput;
+        }
+        else if (invokeContext == OptionPaintApplication.FinishInvoke && lastProcessedInput != null)
+        {
+            toInvoke = lastProcessedInput;
+        }
+        else
+        {
+            toInvoke = toApply.ApplyPalette(WorldContextInstance, worldPoint);
+            setContext = true;
+        }
+
+        SelectedOptions.ApplyOptions(WorldContextInstance, toInvoke, inputContext);
+        toInvoke.Invoke(WorldContextInstance);
 
         if (historyPointer.HasValue)
         {
@@ -403,8 +460,21 @@ public class MapEditorRuntimeController : MonoBehaviour
             }
         }
 
-        ActionHistory.Add(input);
+        if (setContext)
+        {
+            ActionHistory.Add(toInvoke);
+        }
+
         historyPointer = null;
         MapEditorRibbonInstance.MapMarkedAsDirty();
+
+        if (invokeContext == OptionPaintApplication.ContinueInvoke)
+        {
+            lastProcessedInput = toInvoke;
+        }
+        else
+        {
+            lastProcessedInput = null;
+        }
     }
 }

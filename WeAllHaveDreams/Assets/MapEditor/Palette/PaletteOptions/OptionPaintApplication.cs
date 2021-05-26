@@ -23,5 +23,17 @@ public enum OptionPaintApplication
     /// <summary>
     /// Indicates that given this context, the input should be invoked.
     /// </summary>
-    Invoke
+    Invoke,
+
+    /// <summary>
+    /// Indicates that given this context, the input should be invoked.
+    /// However, it shouldn't pop this command off the stack. This is used to preserve undo, so that all of an action can be undone.
+    /// </summary>
+    ContinueInvoke,
+
+    /// <summary>
+    /// Indicates that given this context, the input should be invoked.
+    /// It flags that this is the end of a continuous invoke.
+    /// </summary>
+    FinishInvoke
 }

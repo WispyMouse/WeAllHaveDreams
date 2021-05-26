@@ -80,6 +80,7 @@ public class MapEditorRibbon : MonoBehaviour
         List<PaletteOptions> paletteOptions = new List<PaletteOptions>()
         {
             new SingleClickTilePaintOption(),
+            new DragTilePaintOption(),
             new FloodFillTilePaintOption(),
             new AreaDragTilePaintOption()
         };

@@ -54,7 +54,7 @@ public class PaletteOptionsCollection
         {
             application = curOption.DetermineApplication(worldContextInstance, toApplyTo, inputContext);
 
-            if (application == OptionPaintApplication.Invoke)
+            if (application == OptionPaintApplication.Invoke || application == OptionPaintApplication.ContinueInvoke || application == OptionPaintApplication.FinishInvoke)
             {
                 curOption.Apply(worldContextInstance, toApplyTo, inputContext);
                 break;
