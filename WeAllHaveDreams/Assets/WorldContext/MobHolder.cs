@@ -89,7 +89,6 @@ public class MobHolder : MonoBehaviour
         MapMob newMob = Instantiate(prefab, MobParent);
         newMob.LoadFromConfiguration(prefab.Configuration);
         newMob.SetPosition(location);
-        newMob.SetUnitVisuals();
         newMob.ExhaustAllOptions();
         newMob.gameObject.SetActive(true);
         ActiveMobs.Add(newMob);

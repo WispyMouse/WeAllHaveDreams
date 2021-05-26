@@ -40,8 +40,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3350195962439650154}
   - component: {fileID: 4605866297119515865}
+  - component: {fileID: 1399221609628525569}
   m_Layer: 0
-  m_Name: SimpleMob
+  m_Name: MobBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,9 +78,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerSideIndex: 0
-  RemindersParent: {fileID: 5151275434833661130}
-  ResourceCost: 100
-  AttackRange: 1
+  MobUpdated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1399221609628525569}
+        m_TargetAssemblyTypeName: MobVisuals, Assembly-CSharp
+        m_MethodName: OnMobUpdated
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 4605866297119515865}
+          m_ObjectArgumentAssemblyTypeName: MapMob, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1399221609628525569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3350195962439650155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a2ee1316b17e7641a3041baf1cecb97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Renderer: {fileID: 3350195962574322294}
+  DefaultColor: {r: 1, g: 1, b: 1, a: 1}
+  ExhaustedColor: {r: 0.6320754, g: 0.6320754, b: 0.6320754, a: 1}
   HitPointsVisual: {fileID: 3012367762252515145}
   HitPointsNumerics:
   - {fileID: -1439962401544170818, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
@@ -93,10 +121,7 @@ MonoBehaviour:
   - {fileID: -4412911677491635961, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   - {fileID: -4217592887472625829, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   - {fileID: -6629531029891648246, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
-  Renderer: {fileID: 3350195962574322294}
-  SideSprites:
-  - {fileID: 4874137132420122426, guid: a0a088b2f9edf3146b85f3dbc839cef8, type: 3}
-  - {fileID: -488143866049295664, guid: a0a088b2f9edf3146b85f3dbc839cef8, type: 3}
+  RemindersParent: {fileID: 5151275434833661130}
 --- !u!1 &3350195962574322288
 GameObject:
   m_ObjectHideFlags: 0

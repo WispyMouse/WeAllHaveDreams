@@ -16,7 +16,7 @@ public class MobLibrary : SingletonBase<MobLibrary>
     public Sprite[] RangedMobSprite;
     public Sprite[] EngineerMobSprite;
 
-    public async static Task LoadMobsFromConfiguration()
+    public static IEnumerator LoadMobsFromConfiguration()
     {
         DebugTextLog.AddTextToLog("Loading mobs from configuration.", DebugTextLogChannel.DebugLogging);
 
@@ -32,6 +32,7 @@ public class MobLibrary : SingletonBase<MobLibrary>
 
         DebugTextLog.AddTextToLog($"Loaded {Singleton.MobConfigurations.Count()} mobs.", DebugTextLogChannel.DebugLogging);
         DebugTextLog.AddTextToLog($"Loaded mobs: {string.Join(", ", Singleton.MobConfigurations.Select(mob => mob.Name))}", DebugTextLogChannel.Verbose);
+        yield break;
     }
 
     public static MapMob GetMob(string mobName)
