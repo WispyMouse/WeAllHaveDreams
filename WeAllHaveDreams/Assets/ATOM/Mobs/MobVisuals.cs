@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Configuration;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -31,6 +32,16 @@ public class MobVisuals : MonoBehaviour
     public float ReminderHorizontalSpacing { get; set; } = .35f;
 
     Dictionary<string, Reminder> Reminders { get; set; } = new Dictionary<string, Reminder>();
+
+    private void Start()
+    {
+        MobVisualsConfiguration config = ConfigurationLoadingEntrypoint.GetConfigurationData<MobVisualsConfiguration>().FirstOrDefault();
+        if (config != null)
+        {
+            ColorUtility.TryParseHtmlString(config.DefaultColor, out DefaultColor);
+            ColorUtility.TryParseHtmlString(config.ExhaustedColor, out ExhaustedColor);
+        }
+    }
 
     public void OnMobUpdated(MapMob toDisplay)
     {
