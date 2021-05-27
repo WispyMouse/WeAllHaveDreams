@@ -92,7 +92,7 @@ public class MapEditorRibbon : MonoBehaviour
     {
         List<PaletteSettings> structureSettings = new List<PaletteSettings>();
 
-        foreach (MapStructure structure in StructureLibrary.GetAllStructures())
+        foreach (StructureConfiguration structure in StructureLibrary.GetAllStructures())
         {
             structureSettings.Add(new StructurePlacementPalette(structure));
         }

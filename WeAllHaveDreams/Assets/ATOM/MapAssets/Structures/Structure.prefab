@@ -173,9 +173,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1730766962215249336}
-  - component: {fileID: 4941115558927489737}
+  - component: {fileID: -5583614895596195739}
+  - component: {fileID: -929444283655139676}
   m_Layer: 0
-  m_Name: Base
+  m_Name: Structure
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -197,7 +198,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4941115558927489737
+--- !u!114 &-5583614895596195739
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -206,16 +207,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1730766962215249337}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0523986c60cb8804eb79bd2234c107f8, type: 3}
+  m_Script: {fileID: 11500000, guid: bb42431cf42feeb4192a8884cd9f4ed6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Renderer: {fileID: 1730766960836441972}
   SideSprites:
-  - {fileID: 8416898281017630943, guid: 34e46206aae16b548bfd165cd47852f9, type: 3}
   - {fileID: 3934902697012066516, guid: 34e46206aae16b548bfd165cd47852f9, type: 3}
+  - {fileID: 8416898281017630943, guid: 34e46206aae16b548bfd165cd47852f9, type: 3}
   UnclaimedSprite: {fileID: 8299319516169970853, guid: 34e46206aae16b548bfd165cd47852f9, type: 3}
-  ContributedResourcesPerTurn: 20
-  CaptureImportance: 1
   CapturePointsVisual: {fileID: 1730766961185032154}
   CapturePointsNumerics:
   - {fileID: -1439962401544170818, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
@@ -239,4 +238,32 @@ MonoBehaviour:
   - {fileID: -3215136061973271139, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   - {fileID: -1366181965666896206, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
   - {fileID: 8060736529220523392, guid: 377142da726aaed4fb8d3d04faaab785, type: 3}
-  StructureName: Base
+--- !u!114 &-929444283655139676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730766962215249337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9bf692392b279049a25f0d44fc7c6c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ContributedResourcesPerTurn: 50
+  CaptureImportance: 10
+  StructureUpdated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -5583614895596195739}
+        m_TargetAssemblyTypeName: StructureVisuals, Assembly-CSharp
+        m_MethodName: OnStructureUpdated
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: -929444283655139676}
+          m_ObjectArgumentAssemblyTypeName: MapStructure, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

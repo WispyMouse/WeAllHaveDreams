@@ -188,11 +188,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfd0282abfd457e41be9f6e1f408ba2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Structures:
-  - {fileID: 4941115558927489737, guid: e6e779e26810d8e44a7e4980d9952c13, type: 3}
-  - {fileID: 4444208731043189985, guid: 9d7921fff1c89cc4dbcd33b21e58af8e, type: 3}
-  - {fileID: 8596382311653572228, guid: 74be687cbb7fab7458b7717cecd64712, type: 3}
-  DefaultStructure: {fileID: 4941115558927489737, guid: e6e779e26810d8e44a7e4980d9952c13, type: 3}
+  BellSprites:
+  - {fileID: -3600462155659023468, guid: 451ddd0aedb6bd6468edc8be1949d3f4, type: 3}
+  - {fileID: -3571065555159573361, guid: 451ddd0aedb6bd6468edc8be1949d3f4, type: 3}
+  - {fileID: 7638030212143318558, guid: 451ddd0aedb6bd6468edc8be1949d3f4, type: 3}
+  CapitalSprites:
+  - {fileID: -9043860729359145966, guid: 9f1e1a0a20f34ef48a2e377a68164f5a, type: 3}
+  - {fileID: -3854964705595706665, guid: 9f1e1a0a20f34ef48a2e377a68164f5a, type: 3}
+  - {fileID: 3796422788609999600, guid: 9f1e1a0a20f34ef48a2e377a68164f5a, type: 3}
+  SignpostSprites:
+  - {fileID: 8299319516169970853, guid: 34e46206aae16b548bfd165cd47852f9, type: 3}
+  - {fileID: 8416898281017630943, guid: 34e46206aae16b548bfd165cd47852f9, type: 3}
+  - {fileID: 3934902697012066516, guid: 34e46206aae16b548bfd165cd47852f9, type: 3}
+  DefaultStructure: {fileID: -929444283655139676, guid: e6e779e26810d8e44a7e4980d9952c13, type: 3}
+  StructureBase: {fileID: -929444283655139676, guid: e6e779e26810d8e44a7e4980d9952c13, type: 3}
 --- !u!114 &1120445403
 MonoBehaviour:
   m_ObjectHideFlags: 0

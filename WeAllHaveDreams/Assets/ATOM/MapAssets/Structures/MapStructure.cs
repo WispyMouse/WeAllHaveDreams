@@ -1,15 +1,15 @@
-﻿using System.Collections;
+﻿using Configuration;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
-public abstract class MapStructure : MapObject
+public class MapStructure : MapObject
 {
     public int? PlayerSideIndex;
 
-    public SpriteRenderer Renderer;
-    public Sprite[] SideSprites;
-    public Sprite UnclaimedSprite;
+    public StructureConfiguration Configuration { get; set; }
 
     public int MaxCapturePoints { get; set; } = 20;
     public int CurCapturePoints
@@ -21,7 +21,7 @@ public abstract class MapStructure : MapObject
         set
         {
             _curCapturePoints = value;
-            UpdateCapturePointsVisual();
+            StructureUpdated.Invoke(this);
         }
     }
     private int _curCapturePoints { get; set; }
@@ -29,31 +29,15 @@ public abstract class MapStructure : MapObject
     public int ContributedResourcesPerTurn = 50;
     public int CaptureImportance = 10;
 
-    // TEMPORARY: This should definitely be in its own class
-    public SpriteRenderer CapturePointsVisual;
-    public Sprite[] CapturePointsNumerics;
+    public string StructureName => Configuration.Name;
 
-    public string StructureName;
-
-    private void Awake()
-    {
-        SetOwnership(PlayerSideIndex);
-    }
+    public UnityEvent<MapStructure> StructureUpdated;
     
     public void SetOwnership(int? side)
     {
         this.PlayerSideIndex = side;
-
-        if (side == null)
-        {
-            Renderer.sprite = UnclaimedSprite;
-        }
-        else
-        {
-            Renderer.sprite = SideSprites[side.Value];
-        }
-
         CurCapturePoints = MaxCapturePoints;
+        StructureUpdated.Invoke(this);
     }
 
     public bool IsNotOwnedByMyTeam(int myTeam)
@@ -73,22 +57,10 @@ public abstract class MapStructure : MapObject
         }
     }
 
-    public void UpdateCapturePointsVisual()
-    {
-        if (CurCapturePoints == MaxCapturePoints)
-        {
-            CapturePointsVisual.gameObject.SetActive(false);
-            return;
-        }
-
-        CapturePointsVisual.gameObject.SetActive(true);
-        CapturePointsVisual.sprite = CapturePointsNumerics[CurCapturePoints];
-    }
-
     protected virtual void CompleteCapture(MapMob capturing)
     {
         SetOwnership(capturing.PlayerSideIndex);
-        DebugTextLog.AddTextToLog("Base captured!");
+        DebugTextLog.AddTextToLog("Base captured!", DebugTextLogChannel.Gameplay);
     }
 
     public virtual PlayerInput DoLazyBuildingThing(WorldContext worldContext)
@@ -109,5 +81,13 @@ public abstract class MapStructure : MapObject
     public StructureMapData GetMapData()
     {
         return new StructureMapData() { Position = this.Position, Ownership = PlayerSideIndex, StructureName = StructureName };
+    }
+
+    public void LoadFromConfiguration(Configuration.StructureConfiguration configuration)
+    {
+        Configuration = configuration;
+        gameObject.name = Configuration.Name;
+
+        StructureUpdated.Invoke(this);
     }
 }

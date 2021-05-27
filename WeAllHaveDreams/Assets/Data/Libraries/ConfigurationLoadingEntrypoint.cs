@@ -84,6 +84,7 @@ public class ConfigurationLoadingEntrypoint : SingletonBase<ConfigurationLoading
         }
 
         await ThreadDoctor.AwaitIEnumerator(MobLibrary.LoadMobsFromConfiguration());
+        await ThreadDoctor.AwaitIEnumerator(StructureLibrary.LoadStructuresFromConfiguration());
     }
 
     public static IEnumerable<T> GetConfigurationData<T>() where T : ConfigurationData, new()
