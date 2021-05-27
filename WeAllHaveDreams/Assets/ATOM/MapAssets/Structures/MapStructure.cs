@@ -62,6 +62,11 @@ public class MapStructure : MapObject
     {
         SetOwnership(capturing.PlayerSideIndex);
         DebugTextLog.AddTextToLog("Base captured!", DebugTextLogChannel.Gameplay);
+
+        foreach (StructureConfigurationAbility structureAbility in Abilities)
+        {
+            structureAbility.OnCapture(this);
+        }
     }
 
     public virtual PlayerInput DoLazyBuildingThing(WorldContext worldContext)

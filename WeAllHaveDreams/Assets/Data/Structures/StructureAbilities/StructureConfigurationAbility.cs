@@ -16,4 +16,9 @@ public class StructureConfigurationAbility
     {
         return new List<PlayerInput>();
     }
+
+    public virtual void OnCapture(MapStructure structure)
+    {
+        // Do nothing
+    }
 }

@@ -2,5 +2,12 @@
   "ConfigurationType": "Configuration.StructureConfiguration",
   "Name": "Capital",
   "DevelopmentName": "Capital",
-  "Appearance": "CapitalSprites"
+  "Appearance": "CapitalSprites",
+  "Abilities": 
+  [
+	{
+		"AbilityName": "CapitalCaptureAbility",
+		"Arguments": [ ]
+	}
+  ]
 }
