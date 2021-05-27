@@ -1,0 +1,13 @@
+{
+  "ConfigurationType": "Configuration.StructureConfiguration",
+  "Name": "Bell",
+  "DevelopmentName": "Bell",
+  "Appearance": "BellSprites",
+  "Abilities": 
+  [
+	{
+		"AbilityName": "RecruitsAbility",
+		"Arguments": [ "Basic" ]
+	}
+  ]
+}

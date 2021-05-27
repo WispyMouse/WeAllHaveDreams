@@ -62,6 +62,12 @@ namespace Configuration
         /// </summary>
         public IEnumerable<MobConfigurationAbility> Abilities;
 
+        /// <summary>
+        /// What tags apply to this Mob?
+        /// Used for setting what can be constructed by what structure, how travel across a tile works, etc.
+        /// </summary>
+        public IEnumerable<string> Tags;
+
         public MobConfiguration() : base()
         {
         }

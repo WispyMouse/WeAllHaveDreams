@@ -30,6 +30,7 @@ public class MapStructure : MapObject
     public int CaptureImportance = 10;
 
     public string StructureName => Configuration.Name;
+    public IEnumerable<StructureConfigurationAbility> Abilities { get; private set; } = new List<StructureConfigurationAbility>();
 
     public UnityEvent<MapStructure> StructureUpdated;
     
@@ -68,9 +69,14 @@ public class MapStructure : MapObject
         return null;
     }
 
-    public virtual IEnumerable<PlayerInput> GetPossiblePlayerInputs(WorldContext worldContext)
+    public IEnumerable<PlayerInput> GetPossiblePlayerInputs(WorldContext worldContext)
     {
-        return Enumerable.Empty<PlayerInput>();
+        IEnumerable<PlayerInput> possibleActions = new List<PlayerInput>();
+        foreach (StructureConfigurationAbility curAbility in Abilities)
+        {
+            possibleActions = possibleActions.Union(curAbility.GetPossiblePlayerInputs(this));
+        }
+        return possibleActions;
     }
 
     public void ClearCapture()
@@ -87,6 +93,8 @@ public class MapStructure : MapObject
     {
         Configuration = configuration;
         gameObject.name = Configuration.Name;
+
+        Abilities = configuration.GetSaturatedAbilities();
 
         StructureUpdated.Invoke(this);
     }

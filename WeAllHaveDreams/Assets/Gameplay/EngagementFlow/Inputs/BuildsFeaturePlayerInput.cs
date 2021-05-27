@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildsFeatureInput : PlayerInput
+public class BuildsFeaturePlayerInput : PlayerInput
 {
     public MapMob Builder;
     public string FeatureToBuild;
@@ -10,7 +10,7 @@ public class BuildsFeatureInput : PlayerInput
     public int Cost { get; set; }
     public MapFeature FeaturePrefab { get; set; }
 
-    public BuildsFeatureInput(MapMob builder, string featureToBuild)
+    public BuildsFeaturePlayerInput(MapMob builder, string featureToBuild)
     {
         Builder = builder;
 
@@ -31,7 +31,7 @@ public class BuildsFeatureInput : PlayerInput
 
     public override IEnumerator Execute(WorldContext worldContext, GameplayAnimationHolder animationHolder)
     {
-        DebugTextLog.AddTextToLog($"Building {FeatureToBuild} at {Builder.Position.ToString()}");
+        DebugTextLog.AddTextToLog($"Building {FeatureToBuild} at {Builder.Position.ToString()}", DebugTextLogChannel.Verbose);
         TurnManager.CurrentPlayer.TotalResources -= Cost;
         worldContext.FeatureHolder.SetFeature(Builder.Position, FeatureLibrary.GetFeature(FeatureToBuild));
         yield return TurnManager.ResolveEffects();

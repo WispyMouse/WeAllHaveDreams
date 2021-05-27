@@ -15,5 +15,9 @@
 		"AbilityName": "BuildsAbility",
 		"Arguments": [ "Buildable" ]
 	}
+  ],
+  "Tags":
+  [
+	"Basic"
   ]
 }

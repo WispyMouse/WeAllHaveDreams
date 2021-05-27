@@ -63,6 +63,11 @@ public class MobLibrary : SingletonBase<MobLibrary>
         }
     }
 
+    public static IEnumerable<MobConfiguration> MobsWithTags(IEnumerable<string> tags)
+    {
+        return Singleton.MobConfigurations.Where(mob => tags.All(tag => mob.Tags.Contains(tag)));
+    }
+
     public static IEnumerable<MobConfiguration> GetAllMobs()
     {
         return Singleton.MobConfigurations;
