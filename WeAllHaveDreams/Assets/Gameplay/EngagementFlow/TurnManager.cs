@@ -101,6 +101,16 @@ public class TurnManager : SingletonBase<TurnManager>
             {
                 onFeature.StartOfTurnEffects(curMob);
             }
+
+            MapStructure onStructure = Singleton.WorldContextInstance.StructureHolder.StructureOnPoint(curMob.Position);
+
+            if (onStructure != null)
+            {
+                foreach (StructureConfigurationAbility ability in onStructure.Abilities)
+                {
+                    ability.OnTurnStart(onStructure, curMob);
+                }
+            }
         }
 
         yield break;

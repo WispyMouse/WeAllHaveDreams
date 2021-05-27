@@ -2,5 +2,12 @@
   "ConfigurationType": "Configuration.StructureConfiguration",
   "Name": "Signpost",
   "DevelopmentName": "Signpost",
-  "Appearance": "SignpostSprites"
+  "Appearance": "SignpostSprites",
+  "Abilities": 
+  [
+	{
+		"AbilityName": "HealsAllyAbility",
+		"Arguments": [ 2 ]
+	}
+  ]
 }

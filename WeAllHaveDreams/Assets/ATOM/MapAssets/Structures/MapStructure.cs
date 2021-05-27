@@ -69,11 +69,6 @@ public class MapStructure : MapObject
         }
     }
 
-    public virtual PlayerInput DoLazyBuildingThing(WorldContext worldContext)
-    {
-        return null;
-    }
-
     public IEnumerable<PlayerInput> GetPossiblePlayerInputs(WorldContext worldContext)
     {
         IEnumerable<PlayerInput> possibleActions = new List<PlayerInput>();

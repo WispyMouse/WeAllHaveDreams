@@ -8,6 +8,10 @@
 	{
 		"AbilityName": "RecruitsAbility",
 		"Arguments": [ "Basic" ]
+	},
+	{
+		"AbilityName": "HealsAllyAbility",
+		"Arguments": [ 2 ]
 	}
   ]
 }

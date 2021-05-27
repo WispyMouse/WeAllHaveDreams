@@ -21,4 +21,9 @@ public class StructureConfigurationAbility
     {
         // Do nothing
     }
+
+    public virtual void OnTurnStart(MapStructure structure, MapMob standingOn)
+    {
+        // Do nothing
+    }
 }

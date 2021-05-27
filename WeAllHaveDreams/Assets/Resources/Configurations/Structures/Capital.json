@@ -8,6 +8,10 @@
 	{
 		"AbilityName": "CapitalCaptureAbility",
 		"Arguments": [ ]
+	},
+	{
+		"AbilityName": "HealsAllyAbility",
+		"Arguments": [ 3 ]
 	}
   ]
 }
