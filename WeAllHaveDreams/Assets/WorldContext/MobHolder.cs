@@ -53,12 +53,28 @@ public class MobHolder : MonoBehaviour
 
     public decimal ProjectedDamages(MapMob engaging, MapMob defending)
     {
-        return engaging.CurrentAttackPower * defending.DamageReductionRatio;
+        return ProjectedDamages(engaging, defending, engaging.HitPoints);
     }
 
     public decimal ProjectedDamages(MapMob engaging, MapMob defending, decimal overrideEngagingHealth)
     {
-        return engaging.AttackPowerAtHitPoints(overrideEngagingHealth) * defending.DamageReductionRatio;
+        // We start by taking the raw offensive output of this mob
+        decimal damage = engaging.AttackPowerAtHitPoints(overrideEngagingHealth);
+        DebugTextLog.AddTextToLog($"Base damage: {damage}", DebugTextLogChannel.Verbose);
+
+        // Then reduce by the defending unit's defensive ratio
+        damage *= defending.DamageReductionRatio;
+        DebugTextLog.AddTextToLog($"Defending unit defensive ratio: {defending.DamageReductionRatio}", DebugTextLogChannel.Verbose);
+
+        MapStructure onStructure = WorldContextInstance.StructureHolder.StructureOnPoint(defending.Position);
+        if (onStructure != null)
+        {
+            decimal defensiveRatio = onStructure.GetDefensiveRatio(defending);
+            damage *= defensiveRatio;
+            DebugTextLog.AddTextToLog($"Defending unit structure defensive ratio: {defensiveRatio}", DebugTextLogChannel.Verbose);
+        }
+
+        return damage;
     }
 
     public bool CanAttackFromPosition(MapMob possibleAttacker, MapMob defender, MapCoordinates attackerPosition)

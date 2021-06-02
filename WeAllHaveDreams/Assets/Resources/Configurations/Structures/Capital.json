@@ -3,6 +3,13 @@
   "Name": "Capital",
   "DevelopmentName": "Capital",
   "Appearance": "CapitalSprites",
+  "Defenses":
+  [
+	{
+		"Tags": [ ],
+		"DefensiveRatio": 0.8
+	}
+  ],
   "Abilities": 
   [
 	{

@@ -1,55 +1,82 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DebugTextLog : SingletonBase<DebugTextLog>
+public class DebugTextLog : SingletonBase<DebugTextLog>, IDisposable
 {
     const int TextLogSize = 8;
 
     public Text TextLog;
-    List<string> ActiveText = new List<string>();
+    List<DebugTextEntry> ActiveText = new List<DebugTextEntry>();
 
-    Queue<string> MessageQueue { get; set; } = new Queue<string>();
+    Queue<DebugTextEntry> MessageQueue { get; set; } = new Queue<DebugTextEntry>();
+
+    StreamWriter logFile;
 
     private void Awake()
     {
         ExplicitlySetSingleton();
+        EstablishLogFile();
+    }
+
+    private void EstablishLogFile()
+    {
+        if (logFile != null)
+        {
+            return;
+        }
+
+        logFile = new StreamWriter(Path.Combine(Application.persistentDataPath, $"log.{DateTime.Now.Year}{DateTime.Now.Month}{DateTime.Now.Day}{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}.txt"), true);
     }
 
     private void Update()
     {
         lock (MessageQueue)
         {
+            EstablishLogFile();
+
             while (MessageQueue.Count > 0)
             {
-                string thisText = MessageQueue.Dequeue();
-                Singleton.ActiveText.Add(thisText);
+                DebugTextEntry thisText = MessageQueue.Dequeue();
 
-                if (Singleton.ActiveText.Count > TextLogSize)
+                if (thisText.Channel == DebugTextLogChannel.Verbose)
                 {
-                    Singleton.ActiveText.RemoveRange(0, ActiveText.Count - TextLogSize);
+                    Singleton.ActiveText.Add(thisText);
+
+                    if (Singleton.ActiveText.Count > TextLogSize)
+                    {
+                        Singleton.ActiveText.RemoveRange(0, ActiveText.Count - TextLogSize);
+                    }
+
+                    Singleton.TextLog.text = string.Join("\n", ActiveText.Select(text => text.Message));
                 }
 
-                Singleton.TextLog.text = string.Join("\n", ActiveText);
+                string logMessage = $"{thisText.Channel}: {thisText.Message}";
+                logFile.WriteLine(logMessage);
+                Debug.Log(logMessage);
             }
         }
     }
 
     public static void AddTextToLog(string text, DebugTextLogChannel channel = DebugTextLogChannel.Generic)
     {
-        // HACK: For now, toggle this if we want to hide Verbose logging
-        if (channel == DebugTextLogChannel.Verbose)
-        {
-            return;
-        }
+        AddTextToLog(new DebugTextEntry(channel, text));
+    }
 
+    public static void AddTextToLog(DebugTextEntry toLog)
+    {
         lock (Singleton.MessageQueue)
         {
-            Singleton.MessageQueue.Enqueue(text);
+            Singleton.MessageQueue.Enqueue(toLog);
         }
-        
-        Debug.Log(text);
+    }
+
+    public void Dispose()
+    {
+        logFile.Dispose();
     }
 }

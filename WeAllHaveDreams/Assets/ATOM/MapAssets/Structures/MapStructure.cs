@@ -98,4 +98,28 @@ public class MapStructure : MapObject
 
         StructureUpdated.Invoke(this);
     }
+
+    public decimal GetDefensiveRatio(MapMob defending)
+    {
+        // If we have no defensive values here, then there's no defenses
+        if (!Configuration.Defenses.Any())
+        {
+            return 0;
+        }
+
+        // Get the best (lowest) defensive value out of the tags that apply to this unit
+        decimal? bestDefense = null;
+        foreach (DefensiveAttributes defense in Configuration.Defenses)
+        {
+            if (defense.TagsApply(defending.Tags))
+            {
+                if (!bestDefense.HasValue || bestDefense.Value > defense.DefensiveRatio)
+                {
+                    bestDefense = defense.DefensiveRatio;
+                }
+            }
+        }
+
+        return bestDefense.HasValue ? bestDefense.Value : 0;
+    }
 }

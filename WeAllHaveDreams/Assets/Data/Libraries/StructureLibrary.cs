@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class StructureLibrary : SingletonBase<StructureLibrary>
 {
-    IEnumerable<StructureConfiguration> Configurations { get; set; }
+    IEnumerable<StructureConfiguration> Configurations { get; set; } = System.Array.Empty<StructureConfiguration>();
     Dictionary<string, MapStructure> NamesToStructures { get; set; } = new Dictionary<string, MapStructure>();
 
     public Sprite[] BellSprites;

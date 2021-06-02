@@ -3,6 +3,13 @@
   "Name": "Bell",
   "DevelopmentName": "Bell",
   "Appearance": "BellSprites",
+  "Defenses":
+  [
+	{
+		"Tags": [ ],
+		"DefensiveRatio": 0.95
+	}
+  ],
   "Abilities": 
   [
 	{

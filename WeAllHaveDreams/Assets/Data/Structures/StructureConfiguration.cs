@@ -14,7 +14,9 @@ namespace Configuration
 
         public string Appearance;
 
-        public IEnumerable<StructureConfigurationAbility> Abilities;
+        public IEnumerable<StructureConfigurationAbility> Abilities = Array.Empty<StructureConfigurationAbility>();
+
+        public IEnumerable<DefensiveAttributes> Defenses = Array.Empty<DefensiveAttributes>();
 
         public IEnumerable<StructureConfigurationAbility> GetSaturatedAbilities()
         {
