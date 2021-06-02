@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Configuration;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -7,36 +8,28 @@ using UnityEngine.Tilemaps;
 
 public class GameplayTile : Tile
 {
-    public bool CompletelySolid;
-    public string TileName;
-
-    public TileNeighborSpriteSetting[] SpriteSettings;
-    public Sprite DefaultSprite;
-
-#if UNITY_EDITOR
-    [MenuItem("Assets/Create/GameplayTile")]
-    public static void CreateGameplayTile()
-    {
-        string path = EditorUtility.SaveFilePanelInProject("Save Gameplay Tile", "New Gameplay Tile", "Asset", "Save Gameplay Tile");
-        if (path == "")
-            return;
-        AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<GameplayTile>(), path);
-    }
-#endif
+    public TileConfiguration Configuration;
+    public bool CompletelySolid => Configuration.CompletelySolid;
+    public string TileName => Configuration.TileName;
 
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
     {
         HashSet<NeighborDirection> occuppiedNeighbors = GetNeighborsDirectionsWithSameTile(position, tilemap);
-        TileNeighborSpriteSetting matchingSetting = GetBestNeighborSpriteSetting(occuppiedNeighbors);
 
-        if (matchingSetting != null)
+        TileNeighborSpriteSetting matchingSetting = GetBestNeighborSpriteSetting(occuppiedNeighbors);
+        string spriteToUse = matchingSetting?.SpriteToUse;
+
+        if (string.IsNullOrEmpty(spriteToUse))
         {
-            tileData.sprite = matchingSetting.SpriteToUse ;
+            spriteToUse = Configuration.DefaultSprite;
         }
-        else
-        {
-            tileData.sprite = DefaultSprite;
-        }
+
+        tileData.sprite = TileLibrary.GetSprite(spriteToUse);
+    }
+
+    public void LoadFromConfiguration(TileConfiguration configuration)
+    {
+        Configuration = configuration;
     }
 
     HashSet<NeighborDirection> GetNeighborsDirectionsWithSameTile(MapCoordinates position, ITilemap tilemap)
@@ -62,7 +55,7 @@ public class GameplayTile : Tile
 
     TileNeighborSpriteSetting GetBestNeighborSpriteSetting(HashSet<NeighborDirection> occuppiedNeighbors)
     {
-        return SpriteSettings
+        return Configuration.SpriteSettings
             .Where(setting => setting.SameNeighborDirections.Length == occuppiedNeighbors.Count)
             .Where(setting => setting.SameNeighborDirections.All(snd => occuppiedNeighbors.Contains(snd)))
             .FirstOrDefault();

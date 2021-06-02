@@ -43,7 +43,7 @@ public class DebugTextLog : SingletonBase<DebugTextLog>, IDisposable
             {
                 DebugTextEntry thisText = MessageQueue.Dequeue();
 
-                if (thisText.Channel == DebugTextLogChannel.Verbose)
+                if (thisText.Channel != DebugTextLogChannel.Verbose)
                 {
                     Singleton.ActiveText.Add(thisText);
 

@@ -118,7 +118,7 @@ public class MapEditorRuntimeController : MonoBehaviour
 
         LoadMapDialogInstance.Open();
 
-        LeftClickPaletteSettings = new TilePlacementPalette(TileLibrary.GetTile("Floor"));
+        LeftClickPaletteSettings = new TilePlacementPalette(TileLibrary.GetAllTiles().First());
         RightClickPaletteSettings = new ClearTilePalette();
 
         SelectedOptions = new PaletteOptionsCollection();

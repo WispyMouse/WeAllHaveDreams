@@ -55,26 +55,26 @@ public class ConfigurationLoadingEntrypoint : SingletonBase<ConfigurationLoading
                     fileText = await reader.ReadToEndAsync();
                 }
 
-                DebugTextLog.AddTextToLog("Loaded text");
+                DebugTextLog.AddTextToLog("Loaded text", DebugTextLogChannel.Verbose);
                 Debug.Log(fileText);
 
-                DebugTextLog.AddTextToLog("Converting to ConfigurationData");
+                DebugTextLog.AddTextToLog("Converting to ConfigurationData", DebugTextLogChannel.Verbose);
                 ConfigurationData baseData = JsonUtility.FromJson<ConfigurationData>(fileText);
 
-                DebugTextLog.AddTextToLog($"Getting type ({baseData.ConfigurationType})");
+                DebugTextLog.AddTextToLog($"Getting type ({baseData.ConfigurationType})", DebugTextLogChannel.Verbose);
                 Type specifiedType = Type.GetType(baseData.ConfigurationType, true, true);
 
-                DebugTextLog.AddTextToLog($"Converting to {specifiedType}");
+                DebugTextLog.AddTextToLog($"Converting to {specifiedType}", DebugTextLogChannel.Verbose);
                 ConfigurationData specifiedData = (ConfigurationData)JsonConvert.DeserializeObject(fileText, specifiedType);
 
                 Singleton.configurationData.Add(specifiedData);
-                DebugTextLog.AddTextToLog($"Processed!");
+                DebugTextLog.AddTextToLog($"Processed!", DebugTextLogChannel.Verbose);
 
                 string message = specifiedData.GetConfigurationShortReport();
 
                 if (!string.IsNullOrEmpty(message))
                 {
-                    DebugTextLog.AddTextToLog(message);
+                    DebugTextLog.AddTextToLog(message, DebugTextLogChannel.ConfigurationReport);
                 }
             }
             catch (Exception e)
@@ -83,6 +83,7 @@ public class ConfigurationLoadingEntrypoint : SingletonBase<ConfigurationLoading
             }
         }
 
+        await ThreadDoctor.AwaitIEnumerator(TileLibrary.LoadTilesFromConfiguration());
         await ThreadDoctor.AwaitIEnumerator(MobLibrary.LoadMobsFromConfiguration());
         await ThreadDoctor.AwaitIEnumerator(StructureLibrary.LoadStructuresFromConfiguration());
     }

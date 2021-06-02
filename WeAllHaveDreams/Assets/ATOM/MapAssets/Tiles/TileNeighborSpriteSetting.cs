@@ -6,5 +6,5 @@ using UnityEngine;
 public class TileNeighborSpriteSetting
 {
     public NeighborDirection[] SameNeighborDirections;
-    public Sprite SpriteToUse;
+    public string SpriteToUse;
 }

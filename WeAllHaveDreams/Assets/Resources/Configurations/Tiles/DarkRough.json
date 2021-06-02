@@ -1,0 +1,86 @@
+{
+  "ConfigurationType": "Configuration.TileConfiguration",
+  "TileName": "DarkRough",
+  "SpriteSettings":
+  [
+	{
+		"SameNeighborDirections":
+		[
+			"East",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "DarkRough_N"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "DarkRough_E"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"West"
+		],
+		"SpriteToUse": "DarkRough_S"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"South"
+		],
+		"SpriteToUse": "DarkRough_W"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"South",
+			"West"
+		],
+		"SpriteToUse": "DarkRough_NEInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"West"
+		],
+		"SpriteToUse": "DarkRough_SEInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East"
+		],
+		"SpriteToUse": "DarkRough_SWInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"East",
+			"South"
+		],
+		"SpriteToUse": "DarkRough_NWInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "DarkRough_Center"
+	}
+  ],
+  "DefaultSprite": "DarkRough_Center"
+}

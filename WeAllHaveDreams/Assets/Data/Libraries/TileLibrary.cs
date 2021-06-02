@@ -1,18 +1,40 @@
-﻿using System.Collections;
+﻿using Configuration;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class TileLibrary : SingletonBase<TileLibrary>
 {
-    public GameplayTile[] Tiles;
+    IEnumerable<TileConfiguration> Configurations { get; set; } = System.Array.Empty<TileConfiguration>();
     Dictionary<string, GameplayTile> NamesToTiles { get; set; } = new Dictionary<string, GameplayTile>();
 
+    public Sprite[] TileSprites;
+
+    public GameplayTile TileBase;
     public GameplayTile DefaultTile;
 
     void Awake()
     {
         ExplicitlySetSingleton();
+    }
+
+    public static IEnumerator LoadTilesFromConfiguration()
+    {
+        DebugTextLog.AddTextToLog("Loading tiles from configuration.", DebugTextLogChannel.DebugLogging);
+
+        Singleton.Configurations = ConfigurationLoadingEntrypoint.GetConfigurationData<TileConfiguration>();
+
+        foreach (TileConfiguration curConfiguration in Singleton.Configurations)
+        {
+            GameplayTile tileInstance = ScriptableObject.CreateInstance<GameplayTile>();
+            tileInstance.LoadFromConfiguration(curConfiguration);
+            Singleton.NamesToTiles.Add(curConfiguration.TileName, tileInstance);
+        }
+
+        DebugTextLog.AddTextToLog($"Loaded {Singleton.Configurations.Count()} tiles.", DebugTextLogChannel.ConfigurationReport);
+        DebugTextLog.AddTextToLog($"Loaded tiles: {string.Join(", ", Singleton.NamesToTiles.Values.Select(structure => structure.Configuration.TileName))}", DebugTextLogChannel.Verbose);
+        yield break;
     }
 
     public static GameplayTile GetTile(string tileName)
@@ -27,20 +49,24 @@ public class TileLibrary : SingletonBase<TileLibrary>
             return foundTile;
         }
 
-        GameplayTile matchingTile = Singleton.Tiles.FirstOrDefault(tile => tile.TileName == tileName);
-
-        if (matchingTile == null)
-        {
-            DebugTextLog.AddTextToLog($"Could not find a Tile in the Library with the name {tileName}. Returning a default.");
-            return Singleton.DefaultTile;
-        }
-
-        Singleton.NamesToTiles.Add(tileName, matchingTile);
-        return matchingTile;
+        DebugTextLog.AddTextToLog($"Could not find a Tile in the Library with the name {tileName}. Returning a default.", DebugTextLogChannel.RuntimeError);
+        return Instantiate(Singleton.DefaultTile);
     }
 
-    public static IEnumerable<GameplayTile> GetAllTiles()
+    public static IEnumerable<TileConfiguration> GetAllTiles()
     {
-        return Singleton.Tiles;
+        return Singleton.Configurations;
+    }
+
+    public static Sprite GetSprite(string spriteName)
+    {
+        Sprite foundSprite = Singleton.TileSprites.FirstOrDefault(sprite => sprite.name == spriteName);
+
+        if (foundSprite == null)
+        {
+            DebugTextLog.AddTextToLog($"Could not find a Tile sprite in the Library with the name {spriteName}. Returning a default.", DebugTextLogChannel.RuntimeError);
+        }
+
+        return foundSprite;
     }
 }

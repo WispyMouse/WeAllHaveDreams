@@ -1,0 +1,86 @@
+{
+  "ConfigurationType": "Configuration.TileConfiguration",
+  "TileName": "Wall_Light",
+  "SpriteSettings":
+  [
+	{
+		"SameNeighborDirections":
+		[
+			"East",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Wall_Light_N"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Wall_Light_E"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"West"
+		],
+		"SpriteToUse": "Wall_Light_S"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"South"
+		],
+		"SpriteToUse": "Wall_Light_W"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Wall_Light_NEInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"West"
+		],
+		"SpriteToUse": "Wall_Light_SEInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East"
+		],
+		"SpriteToUse": "Wall_Light_SWInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"East",
+			"South"
+		],
+		"SpriteToUse": "Wall_Light_NWInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Wall_Light_Center"
+	}
+  ],
+  "DefaultSprite": "Wall_Light_Center"
+}

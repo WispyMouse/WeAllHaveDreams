@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Configuration;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,13 +11,13 @@ public class TilePlacementPalette : PaletteSettings
     /// <summary>
     /// A prefab of the tile to place.
     /// </summary>
-    public GameplayTile RepresentedTile;
+    public TileConfiguration RepresentedTile;
 
     /// <summary>
     /// Creates a new TilePlacementPalette.
     /// </summary>
     /// <param name="representedTile">The tile to place.</param>
-    public TilePlacementPalette(GameplayTile representedTile)
+    public TilePlacementPalette(TileConfiguration representedTile)
     {
         RepresentedTile = representedTile;
     }
@@ -24,7 +25,7 @@ public class TilePlacementPalette : PaletteSettings
     /// <inheritdoc />
     public override Sprite GetButtonSprite()
     {
-        return RepresentedTile.sprite;
+        return TileLibrary.GetSprite(RepresentedTile.DefaultSprite);
     }
 
     /// <inheritdoc />

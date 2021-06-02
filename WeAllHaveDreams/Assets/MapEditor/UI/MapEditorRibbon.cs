@@ -72,7 +72,7 @@ public class MapEditorRibbon : MonoBehaviour
     {
         List<PaletteSettings> tileSettings = new List<PaletteSettings>();
 
-        foreach (GameplayTile curTile in TileLibrary.GetAllTiles())
+        foreach (TileConfiguration curTile in TileLibrary.GetAllTiles())
         {
             tileSettings.Add(new TilePlacementPalette(curTile));
         }
