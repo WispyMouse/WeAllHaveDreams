@@ -67,9 +67,27 @@ public class MobHolder : MonoBehaviour
         DebugTextLog.AddTextToLog($"Defending unit defensive ratio: {defending.DamageReductionRatio}", DebugTextLogChannel.Verbose);
 
         MapStructure onStructure = WorldContextInstance.StructureHolder.StructureOnPoint(defending.Position);
+        DefensiveAttributes defense = null;
         if (onStructure != null)
         {
-            decimal defensiveRatio = onStructure.GetDefensiveRatio(defending);
+            defense = onStructure.Configuration?.Defenses?
+                .OrderByDescending(def => def.Priority)
+                .Where(def => def.TagsApply(defending.Tags))
+                .FirstOrDefault();
+        }
+
+        if (defense == null)
+        {
+            GameplayTile tile = WorldContextInstance.MapHolder.GetGameplayTile(defending.Position);
+            defense = tile.Configuration?.Defenses?
+                .OrderByDescending(def => def.Priority)
+                .Where(def => def.TagsApply(defending.Tags))
+                .FirstOrDefault();
+        }
+
+        if (defense != null)
+        {
+            decimal defensiveRatio = defense.DefensiveRatio;
             damage *= defensiveRatio;
             DebugTextLog.AddTextToLog($"Defending unit structure defensive ratio: {defensiveRatio}", DebugTextLogChannel.Verbose);
         }

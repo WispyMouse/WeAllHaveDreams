@@ -1,6 +1,14 @@
 {
   "ConfigurationType": "Configuration.TileConfiguration",
   "TileName": "Wall",
+  "ObstructsVision": true,
+  "MovementCostAttributes":
+  [
+	{
+		"Tags": [],
+		"MovementModification": "Impassible"
+	}
+  ],
   "SpriteSettings":
   [
 	{

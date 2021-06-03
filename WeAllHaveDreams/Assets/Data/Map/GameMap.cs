@@ -124,8 +124,8 @@ public class GameMap
     {
         MapCoordinates startingTile = movingMob.Position;
 
-        var frontier = new Dictionary<MapCoordinates, int>();
-        var possibleVisits = new Dictionary<MapCoordinates, int>();
+        var frontier = new Dictionary<MapCoordinates, decimal>();
+        var possibleVisits = new Dictionary<MapCoordinates, decimal>();
 
         possibleVisits.Add(startingTile, 0);
         frontier.Add(startingTile, 0);
@@ -143,12 +143,12 @@ public class GameMap
 
             foreach (MapCoordinates neighbor in GetNeighbors(thisTile.Key))
             {
-                int totalCost = thisTile.Value + 1; // TEMPORARY: This will eventually consider the movement cost of the tile we're moving on to
-
                 if (!CanMoveInTo(movingMob, thisTile.Key, neighbor, worldContext))
                 {
                     continue;
                 }
+
+                decimal totalCost = thisTile.Value + CostToMoveInTo(movingMob, thisTile.Key, neighbor, worldContext);                
 
                 // If we've already considered this tile, and it was more efficient last time, ignore this attempt
                 // If we haven't considered this tile, then add it
@@ -320,17 +320,32 @@ public class GameMap
         return PotentialAttacks(attacking, target);
     }
 
+    decimal CostToMoveInTo(MapMob moving, MapCoordinates from, MapCoordinates to, WorldContext worldContext)
+    {
+        if (!GameplayTiles.ContainsKey(to))
+        {
+            return MovementCostAttribute.TypicalMovementCost;
+        }
+
+        MovementCostAttribute movement = GetGameplayTile(to).MovementCosts(moving);
+        if (movement?.MovementModification == MovementModificationEnum.AlteredCost)
+        {
+            return movement.Value;
+        }
+
+        return MovementCostAttribute.TypicalMovementCost;
+    }
+
     bool CanMoveInTo(MapMob moving, MapCoordinates from, MapCoordinates to, WorldContext worldContext)
     {
         if (!GameplayTiles.ContainsKey(to))
         {
-            DebugTextLog.AddTextToLog($"Reporting that {to.ToString()} is off the gameplay map and can't be moved in to");
             return false;
         }
 
-        if (GetGameplayTile(to).CompletelySolid)
+        MovementCostAttribute movement = GetGameplayTile(to).MovementCosts(moving);
+        if (movement?.MovementModification == MovementModificationEnum.Impassible)
         {
-            // DebugTextLog.AddTextToLog($"Reporting that {to.x}, {to.y} is completely solid and can't be moved in to");
             return false;
         }
 
@@ -351,7 +366,8 @@ public class GameMap
             return false;
         }
 
-        if (GetGameplayTile(to).CompletelySolid)
+        MovementCostAttribute movement = GetGameplayTile(to).MovementCosts(moving);
+        if (movement?.MovementModification == MovementModificationEnum.Impassible)
         {
             return false;
         }

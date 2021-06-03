@@ -9,7 +9,6 @@ using UnityEngine.Tilemaps;
 public class GameplayTile : Tile
 {
     public TileConfiguration Configuration;
-    public bool CompletelySolid => Configuration.CompletelySolid;
     public string TileName => Configuration.TileName;
 
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
@@ -30,6 +29,26 @@ public class GameplayTile : Tile
     public void LoadFromConfiguration(TileConfiguration configuration)
     {
         Configuration = configuration;
+    }
+
+    public MovementCostAttribute MovementCosts(MapMob forMob)
+    {
+        // If we have no attributes, then return null to indicate there is no modification
+        if (Configuration.MovementCostAttributes == null || !Configuration.MovementCostAttributes.Any())
+        {
+            return null;
+        }
+        MovementCostAttribute chosenAttribute = null;
+
+        foreach (MovementCostAttribute movement in Configuration.MovementCostAttributes.OrderByDescending(move => move.Priority))
+        {
+            if (movement.TagsApply(forMob.Tags))
+            {
+                return movement;
+            }
+        }
+
+        return chosenAttribute;
     }
 
     HashSet<NeighborDirection> GetNeighborsDirectionsWithSameTile(MapCoordinates position, ITilemap tilemap)

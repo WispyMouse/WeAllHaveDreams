@@ -189,7 +189,7 @@ public class FogHolder : MonoBehaviour
 
             if (tile = WorldContextInstance.MapHolder.GetGameplayTile(point))
             {
-                if (tile.CompletelySolid)
+                if (tile.Configuration.ObstructsVision)
                 {
                     if (obstructedOnce)
                     {

@@ -1,6 +1,14 @@
 {
   "ConfigurationType": "Configuration.TileConfiguration",
   "TileName": "Wall_Light",
+  "ObstructsVision": true,
+  "MovementCostAttributes":
+  [
+	{
+		"Tags": [],
+		"MovementModification": "Impassible"
+	}
+  ],
   "SpriteSettings":
   [
 	{
@@ -10,7 +18,7 @@
 			"South",
 			"West"
 		],
-		"SpriteToUse": "Wall_Light_N"
+		"SpriteToUse": "Wall_LightN"
 	},
 	{
 		"SameNeighborDirections":
@@ -19,7 +27,7 @@
 			"South",
 			"West"
 		],
-		"SpriteToUse": "Wall_Light_E"
+		"SpriteToUse": "Wall_LightE"
 	},
 	{
 		"SameNeighborDirections":
@@ -28,7 +36,7 @@
 			"East",
 			"West"
 		],
-		"SpriteToUse": "Wall_Light_S"
+		"SpriteToUse": "Wall_LightS"
 	},
 	{
 		"SameNeighborDirections":
@@ -37,7 +45,7 @@
 			"East",
 			"South"
 		],
-		"SpriteToUse": "Wall_Light_W"
+		"SpriteToUse": "Wall_LightW"
 	},
 	{
 		"SameNeighborDirections":
@@ -45,7 +53,7 @@
 			"South",
 			"West"
 		],
-		"SpriteToUse": "Wall_Light_NEInnerCorner"
+		"SpriteToUse": "Wall_LightNEInnerCorner"
 	},
 	{
 		"SameNeighborDirections":
@@ -53,7 +61,7 @@
 			"North",
 			"West"
 		],
-		"SpriteToUse": "Wall_Light_SEInnerCorner"
+		"SpriteToUse": "Wall_LightSEInnerCorner"
 	},
 	{
 		"SameNeighborDirections":
@@ -61,7 +69,7 @@
 			"North",
 			"East"
 		],
-		"SpriteToUse": "Wall_Light_SWInnerCorner"
+		"SpriteToUse": "Wall_LightSWInnerCorner"
 	},
 	{
 		"SameNeighborDirections":
@@ -69,7 +77,7 @@
 			"East",
 			"South"
 		],
-		"SpriteToUse": "Wall_Light_NWInnerCorner"
+		"SpriteToUse": "Wall_LightNWInnerCorner"
 	},
 	{
 		"SameNeighborDirections":
@@ -79,8 +87,8 @@
 			"South",
 			"West"
 		],
-		"SpriteToUse": "Wall_Light_Center"
+		"SpriteToUse": "Wall_LightCenter"
 	}
   ],
-  "DefaultSprite": "Wall_Light_Center"
+  "DefaultSprite": "Wall_LightCenter"
 }
