@@ -31,14 +31,14 @@ public class MobHolder : MonoBehaviour
 
             if (ActiveMobs.Any(mob => mob.Position == curMob.Position))
             {
-                Debug.LogWarning($"Multiple mobs are on the same position: {{{curMob.Position.x}, {curMob.Position.y}, {curMob.Position.z}}}");
+                Debug.LogWarning($"Multiple mobs are on the same position: {curMob.Position.ToString()}");
             }
 
             ActiveMobs.Add(curMob);
         }
     }
 
-    public MapMob MobOnPoint(Vector3Int position)
+    public MapMob MobOnPoint(MapCoordinates position)
     {
         MapMob mobOnPoint;
 
@@ -53,15 +53,49 @@ public class MobHolder : MonoBehaviour
 
     public decimal ProjectedDamages(MapMob engaging, MapMob defending)
     {
-        return engaging.CurrentAttackPower * defending.DamageReductionRatio;
+        return ProjectedDamages(engaging, defending, engaging.HitPoints);
     }
 
     public decimal ProjectedDamages(MapMob engaging, MapMob defending, decimal overrideEngagingHealth)
     {
-        return engaging.AttackPowerAtHitPoints(overrideEngagingHealth) * defending.DamageReductionRatio;
+        // We start by taking the raw offensive output of this mob
+        decimal damage = engaging.AttackPowerAtHitPoints(overrideEngagingHealth);
+        DebugTextLog.AddTextToLog($"Base damage: {damage}", DebugTextLogChannel.Verbose);
+
+        // Then reduce by the defending unit's defensive ratio
+        damage *= defending.DamageReductionRatio;
+        DebugTextLog.AddTextToLog($"Defending unit defensive ratio: {defending.DamageReductionRatio}", DebugTextLogChannel.Verbose);
+
+        MapStructure onStructure = WorldContextInstance.StructureHolder.StructureOnPoint(defending.Position);
+        DefensiveAttributes defense = null;
+        if (onStructure != null)
+        {
+            defense = onStructure.Configuration?.Defenses?
+                .OrderByDescending(def => def.Priority)
+                .Where(def => def.TagsApply(defending.Tags))
+                .FirstOrDefault();
+        }
+
+        if (defense == null)
+        {
+            GameplayTile tile = WorldContextInstance.MapHolder.GetGameplayTile(defending.Position);
+            defense = tile.Configuration?.Defenses?
+                .OrderByDescending(def => def.Priority)
+                .Where(def => def.TagsApply(defending.Tags))
+                .FirstOrDefault();
+        }
+
+        if (defense != null)
+        {
+            decimal defensiveRatio = defense.DefensiveRatio;
+            damage *= defensiveRatio;
+            DebugTextLog.AddTextToLog($"Defending unit structure defensive ratio: {defensiveRatio}", DebugTextLogChannel.Verbose);
+        }
+
+        return damage;
     }
 
-    public bool CanAttackFromPosition(MapMob possibleAttacker, MapMob defender, Vector3Int attackerPosition)
+    public bool CanAttackFromPosition(MapMob possibleAttacker, MapMob defender, MapCoordinates attackerPosition)
     {
         return WorldContextInstance.MapHolder.PotentialAttacks(possibleAttacker, attackerPosition).Contains(defender.Position);
     }
@@ -78,7 +112,7 @@ public class MobHolder : MonoBehaviour
         Destroy(toRemove.gameObject);
     }
 
-    public MapMob CreateNewUnit(Vector3Int location, MapMob prefab)
+    public MapMob CreateNewUnit(MapCoordinates location, MapMob prefab)
     {
         if (ActiveMobs.Any(mob => mob.Position == location))
         {
@@ -89,14 +123,13 @@ public class MobHolder : MonoBehaviour
         MapMob newMob = Instantiate(prefab, MobParent);
         newMob.LoadFromConfiguration(prefab.Configuration);
         newMob.SetPosition(location);
-        newMob.SetUnitVisuals();
         newMob.ExhaustAllOptions();
         newMob.gameObject.SetActive(true);
         ActiveMobs.Add(newMob);
         return newMob;
     }
 
-    public void CreateNewUnit(Vector3Int location, MapMob prefab, int teamIndex)
+    public void CreateNewUnit(MapCoordinates location, MapMob prefab, int teamIndex)
     {
         MapMob newMob = CreateNewUnit(location, prefab);
         newMob.SetOwnership(teamIndex);
@@ -116,5 +149,14 @@ public class MobHolder : MonoBehaviour
         }
 
         ActiveMobs = new List<MapMob>();
+    }
+
+    public void LoadFromRealm(Realm toLoad)
+    {
+        foreach (MobMapData mobData in toLoad.Mobs)
+        {
+            DebugTextLog.AddTextToLog($"Placing {mobData.MobName} at {mobData.Position.ToString()}), owned by Faction {mobData.Ownership}", DebugTextLogChannel.Verbose);
+            CreateNewUnit(mobData);
+        }
     }
 }

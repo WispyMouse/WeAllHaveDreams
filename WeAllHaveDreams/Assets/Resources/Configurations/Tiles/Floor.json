@@ -1,0 +1,86 @@
+{
+  "ConfigurationType": "Configuration.TileConfiguration",
+  "TileName": "Floor",
+  "SpriteSettings":
+  [
+	{
+		"SameNeighborDirections":
+		[
+			"East",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Floor_N"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Floor_E"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"West"
+		],
+		"SpriteToUse": "Floor_S"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"South"
+		],
+		"SpriteToUse": "Floor_W"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Floor_NEInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"West"
+		],
+		"SpriteToUse": "Floor_SEInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East"
+		],
+		"SpriteToUse": "Floor_SWInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"East",
+			"South"
+		],
+		"SpriteToUse": "Floor_NWInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Floor_Center"
+	}
+  ],
+  "DefaultSprite": "Floor_Center"
+}

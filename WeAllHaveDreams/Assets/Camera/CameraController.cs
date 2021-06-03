@@ -13,8 +13,8 @@ public class CameraController : SingletonBase<CameraController>
 
     public static void CenterCamera()
     {
-        Vector3 center = new Vector3(((float)Singleton.WorldContextInstance.MapHolder.GetAllTiles().Min(tile => tile.x) + (float)Singleton.WorldContextInstance.MapHolder.GetAllTiles().Max(tile => tile.x)) / 2f,
-            ((float)Singleton.WorldContextInstance.MapHolder.GetAllTiles().Min(tile => tile.y) + (float)Singleton.WorldContextInstance.MapHolder.GetAllTiles().Max(tile => tile.y)) / 2f,
+        Vector3 center = new Vector3(((float)Singleton.WorldContextInstance.MapHolder.GetAllTiles().Min(tile => tile.X) + (float)Singleton.WorldContextInstance.MapHolder.GetAllTiles().Max(tile => tile.X)) / 2f,
+            ((float)Singleton.WorldContextInstance.MapHolder.GetAllTiles().Min(tile => tile.Y) + (float)Singleton.WorldContextInstance.MapHolder.GetAllTiles().Max(tile => tile.Y)) / 2f,
             0);
 
         Singleton.MainCamera.transform.position = center + Vector3.back * 10;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StructureMapData
 {
-    public Vector3Int Position;
+    public MapCoordinates Position;
     public string StructureName;
     public int? Ownership;
 }

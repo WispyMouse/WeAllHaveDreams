@@ -1,0 +1,24 @@
+{
+  "ConfigurationType": "Configuration.StructureConfiguration",
+  "Name": "Bell",
+  "DevelopmentName": "Bell",
+  "Appearance": "BellSprites",
+  "Defenses":
+  [
+	{
+		"Tags": [ ],
+		"DefensiveRatio": 0.95
+	}
+  ],
+  "Abilities": 
+  [
+	{
+		"AbilityName": "RecruitsAbility",
+		"Arguments": [ "Basic" ]
+	},
+	{
+		"AbilityName": "HealsAllyAbility",
+		"Arguments": [ 2 ]
+	}
+  ]
+}

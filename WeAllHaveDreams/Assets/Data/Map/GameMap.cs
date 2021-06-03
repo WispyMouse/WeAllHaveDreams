@@ -8,12 +8,12 @@ using UnityEngine.Tilemaps;
 
 public class GameMap
 {
-    Dictionary<Vector3Int, IEnumerable<Vector3Int>> Neighbors { get; set; }
-    Dictionary<Vector3Int, GameplayTile> GameplayTiles { get; set; }
+    Dictionary<MapCoordinates, IEnumerable<MapCoordinates>> Neighbors { get; set; }
+    Dictionary<MapCoordinates, GameplayTile> GameplayTiles { get; set; }
 
     public Realm LoadedRealm;
 
-    public GameplayTile GetGameplayTile(Vector3Int position)
+    public GameplayTile GetGameplayTile(MapCoordinates position)
     {
         GameplayTile foundTile;
 
@@ -29,7 +29,7 @@ public class GameMap
     {
         try
         {
-            var gameplayTiles = new Dictionary<Vector3Int, GameplayTile>();
+            var gameplayTiles = new Dictionary<MapCoordinates, GameplayTile>();
 
             GameMap newMap = new GameMap();
             newMap.LoadedRealm = realmData;
@@ -56,24 +56,24 @@ public class GameMap
     {
         GameMap newMap = new GameMap();
 
-        var neighbors = new Dictionary<Vector3Int, IEnumerable<Vector3Int>>();
-        var gameplayTiles = new Dictionary<Vector3Int, GameplayTile>();
+        var neighbors = new Dictionary<MapCoordinates, IEnumerable<MapCoordinates>>();
+        var gameplayTiles = new Dictionary<MapCoordinates, GameplayTile>();
 
-        var traveled = new HashSet<Vector3Int>() { Vector3Int.zero };
-        var frontier = new HashSet<Vector3Int>() { Vector3Int.zero };
-        gameplayTiles.Add(Vector3Int.zero, tileMap.GetTile<GameplayTile>(Vector3Int.zero));
+        var traveled = new HashSet<MapCoordinates>() { MapCoordinates.Zero };
+        var frontier = new HashSet<MapCoordinates>() { MapCoordinates.Zero };
+        gameplayTiles.Add(MapCoordinates.Zero, tileMap.GetTile<GameplayTile>(MapCoordinates.Zero));
 
         while (frontier.Any())
         {
-            Vector3Int thisTile = frontier.First();
+            MapCoordinates thisTile = frontier.First();
             frontier.Remove(thisTile);
 
-            HashSet<Vector3Int> actualNeighbors = new HashSet<Vector3Int>();
+            HashSet<MapCoordinates> actualNeighbors = new HashSet<MapCoordinates>();
 
-            foreach (Vector3Int curPotentialNeighbor in GetPotentialNeighbors(thisTile))
+            foreach (MapCoordinates curPotentialNeighbor in GetPotentialNeighbors(thisTile))
             {
                 // If this tile isn't in the map, continue
-                if (!tileMap.HasTile((Vector3Int)curPotentialNeighbor))
+                if (!tileMap.HasTile(curPotentialNeighbor))
                 {
                     continue;
                 }
@@ -88,7 +88,7 @@ public class GameMap
 
                 frontier.Add(curPotentialNeighbor);
                 traveled.Add(curPotentialNeighbor);
-                gameplayTiles.Add(curPotentialNeighbor, tileMap.GetTile<GameplayTile>((Vector3Int)curPotentialNeighbor));
+                gameplayTiles.Add(curPotentialNeighbor, tileMap.GetTile<GameplayTile>(curPotentialNeighbor));
             }
 
             neighbors.Add(thisTile, actualNeighbors);
@@ -104,28 +104,28 @@ public class GameMap
     {
         GameMap newMap = new GameMap();
         newMap.LoadedRealm = Realm.GetEmptyRealm();
-        newMap.GameplayTiles = new Dictionary<Vector3Int, GameplayTile>();
-        newMap.Neighbors = new Dictionary<Vector3Int, IEnumerable<Vector3Int>>();
+        newMap.GameplayTiles = new Dictionary<MapCoordinates, GameplayTile>();
+        newMap.Neighbors = new Dictionary<MapCoordinates, IEnumerable<MapCoordinates>>();
         return newMap;
     }
 
-    public static Vector3Int[] GetPotentialNeighbors(Vector3Int center)
+    public static MapCoordinates[] GetPotentialNeighbors(MapCoordinates center)
     {
-        return new Vector3Int[]
+        return new MapCoordinates[]
         {
-            center + Vector3Int.right,
-            center + Vector3Int.up,
-            center + Vector3Int.left,
-            center + Vector3Int.down
+            center + MapCoordinates.Right,
+            center + MapCoordinates.Up,
+            center + MapCoordinates.Left,
+            center + MapCoordinates.Down
         };
     }
 
-    public IEnumerable<Vector3Int> PotentialMoves(MapMob movingMob, WorldContext worldContext)
+    public IEnumerable<MapCoordinates> PotentialMoves(MapMob movingMob, WorldContext worldContext)
     {
-        Vector3Int startingTile = movingMob.Position;
+        MapCoordinates startingTile = movingMob.Position;
 
-        var frontier = new Dictionary<Vector3Int, int>();
-        var possibleVisits = new Dictionary<Vector3Int, int>();
+        var frontier = new Dictionary<MapCoordinates, decimal>();
+        var possibleVisits = new Dictionary<MapCoordinates, decimal>();
 
         possibleVisits.Add(startingTile, 0);
         frontier.Add(startingTile, 0);
@@ -141,14 +141,14 @@ public class GameMap
                 continue;
             }
 
-            foreach (Vector3Int neighbor in GetNeighbors(thisTile.Key))
+            foreach (MapCoordinates neighbor in GetNeighbors(thisTile.Key))
             {
-                int totalCost = thisTile.Value + 1; // TEMPORARY: This will eventually consider the movement cost of the tile we're moving on to
-
                 if (!CanMoveInTo(movingMob, thisTile.Key, neighbor, worldContext))
                 {
                     continue;
                 }
+
+                decimal totalCost = thisTile.Value + CostToMoveInTo(movingMob, thisTile.Key, neighbor, worldContext);                
 
                 // If we've already considered this tile, and it was more efficient last time, ignore this attempt
                 // If we haven't considered this tile, then add it
@@ -173,9 +173,9 @@ public class GameMap
             }
         }
 
-        List<Vector3Int> possibleMoves = new List<Vector3Int>();
+        List<MapCoordinates> possibleMoves = new List<MapCoordinates>();
 
-        foreach (Vector3Int position in possibleVisits.Keys)
+        foreach (MapCoordinates position in possibleVisits.Keys)
         {
             if (CanStopOn(movingMob, position, worldContext))
             {
@@ -186,12 +186,12 @@ public class GameMap
         return possibleMoves;
     }
 
-    public IEnumerable<Vector3Int> PotentialAttacks(MapMob attacking, Vector3Int from)
+    public IEnumerable<MapCoordinates> PotentialAttacks(MapMob attacking, MapCoordinates from)
     {
-        Vector3Int startingTile = from;
+        MapCoordinates startingTile = from;
 
-        var frontier = new Dictionary<Vector3Int, int>();
-        var possibleAttacks = new Dictionary<Vector3Int, int>();
+        var frontier = new Dictionary<MapCoordinates, int>();
+        var possibleAttacks = new Dictionary<MapCoordinates, int>();
 
         possibleAttacks.Add(startingTile, 0);
         frontier.Add(startingTile, 0);
@@ -207,7 +207,7 @@ public class GameMap
                 continue;
             }
 
-            foreach (Vector3Int neighbor in GetNeighbors(thisTile.Key))
+            foreach (MapCoordinates neighbor in GetNeighbors(thisTile.Key))
             {
                 int totalCost = thisTile.Value + 1; // TEMPORARY: This will eventually consider the movement cost of the tile we're moving on to
 
@@ -240,31 +240,31 @@ public class GameMap
         return possibleAttacks.Keys;
     }
 
-    public List<Vector3Int> Path(MapMob moving, Vector3Int to, WorldContext worldContext)
+    public List<MapCoordinates> Path(MapMob moving, MapCoordinates to, WorldContext worldContext)
     {
         // TEMPORARY: Looks like there's no convenient built in solutions for a Priority Queue, will have to make one
-        var frontier = new List<Tuple<Vector3Int, int>>(); ;
-        frontier.Add(new Tuple<Vector3Int, int>(moving.Position, 0));
+        var frontier = new List<Tuple<MapCoordinates, int>>(); ;
+        frontier.Add(new Tuple<MapCoordinates, int>(moving.Position, 0));
 
-        var cameFrom = new Dictionary<Vector3Int, Vector3Int>();
+        var cameFrom = new Dictionary<MapCoordinates, MapCoordinates>();
         cameFrom.Add(moving.Position, moving.Position);
 
-        var costSoFar = new Dictionary<Vector3Int, int>();
+        var costSoFar = new Dictionary<MapCoordinates, int>();
         costSoFar.Add(moving.Position, 0);
 
         while (frontier.Any())
         {
-            Tuple<Vector3Int, int> curPositionTuple = frontier.OrderBy(f => f.Item2).First();
+            Tuple<MapCoordinates, int> curPositionTuple = frontier.OrderBy(f => f.Item2).First();
             frontier.Remove(curPositionTuple);
 
-            Vector3Int positionValue = curPositionTuple.Item1;
+            MapCoordinates positionValue = curPositionTuple.Item1;
 
             if (positionValue == to)
             {
                 break;
             }
 
-            foreach (Vector3Int neighbor in GetNeighbors(positionValue))
+            foreach (MapCoordinates neighbor in GetNeighbors(positionValue))
             {
                 // Can't move here, don't consider it
                 if (!CanMoveInTo(moving, positionValue, neighbor, worldContext))
@@ -273,7 +273,7 @@ public class GameMap
                 }
 
                 int newCost = costSoFar[positionValue] + 1; // TEMPORARY: Will eventually consider value of neighbor
-                int heuristicDistance = newCost + Mathf.Abs(to.x - neighbor.x) + Mathf.Abs(to.y - neighbor.y);
+                int heuristicDistance = newCost + Mathf.Abs(to.X - neighbor.X) + Mathf.Abs(to.Y - neighbor.Y);
 
                 if (cameFrom.ContainsKey(neighbor))
                 {
@@ -281,14 +281,14 @@ public class GameMap
                     {
                         costSoFar[neighbor] = newCost;
                         cameFrom[neighbor] = positionValue;
-                        frontier.Add(new Tuple<Vector3Int, int>(neighbor, heuristicDistance));
+                        frontier.Add(new Tuple<MapCoordinates, int>(neighbor, heuristicDistance));
                     }
                 }
                 else
                 {
                     costSoFar.Add(neighbor, newCost);
                     cameFrom.Add(neighbor, positionValue);
-                    frontier.Add(new Tuple<Vector3Int, int>(neighbor, heuristicDistance));
+                    frontier.Add(new Tuple<MapCoordinates, int>(neighbor, heuristicDistance));
                 }
             }
         }
@@ -299,8 +299,8 @@ public class GameMap
             return null;
         }
 
-        List<Vector3Int> path = new List<Vector3Int>();
-        Vector3Int current = to;
+        List<MapCoordinates> path = new List<MapCoordinates>();
+        MapCoordinates current = to;
 
         while (current != moving.Position)
         {
@@ -312,7 +312,7 @@ public class GameMap
         return path;
     }
 
-    public IEnumerable<Vector3Int> CanAttackFrom(MapMob attacking, Vector3Int target)
+    public IEnumerable<MapCoordinates> CanAttackFrom(MapMob attacking, MapCoordinates target)
     {
         // TEMPORARY: Assume everyone attacks in a perfect area around them, with no diversity in allowed patterns
         // Given this assumption, just find the PotentialAttacks from that position and return that
@@ -320,17 +320,32 @@ public class GameMap
         return PotentialAttacks(attacking, target);
     }
 
-    bool CanMoveInTo(MapMob moving, Vector3Int from, Vector3Int to, WorldContext worldContext)
+    decimal CostToMoveInTo(MapMob moving, MapCoordinates from, MapCoordinates to, WorldContext worldContext)
     {
         if (!GameplayTiles.ContainsKey(to))
         {
-            DebugTextLog.AddTextToLog($"Reporting that {to.x}, {to.y} is off the gameplay map and can't be moved in to");
+            return MovementCostAttribute.TypicalMovementCost;
+        }
+
+        MovementCostAttribute movement = GetGameplayTile(to).MovementCosts(moving);
+        if (movement?.MovementModification == MovementModificationEnum.AlteredCost)
+        {
+            return movement.Value;
+        }
+
+        return MovementCostAttribute.TypicalMovementCost;
+    }
+
+    bool CanMoveInTo(MapMob moving, MapCoordinates from, MapCoordinates to, WorldContext worldContext)
+    {
+        if (!GameplayTiles.ContainsKey(to))
+        {
             return false;
         }
 
-        if (GetGameplayTile(to).CompletelySolid)
+        MovementCostAttribute movement = GetGameplayTile(to).MovementCosts(moving);
+        if (movement?.MovementModification == MovementModificationEnum.Impassible)
         {
-            // DebugTextLog.AddTextToLog($"Reporting that {to.x}, {to.y} is completely solid and can't be moved in to");
             return false;
         }
 
@@ -344,14 +359,15 @@ public class GameMap
         return true;
     }
 
-    bool CanStopOn(MapMob moving, Vector3Int to, WorldContext worldContext)
+    bool CanStopOn(MapMob moving, MapCoordinates to, WorldContext worldContext)
     {
         if (!GameplayTiles.ContainsKey(to))
         {
             return false;
         }
 
-        if (GetGameplayTile(to).CompletelySolid)
+        MovementCostAttribute movement = GetGameplayTile(to).MovementCosts(moving);
+        if (movement?.MovementModification == MovementModificationEnum.Impassible)
         {
             return false;
         }
@@ -366,26 +382,26 @@ public class GameMap
         return true;
     }
 
-    public IEnumerable<Vector3Int> GetNeighbors(Vector3Int point)
+    public IEnumerable<MapCoordinates> GetNeighbors(MapCoordinates point)
     {
-        IEnumerable<Vector3Int> neighbors;
+        IEnumerable<MapCoordinates> neighbors;
 
         if (Neighbors.TryGetValue(point, out neighbors))
         {
             return neighbors;
         }
 
-        DebugTextLog.AddTextToLog($"Tried to get neighbors for ({point.x}, {point.y}), but the tile wasn't in the {nameof(Neighbors)} dictionary.", DebugTextLogChannel.Verbose);
+        DebugTextLog.AddTextToLog($"Tried to get neighbors for {point.ToString()}, but the tile wasn't in the {nameof(Neighbors)} dictionary.", DebugTextLogChannel.Verbose);
 
-        return Array.Empty<Vector3Int>();
+        return Array.Empty<MapCoordinates>();
     }
 
-    public IEnumerable<Vector3Int> GetAllTiles()
+    public IEnumerable<MapCoordinates> GetAllTiles()
     {
         return GameplayTiles.Keys;
     }
 
-    public void SetTile(Vector3Int position, GameplayTile tile)
+    public void SetTile(MapCoordinates position, GameplayTile tile)
     {
         if (tile == null)
         {
@@ -401,13 +417,13 @@ public class GameMap
         {
             GameplayTiles.Add(position, tile);
 
-            List<Vector3Int> newNeighbors = new List<Vector3Int>();
+            List<MapCoordinates> newNeighbors = new List<MapCoordinates>();
 
-            foreach (Vector3Int curNeighbor in GetPotentialNeighbors(position))
+            foreach (MapCoordinates curNeighbor in GetPotentialNeighbors(position))
             {
                 if (GameplayTiles.ContainsKey(curNeighbor))
                 {
-                    Neighbors[curNeighbor] = Neighbors[curNeighbor].Union(new Vector3Int[] { position });
+                    Neighbors[curNeighbor] = Neighbors[curNeighbor].Union(new MapCoordinates[] { position });
                     newNeighbors.Add(curNeighbor);
                 }
             }
@@ -416,34 +432,34 @@ public class GameMap
         }
     }
 
-    public void RemoveTile(Vector3Int position)
+    public void RemoveTile(MapCoordinates position)
     {
         GameplayTiles.Remove(position);
         Neighbors.Remove(position);
 
-        foreach (Vector3Int curNeighbor in GetPotentialNeighbors(position))
+        foreach (MapCoordinates curNeighbor in GetPotentialNeighbors(position))
         {
             if (GameplayTiles.ContainsKey(curNeighbor))
             {
-                Neighbors[curNeighbor] = Neighbors[curNeighbor].Except(new Vector3Int[] { position });
+                Neighbors[curNeighbor] = Neighbors[curNeighbor].Except(new MapCoordinates[] { position });
             }
         }
     }
 
-    static Dictionary<Vector3Int, IEnumerable<Vector3Int>> GenerateNeighbors(Realm forRealm)
+    static Dictionary<MapCoordinates, IEnumerable<MapCoordinates>> GenerateNeighbors(Realm forRealm)
     {
-        Dictionary<Vector3Int, IEnumerable<Vector3Int>> neighborsDictionary = new Dictionary<Vector3Int, IEnumerable<Vector3Int>>();
+        Dictionary<MapCoordinates, IEnumerable<MapCoordinates>> neighborsDictionary = new Dictionary<MapCoordinates, IEnumerable<MapCoordinates>>();
 
         foreach (RealmCoordinate coordinate in forRealm.RealmCoordinates)
         {
-            neighborsDictionary.Add(coordinate.Position, new Vector3Int[] { });
+            neighborsDictionary.Add(coordinate.Position, new MapCoordinates[] { });
         }
 
         foreach (RealmCoordinate coordinate in forRealm.RealmCoordinates)
         {
-            List<Vector3Int> actualNeighbors = new List<Vector3Int>();
+            List<MapCoordinates> actualNeighbors = new List<MapCoordinates>();
 
-            foreach (Vector3Int neighbor in GetPotentialNeighbors(coordinate.Position))
+            foreach (MapCoordinates neighbor in GetPotentialNeighbors(coordinate.Position))
             {
                 if (neighborsDictionary.ContainsKey(neighbor))
                 {

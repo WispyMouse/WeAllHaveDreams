@@ -5,9 +5,9 @@ using UnityEngine;
 // Adapted from https://wiki.unity3d.com/index.php/Bresenham3D
 public static class BresenhamLineDrawer
 {
-    public static List<Vector3Int> PointsOnLine(Vector3Int start, Vector3Int end)
+    public static List<MapCoordinates> PointsOnLine(MapCoordinates start, MapCoordinates end)
     {
-        List<Vector3Int> points = new List<Vector3Int>();
+        List<MapCoordinates> points = new List<MapCoordinates>();
 
         int xd, yd;
         int x, y;
@@ -15,8 +15,8 @@ public static class BresenhamLineDrawer
         int sx, sy;
         int dx, dy;
 
-        dx = (int)(end.x - start.x);
-        dy = (int)(end.y - start.y);
+        dx = (int)(end.X - start.X);
+        dy = (int)(end.Y - start.Y);
 
         ax = Mathf.Abs(dx) << 1;
         ay = Mathf.Abs(dy) << 1;
@@ -24,17 +24,17 @@ public static class BresenhamLineDrawer
         sx = (int)Mathf.Sign((float)dx);
         sy = (int)Mathf.Sign((float)dy);
 
-        x = (int)start.x;
-        y = (int)start.y;
+        x = (int)start.X;
+        y = (int)start.Y;
 
         if (ax >= ay) // x dominant
         {
             yd = ay - (ax >> 1);
             for (; ; )
             {
-                points.Add(new Vector3Int(x, y, 0));
+                points.Add(new MapCoordinates(x, y));
 
-                if (x == (int)end.x)
+                if (x == (int)end.X)
                 {
                     return points;
                 }
@@ -54,9 +54,9 @@ public static class BresenhamLineDrawer
             xd = ax - (ay >> 1);
             for (; ; )
             {
-                points.Add(new Vector3Int(x, y, 0));
+                points.Add(new MapCoordinates(x, y));
 
-                if (y == (int)end.y)
+                if (y == (int)end.Y)
                     return points;
 
                 if (xd >= 0)

@@ -1,0 +1,94 @@
+{
+  "ConfigurationType": "Configuration.TileConfiguration",
+  "TileName": "Rough",
+  "MovementCostAttributes":
+  [
+	{
+		"Tags": [],
+		"MovementModification": "AlteredCost",
+		"Value": ".5"
+	}
+  ],
+  "SpriteSettings":
+  [
+	{
+		"SameNeighborDirections":
+		[
+			"East",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Rough_N"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Rough_E"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"West"
+		],
+		"SpriteToUse": "Rough_S"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"South"
+		],
+		"SpriteToUse": "Rough_W"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Rough_NEInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"West"
+		],
+		"SpriteToUse": "Rough_SEInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East"
+		],
+		"SpriteToUse": "Rough_SWInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"East",
+			"South"
+		],
+		"SpriteToUse": "Rough_NWInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Rough_Center"
+	}
+  ],
+  "DefaultSprite": "Rough_Center"
+}

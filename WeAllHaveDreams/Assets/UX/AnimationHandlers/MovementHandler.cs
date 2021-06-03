@@ -9,9 +9,9 @@ public class MovementHandler : MonoBehaviour
 
     public float TimeForUnitToWalkAcrossTile = .12f;
 
-    public IEnumerator UnitWalks(MapMob moving, Vector3Int position)
+    public IEnumerator UnitWalks(MapMob moving, MapCoordinates position)
     {
-        List<Vector3Int> path = WorldContextInstance.MapHolder.Path(moving, position);
+        List<MapCoordinates> path = WorldContextInstance.MapHolder.Path(moving, position);
 
         if (path == null)
         {
@@ -19,17 +19,17 @@ public class MovementHandler : MonoBehaviour
             yield break;
         }
 
-        Vector3Int startingPosition = moving.Position;
+        Vector3 startingPosition = new Vector3(moving.Position.X, moving.Position.Y);
 
         while (path.Any())
         {
-            Vector3Int thisPathPart = path[0];
+            MapCoordinates thisPathPart = path[0];
             path.RemoveAt(0);
 
-            Vector3Int targetPosition = new Vector3Int(thisPathPart.x, thisPathPart.y, thisPathPart.z);
+            Vector3 targetPosition = new Vector3(thisPathPart.X, thisPathPart.Y, 0);
             float curTime = 0;
 
-            WorldContextInstance.FogHolder.ManageVisibilityToCurrentPerspective(moving, targetPosition);
+            WorldContextInstance.FogHolder.ManageVisibilityToCurrentPerspective(moving, thisPathPart);
 
             while (curTime <= TimeForUnitToWalkAcrossTile)
             {

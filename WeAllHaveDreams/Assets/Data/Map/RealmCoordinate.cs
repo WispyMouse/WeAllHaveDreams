@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class RealmCoordinate
 {
-    public Vector3Int Position;
+    public MapCoordinates Position;
     public string Tile;
 }

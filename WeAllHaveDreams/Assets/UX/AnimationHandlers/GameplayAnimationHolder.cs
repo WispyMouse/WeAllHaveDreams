@@ -9,13 +9,13 @@ public class GameplayAnimationHolder : MonoBehaviour
     public MovementHandler MovementHandlerInstance;
     public AttackHandler AttackAnimationHandlerInstance;
 
-    public IEnumerator MoveUnit(MapMob toMove, Vector3Int to)
+    public IEnumerator MoveUnit(MapMob toMove, MapCoordinates to)
     {
         MapMob onPoint;
 
         if ((onPoint = WorldContextInstance.MobHolder.MobOnPoint(to)) != null && onPoint != toMove)
         {
-            DebugTextLog.AddTextToLog($"A unit is trying to move to an occuppied tile at {{{to.x}, {to.y}, {to.z}}}");
+            DebugTextLog.AddTextToLog($"A unit is trying to move to an occuppied tile at {to.ToString()}", DebugTextLogChannel.RuntimeError);
             yield break;
         }
 
@@ -24,7 +24,7 @@ public class GameplayAnimationHolder : MonoBehaviour
         yield return MovementHandlerInstance.UnitWalks(toMove, to);
 
         toMove.SetPosition(to);
-        DebugTextLog.AddTextToLog($"Unit {toMove.Name} moved to {{{to.x}, {to.y}, {to.z}}}");
+        DebugTextLog.AddTextToLog($"Unit {toMove.Name} moved to {to.ToString()}", DebugTextLogChannel.Verbose);
 
         toMove.CalculateStandingStatAdjustments(WorldContextInstance.FeatureHolder.FeatureOnPoint(to));
     }
@@ -36,7 +36,7 @@ public class GameplayAnimationHolder : MonoBehaviour
         yield return AttackAnimationHandlerInstance.UnitAttacksUnit(engaging, defending, new System.Action(() =>
         {
             defending.HitPoints = System.Math.Max(0, defending.HitPoints - offensiveDamage);
-            DebugTextLog.AddTextToLog($"{engaging.Name} deals {offensiveDamage} damage to {defending.Name}! ({defending.HitPoints} remaining)");
+            DebugTextLog.AddTextToLog($"{engaging.Name} deals {offensiveDamage} damage to {defending.Name}! ({defending.HitPoints} remaining)", DebugTextLogChannel.Gameplay);
         }));
 
         if (defending.HitPoints > 0)
@@ -52,7 +52,7 @@ public class GameplayAnimationHolder : MonoBehaviour
             yield return AttackAnimationHandlerInstance.UnitAttacksUnit(defending, engaging, new System.Action(() =>
             {
                 engaging.HitPoints = System.Math.Max(0, engaging.HitPoints - returnDamage);
-                DebugTextLog.AddTextToLog($"{defending.Name} counters with {returnDamage} damage to {engaging.Name}! ({engaging.HitPoints} remaining)");
+                DebugTextLog.AddTextToLog($"{defending.Name} counters with {returnDamage} damage to {engaging.Name}! ({engaging.HitPoints} remaining)", DebugTextLogChannel.Gameplay);
             }));
         }
     }

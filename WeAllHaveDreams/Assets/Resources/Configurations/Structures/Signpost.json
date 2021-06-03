@@ -1,0 +1,20 @@
+{
+  "ConfigurationType": "Configuration.StructureConfiguration",
+  "Name": "Signpost",
+  "DevelopmentName": "Signpost",
+  "Appearance": "SignpostSprites",
+  "Defenses":
+  [
+	{
+		"Tags": [ ],
+		"DefensiveRatio": 0.95
+	}
+  ],
+  "Abilities": 
+  [
+	{
+		"AbilityName": "HealsAllyAbility",
+		"Arguments": [ 2 ]
+	}
+  ]
+}

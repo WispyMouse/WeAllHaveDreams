@@ -10,8 +10,8 @@ public class LoadMapDialog : MonoBehaviour
     Coroutine ActiveLoading { get; set; }
 
     public Transform LoadableMapsList;
-    public MapEditorFileManagement MapEditorFileManagementInstance;
     public MapEditorBootup MapEditorBootupInstance;
+    public MapEditorRuntimeController MapEditorRuntimeControllerInstance;
 
     Realm SelectedRealm { get; set; }
 
@@ -28,13 +28,10 @@ public class LoadMapDialog : MonoBehaviour
 
     IEnumerator ProcessOpening()
     {
-        Task<List<Realm>> realmsTask = Task.Run(MapEditorFileManagementInstance.GetAllRealms);
-        while (!realmsTask.IsCompleted)
-        {
-            yield return new WaitForEndOfFrame();
-        }
+        CoroutineTaskReturnWrapper<IEnumerable<Realm>> allRealmsWrapper = ThreadDoctor.YieldTaskWithWrapper(FileManagement.GetAllRealms());
+        yield return allRealmsWrapper.YieldRoutine();
 
-        foreach (Realm curRealm in realmsTask.Result)
+        foreach (Realm curRealm in allRealmsWrapper.Result)
         {
             LoadMapMapNameButton newButton = Instantiate(ButtonPF, LoadableMapsList);
             newButton.SetRealm(curRealm, SelectRealm);
@@ -73,7 +70,7 @@ public class LoadMapDialog : MonoBehaviour
 
     IEnumerator ProcessLoading()
     {
-        yield return MapEditorBootupInstance.LoadRealm(SelectedRealm);
+        yield return MapEditorRuntimeControllerInstance.LoadRealm(SelectedRealm);
         Close();
     }
 }

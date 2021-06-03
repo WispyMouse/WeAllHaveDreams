@@ -14,7 +14,7 @@ public class LocationInput : SingletonBase<LocationInput>
     {
         if (tileCursorVisibility)
         {
-            Vector3Int? tileCursorPosition = GetHoveredTilePosition(false);
+            MapCoordinates? tileCursorPosition = GetHoveredTilePosition(false);
 
             if (tileCursorPosition.HasValue)
             {
@@ -23,9 +23,9 @@ public class LocationInput : SingletonBase<LocationInput>
         }
     }
 
-    public static Vector3Int? GetHoveredTilePosition(bool requireExistingTile = true)
+    public static MapCoordinates? GetHoveredTilePosition(bool requireExistingTile = true)
     {
-        Vector3Int worldpoint = Singleton.WorldContextInstance.MapHolder.LoadedMap.WorldToCell(CameraController.ScreenToWorldPoint(Input.mousePosition));
+        MapCoordinates worldpoint = Singleton.WorldContextInstance.MapHolder.LoadedMap.WorldToCell(CameraController.ScreenToWorldPoint(Input.mousePosition));
 
         if (requireExistingTile && !Singleton.WorldContextInstance.MapHolder.LoadedMap.HasTile(worldpoint))
         {

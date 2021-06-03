@@ -1,0 +1,94 @@
+{
+  "ConfigurationType": "Configuration.TileConfiguration",
+  "TileName": "Wall",
+  "ObstructsVision": true,
+  "MovementCostAttributes":
+  [
+	{
+		"Tags": [],
+		"MovementModification": "Impassible"
+	}
+  ],
+  "SpriteSettings":
+  [
+	{
+		"SameNeighborDirections":
+		[
+			"East",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Wall_N"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Wall_E"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"West"
+		],
+		"SpriteToUse": "Wall_S"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"South"
+		],
+		"SpriteToUse": "Wall_W"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Wall_NEInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"West"
+		],
+		"SpriteToUse": "Wall_SEInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East"
+		],
+		"SpriteToUse": "Wall_SWInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"East",
+			"South"
+		],
+		"SpriteToUse": "Wall_NWInnerCorner"
+	},
+	{
+		"SameNeighborDirections":
+		[
+			"North",
+			"East",
+			"South",
+			"West"
+		],
+		"SpriteToUse": "Wall_Center"
+	}
+  ],
+  "DefaultSprite": "Wall_Center"
+}

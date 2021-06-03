@@ -8,5 +8,9 @@
   "AttackRange": 1,
   "DamageOutputRatio": 0.4,
   "DamageReductionRatio": 1,
-  "Appearance": "BasicMobSprite"
+  "Appearance": "BasicMobSprite",
+  "Tags":
+  [
+	"Basic"
+  ]
 }

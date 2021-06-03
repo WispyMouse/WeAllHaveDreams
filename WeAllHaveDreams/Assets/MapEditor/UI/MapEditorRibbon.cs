@@ -8,18 +8,24 @@ using UnityEngine.UI;
 
 public class MapEditorRibbon : MonoBehaviour
 {
-    public MapEditorFileManagement MapEditorFileManagementInstance;
-
     public MapEditorPalette MapEditorPaletteInstance;
+    public MapEditorRuntimeController MapEditorRuntimeControllerInstance;
 
     public SaveMapDialog SaveMapDialogInstance;
     public LoadMapDialog LoadMapDialogInstance;
 
     public Button PlayButton;
 
+    private void Awake()
+    {
+        MapEditorRuntimeControllerInstance.MapSavedEvent += MapSaved;
+        MapEditorRuntimeControllerInstance.MapLoadedEvent += MapLoaded;
+        MapEditorRuntimeControllerInstance.MapChangedEvent += MapChanged;
+    }
+
     public void SaveButtonPressed()
     {
-        if (MapEditorFileManagementInstance.MapHasBeenSavedBefore)
+        if (GameplayMapBootup.WIPRealm != null)
         {
             StartCoroutine(QuickSave());
         }
@@ -29,16 +35,19 @@ public class MapEditorRibbon : MonoBehaviour
         }
     }
 
-    async Task SaveExistingRealm()
+    public void MapLoaded(object sender, Realm realm)
     {
-        await MapEditorFileManagementInstance.SaveExistingRealm();
-        DebugTextLog.AddTextToLog("Map Saved!", DebugTextLogChannel.MapEditorOperations);
         PlayButton.interactable = true;
     }
 
-    public void MapLoaded()
+    public void MapSaved(object sender, Realm realm)
     {
         PlayButton.interactable = true;
+    }
+
+    public void MapChanged(object sender, Realm realm)
+    {
+        PlayButton.interactable = false;
     }
 
     public void PlayButtonPressed()
@@ -49,16 +58,8 @@ public class MapEditorRibbon : MonoBehaviour
 
     IEnumerator QuickSave()
     {
-        Task saveTask = Task.Run(SaveExistingRealm);
-        while (!saveTask.IsCompleted)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        MapSaved();
-    }
-
-    public void MapSaved()
-    {
+        yield return MapEditorRuntimeControllerInstance.SaveRealm();
+        DebugTextLog.AddTextToLog("Map Saved!", DebugTextLogChannel.MapEditorOperations);
         PlayButton.interactable = true;
     }
 
@@ -71,24 +72,32 @@ public class MapEditorRibbon : MonoBehaviour
     {
         List<PaletteSettings> tileSettings = new List<PaletteSettings>();
 
-        foreach (GameplayTile curTile in TileLibrary.GetAllTiles())
+        foreach (TileConfiguration curTile in TileLibrary.GetAllTiles())
         {
             tileSettings.Add(new TilePlacementPalette(curTile));
         }
 
-        MapEditorPaletteInstance.Open(tileSettings);
+        List<PaletteOptions> paletteOptions = new List<PaletteOptions>()
+        {
+            new SingleClickTilePaintOption(),
+            new DragTilePaintOption(),
+            new FloodFillTilePaintOption(),
+            new AreaDragTilePaintOption()
+        };
+
+        MapEditorPaletteInstance.OpenTab(new PaletteTab("Tiles", tileSettings, paletteOptions));
     }
 
     public void StructurePaletteClicked()
     {
         List<PaletteSettings> structureSettings = new List<PaletteSettings>();
 
-        foreach (MapStructure structure in StructureLibrary.GetAllStructures())
+        foreach (StructureConfiguration structure in StructureLibrary.GetAllStructures())
         {
             structureSettings.Add(new StructurePlacementPalette(structure));
         }
 
-        MapEditorPaletteInstance.Open(structureSettings);
+        MapEditorPaletteInstance.OpenTab(new PaletteTab("Structures", structureSettings));
     }
 
     public void FeaturePaletteClicked()
@@ -100,7 +109,7 @@ public class MapEditorRibbon : MonoBehaviour
             featureSettings.Add(new FeaturePlacementPalette(feature));
         }
 
-        MapEditorPaletteInstance.Open(featureSettings);
+        MapEditorPaletteInstance.OpenTab(new PaletteTab("Features", featureSettings));
     }
 
     public void OwnershipPaletteClicked()
@@ -114,7 +123,7 @@ public class MapEditorRibbon : MonoBehaviour
             ownershipSettings.Add(new OwnershipPalette(ii));
         }
 
-        MapEditorPaletteInstance.Open(ownershipSettings);
+        MapEditorPaletteInstance.OpenTab(new PaletteTab("Faction", ownershipSettings));
     }
 
     public void MobPaletteClicked()
@@ -126,11 +135,16 @@ public class MapEditorRibbon : MonoBehaviour
             mobSettings.Add(new MobPalette(config));
         }
 
-        MapEditorPaletteInstance.Open(mobSettings);
+        MapEditorPaletteInstance.OpenTab(new PaletteTab("Mobs", mobSettings));
     }
 
     public void LoadMapButtonClicked()
     {
         LoadMapDialogInstance.Open();
+    }
+
+    public void NewMapButtonPressed()
+    {
+        MapEditorRuntimeControllerInstance.NewMap();
     }
 }

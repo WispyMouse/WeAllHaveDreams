@@ -9,7 +9,7 @@ public class ReminderFactory : SingletonBase<ReminderFactory>
     public Sprite MoveReminderSprite;
     public Sprite AttackReminderSprite;
 
-    public static Reminder GetReminder(MapMob onMob, string reminderTag)
+    public static Reminder GetReminder(MobVisuals onMob, string reminderTag)
     {
         Reminder newReminder = Instantiate(Singleton.ReminderPF, onMob.RemindersParent);
 

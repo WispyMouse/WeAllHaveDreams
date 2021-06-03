@@ -1,0 +1,24 @@
+{
+  "ConfigurationType": "Configuration.StructureConfiguration",
+  "Name": "Capital",
+  "DevelopmentName": "Capital",
+  "Appearance": "CapitalSprites",
+  "Defenses":
+  [
+	{
+		"Tags": [ ],
+		"DefensiveRatio": 0.8
+	}
+  ],
+  "Abilities": 
+  [
+	{
+		"AbilityName": "CapitalCaptureAbility",
+		"Arguments": [ ]
+	},
+	{
+		"AbilityName": "HealsAllyAbility",
+		"Arguments": [ 3 ]
+	}
+  ]
+}

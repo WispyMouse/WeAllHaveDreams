@@ -5,56 +5,43 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MapEditorBootup : MonoBehaviour
+/// <summary>
+/// Bootup entry point for the MapEditor.
+/// This is the first logic point for the MapEditor, where all of the runtimes are initialized.
+/// </summary>
+public class MapEditorBootup : MapBootup
 {
-    public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
-    public LoadMapDialog LoadMapDialogInstance;
+    /// <summary>
+    /// Pointer to the <see cref="MapEditorRuntimeController"/> in the scene.
+    /// This class hands off the start of the MapEditor scene to this after it's done loading in.
+    /// </summary>
     public MapEditorRuntimeController MapEditorRuntimeControllerInstance;
-    public MapEditorRibbon MapEditorRibbonInstance;
 
-    private void Start()
+    /// <inheritdoc />
+    protected override IEnumerator Startup()
     {
-        StartCoroutine(StartInternal());
+        MapEditorRuntimeControllerInstance.Startup();
+
+        yield break;
     }
 
-    IEnumerator StartInternal()
+    /// <inheritdoc />
+    protected override IEnumerator LoadRealm()
     {
-        DebugTextLog.AddTextToLog("Loading Library");
-        yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("Library", LoadSceneMode.Additive));
-
-        yield return ThreadDoctor.YieldTask(ConfigurationLoadingEntrypoint.LoadAllConfigurationData());
-
-        DebugTextLog.AddTextToLog("Loading WorldContext");
-        yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("WorldContext", LoadSceneMode.Additive));
-
-        DebugTextLog.AddTextToLog("Loading Camera");
-        yield return ThreadDoctor.YieldAsyncOperation(SceneManager.LoadSceneAsync("Camera", LoadSceneMode.Additive));
-
-        if (MapBootup.WIPRealm == null)
+        // Passes the load call to the runtime controller
+        yield return MapEditorRuntimeControllerInstance.LoadRealm(GetRealm());
+    }
+    
+    /// <inheritdoc />
+    protected override Realm GetRealm()
+    {
+        if (GameplayMapBootup.WIPRealm == null)
         {
-            WorldContextInstance.MapHolder.LoadEmptyRealm();
+            return Realm.GetEmptyRealm();
         }
         else
         {
-            WorldContextInstance.MapHolder.LoadFromRealm(MapBootup.WIPRealm);
+            return GameplayMapBootup.WIPRealm;
         }
-
-        LocationInput.SetTileCursorVisibility(true);
-
-        DebugTextLog.AddTextToLog("Press Z to undo and Y to redo", DebugTextLogChannel.DebugOperationInputInstructions);
-
-        LoadMapDialogInstance.Open();
-        MapEditorRuntimeControllerInstance.Startup();
-    }
-
-    public IEnumerator LoadRealm(Realm toLoad)
-    {
-        WorldContextInstance.ClearEverything();
-
-        DebugTextLog.AddTextToLog($"Loading realm: {toLoad.Name}, {toLoad.RealmCoordinates.Count()}", DebugTextLogChannel.DebugLogging);
-        yield return WorldContextInstance.MapHolder.LoadFromRealm(toLoad);
-        MapBootup.WIPRealm = toLoad;
-        MapEditorRibbonInstance.MapLoaded();
-        DebugTextLog.AddTextToLog("Loaded realm", DebugTextLogChannel.DebugLogging);
     }
 }

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Phase for using the abilities of a structure.
+/// </summary>
 public class StructureUsagePhase : InputGameplayPhase
 {
     public NeutralPhase NeutralPhaseInstance;
@@ -11,14 +14,19 @@ public class StructureUsagePhase : InputGameplayPhase
     public WorldContext WorldContextInstance => WorldContext.GetWorldContext();
 
     MapStructure selectedStructure { get; set; }
-    List<PlayerInput> possibleInputs { get; set; }
     PlayerInput selectedInput { get; set; }
+
+    SortedDictionary<KeyCode, PlayerInput> possibleInputs { get; set; }
 
     public StructureUsagePhase StructureSelected(MapStructure structure)
     {
         selectedStructure = structure;
-        possibleInputs = structure.GetPossiblePlayerInputs(WorldContextInstance).ToList();
         selectedInput = null;
+        possibleInputs = new SortedDictionary<KeyCode, PlayerInput>();
+
+        List<PlayerInput> inputs = structure.GetPossiblePlayerInputs(WorldContextInstance).ToList();
+        possibleInputs = SortOptionsInToDictionary(inputs);
+
         return this;
     }
 
@@ -27,15 +35,12 @@ public class StructureUsagePhase : InputGameplayPhase
 
     public override IEnumerator EnterPhase()
     {
-        // TODO: Handle this navigation more elegantly!
-        for (int index = 0; index < possibleInputs.Count && index < ((int)KeyCode.Y - (int)KeyCode.A); index++)
+        foreach (KeyValuePair<KeyCode, PlayerInput> input in possibleInputs)
         {
-            KeyCode thisChar = (KeyCode)((int)KeyCode.A + index);
-            PlayerInput plan = possibleInputs[index];
-            DebugTextLog.AddTextToLog($"{thisChar.ToString()}) {plan.LongTitle}");
+            DebugTextLog.AddTextToLog($"{input.Key.ToString()}) {input.Value.LongTitle}");
         }
 
-        DebugTextLog.AddTextToLog("Z) Back");
+        DebugTextLog.AddTextToLog("Z) Back", DebugTextLogChannel.DebugOperationInputInstructions);
 
         yield break;
     }
@@ -44,12 +49,11 @@ public class StructureUsagePhase : InputGameplayPhase
     {
         nextPhase = this;
 
-        // TODO: Handle this navigation more elegantly!
-        for (int index = 0; index < possibleInputs.Count && index < ((int)KeyCode.Y - (int)KeyCode.A); index ++)
+        foreach (KeyValuePair<KeyCode, PlayerInput> input in possibleInputs)
         {
-            if (Input.GetKeyDown((KeyCode)((int)KeyCode.A + index)))
+            if (Input.GetKeyDown(input.Key))
             {
-                selectedInput = possibleInputs[index];
+                selectedInput = input.Value;
                 nextPhase = InputResolutionPhaseInstance.ResolveThis(selectedInput, NeutralPhaseInstance);
                 return true;
             }

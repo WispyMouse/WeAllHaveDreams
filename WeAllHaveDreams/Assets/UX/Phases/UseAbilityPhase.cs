@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Phase for using an ability of a unit.
+/// </summary>
 public class UseAbilityPhase : InputGameplayPhase
 {
     public NeutralPhase NeutralPhaseInstance;
@@ -12,14 +15,16 @@ public class UseAbilityPhase : InputGameplayPhase
     MobConfigurationAbility selectedAbility;
 
     PlayerInput selectedInput { get; set; }
-    List<PlayerInput> possibleInputs { get; set; }
+    SortedDictionary<KeyCode, PlayerInput> possibleInputs { get; set; }
 
     public UseAbilityPhase AbilitySelected(MapMob mob, MobConfigurationAbility ability)
     {
         selectedUnit = mob;
         selectedAbility = ability;
 
-        possibleInputs = ability.GetPossiblePlayerInputs(mob).ToList();
+        List<PlayerInput> inputs = ability.GetPossiblePlayerInputs(mob).ToList();
+        possibleInputs = SortOptionsInToDictionary(inputs);
+
         selectedInput = null;
         return this;
     }
@@ -29,12 +34,9 @@ public class UseAbilityPhase : InputGameplayPhase
 
     public override IEnumerator EnterPhase()
     {
-        // TODO: Handle this navigation more elegantly!
-        for (int index = 0; index < possibleInputs.Count && index < ((int)KeyCode.Y - (int)KeyCode.A); index++)
+        foreach (KeyValuePair<KeyCode, PlayerInput> input in possibleInputs)
         {
-            KeyCode thisChar = (KeyCode)((int)KeyCode.A + index);
-            PlayerInput plan = possibleInputs[index];
-            DebugTextLog.AddTextToLog($"{thisChar.ToString()}) {plan.LongTitle}");
+            DebugTextLog.AddTextToLog($"{input.Key.ToString()}) {input.Value.LongTitle}");
         }
 
         DebugTextLog.AddTextToLog("Z) Back");
@@ -46,12 +48,11 @@ public class UseAbilityPhase : InputGameplayPhase
     {
         nextPhase = this;
 
-        // TODO: Handle this navigation more elegantly!
-        for (int index = 0; index < possibleInputs.Count && index < ((int)KeyCode.Y - (int)KeyCode.A); index++)
+        foreach (KeyValuePair<KeyCode, PlayerInput> input in possibleInputs)
         {
-            if (Input.GetKeyDown((KeyCode)((int)KeyCode.A + index)))
+            if (Input.GetKeyDown(input.Key))
             {
-                selectedInput = possibleInputs[index];
+                selectedInput = input.Value;
                 nextPhase = InputResolutionPhaseInstance.ResolveThis(selectedInput, NeutralPhaseInstance);
                 return true;
             }

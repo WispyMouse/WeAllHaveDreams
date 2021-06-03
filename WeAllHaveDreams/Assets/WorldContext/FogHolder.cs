@@ -15,7 +15,7 @@ public class FogHolder : MonoBehaviour
     public Tile HasBeenSeenTile;
     public Tile VisibleTile;
 
-    public HashSet<Vector3Int> AllTiles { get; private set; } = new HashSet<Vector3Int>();
+    public HashSet<MapCoordinates> AllTiles { get; private set; } = new HashSet<MapCoordinates>();
     public Dictionary<int, TeamVisibility> TeamVisibilityData = new Dictionary<int, TeamVisibility>();
 
     Configuration.FogVisibilityConfigurations fogVisibilityConfigurations { get; set; }
@@ -25,9 +25,9 @@ public class FogHolder : MonoBehaviour
         fogVisibilityConfigurations = ConfigurationLoadingEntrypoint.GetConfigurationData<Configuration.FogVisibilityConfigurations>().First();
         DebugTextLog.AddTextToLog("Press F to switch visibility modes", DebugTextLogChannel.DebugLogging);
 
-        AllTiles = new HashSet<Vector3Int>(WorldContextInstance.MapHolder.GetAllTiles());
+        AllTiles = new HashSet<MapCoordinates>(WorldContextInstance.MapHolder.GetAllTiles());
 
-        foreach (Vector3Int tile in AllTiles)
+        foreach (MapCoordinates tile in AllTiles)
         {
             if (fogVisibilityConfigurations.CoverMapInDarknessInitially)
             {
@@ -44,7 +44,7 @@ public class FogHolder : MonoBehaviour
     {
         if (fogVisibilityConfigurations.FogTurnHandlingMode == FogTurnHandlingEnum.ShowAllMap)
         {
-            foreach (Vector3Int position in AllTiles)
+            foreach (MapCoordinates position in AllTiles)
             {
                 FogTileMap.SetTile(position, VisibleTile);
             }
@@ -52,16 +52,16 @@ public class FogHolder : MonoBehaviour
             return;
         }
 
-        var visibleTiles = new HashSet<Vector3Int>();
-        var hasBeenTiles = new HashSet<Vector3Int>();
+        var visibleTiles = new HashSet<MapCoordinates>();
+        var hasBeenTiles = new HashSet<MapCoordinates>();
 
         foreach (int player in TeamVisibilityData.Keys)
         {
             if (fogVisibilityConfigurations.ShouldShowMapView(player))
             {
                 TeamVisibility curVisibility = TeamVisibilityData[player];
-                visibleTiles = new HashSet<Vector3Int>(visibleTiles.Union(curVisibility.VisibleTiles));
-                hasBeenTiles = new HashSet<Vector3Int>(hasBeenTiles.Union(curVisibility.HasBeenSeenTiles));
+                visibleTiles = new HashSet<MapCoordinates>(visibleTiles.Union(curVisibility.VisibleCoordinates));
+                hasBeenTiles = new HashSet<MapCoordinates>(hasBeenTiles.Union(curVisibility.HasBeenSeenCoordinates));
             }
         }
 
@@ -70,7 +70,7 @@ public class FogHolder : MonoBehaviour
             hasBeenTiles = AllTiles;
         }
 
-        foreach (Vector3Int position in AllTiles)
+        foreach (MapCoordinates position in AllTiles)
         {
             if (visibleTiles.Contains(position))
             {
@@ -108,20 +108,20 @@ public class FogHolder : MonoBehaviour
 
         foreach (MapMob curMob in WorldContextInstance.MobHolder.MobsOnTeam(player))
         {
-            Vector3Int mobPosition = curMob.Position;
+            MapCoordinates mobPosition = curMob.Position;
 
             if (fogVisibilityConfigurations.UpdateVisibilityOnlyAfterSettling)
             {
                 mobPosition = curMob.RestingPosition;
             }
-            HashSet<Vector3Int> thisMobsVisibleTiles = CalculateVisibleTiles(curMob, mobPosition);
+            HashSet<MapCoordinates> thisMobsVisibleTiles = CalculateVisibleTiles(curMob, mobPosition);
 
             assignedVisibility.IncorporateVisibleTiles(thisMobsVisibleTiles);
         }
 
         foreach (MapStructure curStructure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => structure.PlayerSideIndex == player))
         {
-            HashSet<Vector3Int> thisStructureVisibleTiles = CalculateVisibleTiles(curStructure);
+            HashSet<MapCoordinates> thisStructureVisibleTiles = CalculateVisibleTiles(curStructure);
             assignedVisibility.IncorporateVisibleTiles(thisStructureVisibleTiles);
         }
 
@@ -136,11 +136,11 @@ public class FogHolder : MonoBehaviour
         }
     }
 
-    public HashSet<Vector3Int> CalculateVisibleTiles(MapMob mob, Vector3Int fromPosition)
+    public HashSet<MapCoordinates> CalculateVisibleTiles(MapMob mob, MapCoordinates fromPosition)
     {
-        var seenPositions = new HashSet<Vector3Int>();
+        var seenPositions = new HashSet<MapCoordinates>();
+        var frontier = new HashSet<MapCoordinates>();
 
-        var frontier = new HashSet<Vector3Int>();
         frontier.Add(fromPosition);
         seenPositions.Add(fromPosition);
 
@@ -150,13 +150,13 @@ public class FogHolder : MonoBehaviour
             frontier.Remove(thisTile);
 
             // If we've already expended all our range, stop ranging (lol)
-            int distanceFromStart = Mathf.Abs(fromPosition.x - thisTile.x) + Mathf.Abs(fromPosition.y - thisTile.y);
+            int distanceFromStart = Mathf.Abs(fromPosition.X - thisTile.X) + Mathf.Abs(fromPosition.Y - thisTile.Y);
             if (distanceFromStart >= mob.SightRange)
             {
                 continue;
             }
 
-            foreach (Vector3Int neighbor in WorldContextInstance.MapHolder.GetNeighbors(thisTile))
+            foreach (MapCoordinates neighbor in WorldContextInstance.MapHolder.GetNeighbors(thisTile))
             {
                 if (seenPositions.Contains(neighbor))
                 {
@@ -174,16 +174,31 @@ public class FogHolder : MonoBehaviour
         return seenPositions;
     }
 
-    public HashSet<Vector3Int> CalculateVisibleTiles(MapStructure mapStructure)
+    public HashSet<MapCoordinates> CalculateVisibleTiles(MapStructure mapStructure)
     {
-        return new HashSet<Vector3Int>() { mapStructure.Position };
+        return new HashSet<MapCoordinates>() { mapStructure.Position };
     }
 
-    public bool ClearLineOfVisibility(Vector3Int pointA, Vector3Int pointB)
+    public bool ClearLineOfVisibility(MapCoordinates pointA, MapCoordinates pointB)
     {
-        foreach (Vector3Int point in BresenhamLineDrawer.PointsOnLine(pointA, pointB))
+        bool obstructedOnce = false;
+
+        foreach (MapCoordinates point in BresenhamLineDrawer.PointsOnLine(pointA, pointB))
         {
-            // TODO: Obstructions!
+            GameplayTile tile;
+
+            if (tile = WorldContextInstance.MapHolder.GetGameplayTile(point))
+            {
+                if (tile.Configuration.ObstructsVision)
+                {
+                    if (obstructedOnce)
+                    {
+                        return false;
+                    }
+
+                    obstructedOnce = true;
+                }
+            }
         }
 
         return true;
@@ -191,7 +206,7 @@ public class FogHolder : MonoBehaviour
 
     public void ClearAllTiles()
     {
-        AllTiles = new HashSet<Vector3Int>();
+        AllTiles = new HashSet<MapCoordinates>();
         TeamVisibilityData = new Dictionary<int, TeamVisibility>();
         FogTileMap.ClearAllTiles();
     }
@@ -212,12 +227,12 @@ public class FogHolder : MonoBehaviour
         }
     }
 
-    public bool PointIsVisibleToPlayer(Vector3Int point, int player)
+    public bool PointIsVisibleToPlayer(MapCoordinates point, int player)
     {
-        return TeamVisibilityData[player].VisibleTiles.Contains(point);
+        return TeamVisibilityData[player].VisibleCoordinates.Contains(point);
     }
 
-    public bool PointIsVisibleToCurrentPerspective(Vector3Int point)
+    public bool PointIsVisibleToCurrentPerspective(MapCoordinates point)
     {
         switch (fogVisibilityConfigurations.FogTurnHandlingMode)
         {
@@ -240,7 +255,7 @@ public class FogHolder : MonoBehaviour
         ManageVisibilityToCurrentPerspective(toConsider, toConsider.Position);
     }
 
-    public void ManageVisibilityToCurrentPerspective(MapObject toConsider, Vector3Int position)
+    public void ManageVisibilityToCurrentPerspective(MapObject toConsider, MapCoordinates position)
     {
         if (!PointIsVisibleToCurrentPerspective(position))
         {

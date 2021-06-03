@@ -1,14 +1,14 @@
 ﻿using Configuration;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MapMob : MapObject
 {
     public int PlayerSideIndex; // TEMPORARY: Can be set within the editor
-    public Transform RemindersParent;
-    public float ReminderHorizontalSpacing { get; set; } = .35f; // TEMPORARY: This is a UI thing and should be somewhere else
 
     public MobConfiguration Configuration { get; set; }
     public string Name => Configuration.Name;
@@ -25,11 +25,7 @@ public class MapMob : MapObject
 
     public IEnumerable<StatAdjustment> ActiveStatAdjustments { get; private set; } = new List<StatAdjustment>();
 
-    // TEMPORARY: This should definitely be in its own class
-    public SpriteRenderer HitPointsVisual;
-    public Sprite[] HitPointsNumerics;
-
-    public SpriteRenderer Renderer;
+    public UnityEvent<MapMob> MobUpdated;
 
     public decimal MaxHitPoints { get; set; } = 10.0M;
     public decimal HitPoints
@@ -41,7 +37,7 @@ public class MapMob : MapObject
         set
         {
             _hitPoints = value;
-            UpdateHitPointVisual();
+            MobUpdated.Invoke(this);
         }
     }
     private decimal _hitPoints { get; set; } = 10.0M;
@@ -55,15 +51,7 @@ public class MapMob : MapObject
         set
         {
             _canMove = value;
-
-            if (value)
-            {
-                ShowReminder(nameof(CanMove));
-            }
-            else
-            {
-                HideReminder(nameof(CanMove));
-            }
+            MobUpdated.Invoke(this);
         }
     }
     private bool _canMove { get; set; }
@@ -77,15 +65,7 @@ public class MapMob : MapObject
         set
         {
             _canAttack = value;
-
-            if (value)
-            {
-                ShowReminder(nameof(CanAttack));
-            }
-            else
-            {
-                HideReminder(nameof(CanAttack));
-            }
+            MobUpdated.Invoke(this);
         }
     }
     private bool _canAttack { get; set; }
@@ -95,6 +75,14 @@ public class MapMob : MapObject
         get
         {
             return CanMove || CanAttack;
+        }
+    }
+
+    public bool IsExhausted
+    {
+        get
+        {
+            return !CanMove && !CanAttack && !CanCapture;
         }
     }
 
@@ -109,7 +97,7 @@ public class MapMob : MapObject
             return !CanMove && !CanAttack;
         }
     }
-    public Vector3Int RestingPosition
+    public MapCoordinates RestingPosition
     {
         get
         {
@@ -130,17 +118,15 @@ public class MapMob : MapObject
             restingPosition = value;
         }
     }
-    Vector3Int? restingPosition { get; set; }
-
-    Dictionary<string, Reminder> Reminders { get; set; } = new Dictionary<string, Reminder>();
+    MapCoordinates? restingPosition { get; set; }
 
     public void RefreshForStartOfTurn()
     {
-        CanMove = true;
-        ShowReminder(nameof(CanMove));
+        bool refresh = TurnManager.CurrentPlayer.PlayerSideIndex == PlayerSideIndex;
 
-        CanAttack = true;
-        ShowReminder(nameof(CanAttack));
+        CanMove = refresh;
+        CanAttack = refresh;
+        MobUpdated.Invoke(this);
     }
 
     public void ExhaustAllOptions()
@@ -153,51 +139,6 @@ public class MapMob : MapObject
     public void ClearForEndOfTurn()
     {
         ExhaustAllOptions();
-    }
-
-    public void ShowReminder(string reminderTag)
-    {
-        if (Reminders.ContainsKey(reminderTag))
-        {
-            Reminders[reminderTag]?.Show();
-        }
-        else
-        {
-            Reminder newReminder = ReminderFactory.GetReminder(this, reminderTag);
-            Reminders.Add(reminderTag, newReminder);
-        }
-
-        SettleReminderOrdering();
-    }
-
-    void HideReminder(string reminderTag)
-    {
-        if (Reminders.ContainsKey(reminderTag))
-        {
-            Reminders[reminderTag]?.Hide();
-        }
-
-        SettleReminderOrdering();
-    }
-
-    void HideAllReminders()
-    {
-        foreach (string key in Reminders.Keys)
-        {
-            HideReminder(key);
-        }
-    }
-
-    void SettleReminderOrdering()
-    {
-        List<Reminder> orderedReminders = Reminders.Values.OrderBy(r => r.ReminderTag).ToList();
-
-        for (int ii = 0; ii < Reminders.Count; ii++)
-        {
-            float offset = (float)ii * ReminderHorizontalSpacing;
-            Reminder thisReminder = orderedReminders[ii];
-            thisReminder.transform.localPosition = Vector3.left * offset;
-        }
     }
 
     public decimal CurrentAttackPower
@@ -213,24 +154,6 @@ public class MapMob : MapObject
         return System.Math.Ceiling(hitPoints) * DamageOutputRatio;
     }
 
-    public void UpdateHitPointVisual()
-    {
-        if (HitPoints == MaxHitPoints)
-        {
-            HitPointsVisual.gameObject.SetActive(false);
-            return;
-        }
-
-        int roundedValue = System.Math.Min(10, (int)System.Math.Ceiling(HitPoints));
-        HitPointsVisual.sprite = HitPointsNumerics[roundedValue];
-        HitPointsVisual.gameObject.SetActive(true);
-    }
-
-    public void SetUnitVisuals()
-    {
-        Renderer.sprite = MobLibrary.GetMobSprite(Configuration.Appearance, PlayerSideIndex);
-    }
-
     public int CurrentCapturePoints
     {
         get
@@ -242,7 +165,8 @@ public class MapMob : MapObject
     public void SetOwnership(int side)
     {
         PlayerSideIndex = side;
-        Renderer.sprite = MobLibrary.GetMobSprite(Configuration.Appearance, PlayerSideIndex);
+
+        MobUpdated.Invoke(this);
     }
 
     public void LoadFromConfiguration(Configuration.MobConfiguration configuration)
@@ -252,6 +176,8 @@ public class MapMob : MapObject
 
         MobStats = configuration.GetAllMobStats();
         Abilities = configuration.GetSaturatedAbilities();
+
+        MobUpdated.Invoke(this);
     }
 
     public void CalculateStandingStatAdjustments(MapFeature onFeature)

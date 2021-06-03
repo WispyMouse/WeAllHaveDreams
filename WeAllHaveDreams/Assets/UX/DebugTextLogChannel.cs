@@ -13,5 +13,7 @@ public enum DebugTextLogChannel
     DebugOperations,
     DebugOperationInputInstructions,
     MapEditorOperations,
-    Verbose
+    Verbose,
+    NotImplemented,
+    AILogging
 }
