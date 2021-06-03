@@ -26,6 +26,12 @@ public class UnitMovementPhase : InputGameplayPhase
 
     public override IEnumerator EnterPhase()
     {
+        // Has our unit become unavailable since this phase has been set? If so, exit early.
+        if (selectedUnit == null)
+        { 
+            yield break;
+        }
+
         // If we can't move, then don't do anything
         if (!selectedUnit.CanMove)
         {
@@ -166,7 +172,7 @@ public class UnitMovementPhase : InputGameplayPhase
     {
         get
         {
-            return !selectedUnit.CanMove;
+            return selectedUnit == null || !selectedUnit.CanMove;
         }
     }
 
