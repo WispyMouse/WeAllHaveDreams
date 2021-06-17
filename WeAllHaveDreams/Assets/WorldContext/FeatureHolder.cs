@@ -40,7 +40,7 @@ public class FeatureHolder : MonoBehaviour
 
         if (TurnManager.GameIsInProgress)
         {
-            WorldContextInstance.FogHolder.UpdateVisibilityForPlayer(TurnManager.CurrentPlayer.PlayerSideIndex);
+            WorldContextInstance.FogHolder.UpdateVisibilityForPlayer(TurnManager.CurrentPlayer);
         }
     }
 

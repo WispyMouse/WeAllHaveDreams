@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 public class MapMob : MapObject
 {
-    public int PlayerSideIndex; // TEMPORARY: Can be set within the editor
+    public PlayerSide MyPlayerSide { get; set; }
 
     public MobConfiguration Configuration { get; set; }
     public string Name => Configuration.Name;
@@ -122,7 +122,7 @@ public class MapMob : MapObject
 
     public void RefreshForStartOfTurn()
     {
-        bool refresh = TurnManager.CurrentPlayer.PlayerSideIndex == PlayerSideIndex;
+        bool refresh = TurnManager.CurrentPlayer == MyPlayerSide;
 
         CanMove = refresh;
         CanAttack = refresh;
@@ -162,9 +162,9 @@ public class MapMob : MapObject
         }
     }
 
-    public void SetOwnership(int side)
+    public void SetOwnership(PlayerSide side)
     {
-        PlayerSideIndex = side;
+        MyPlayerSide = side;
 
         MobUpdated.Invoke(this);
     }
@@ -212,6 +212,6 @@ public class MapMob : MapObject
 
     public MobMapData GetMapData()
     {
-        return new MobMapData() { Position = Position, MobName = Name, Ownership = PlayerSideIndex };
+        return new MobMapData() { Position = Position, MobName = Name, Ownership = MyPlayerSide.PlayerSideIndex };
     }
 }

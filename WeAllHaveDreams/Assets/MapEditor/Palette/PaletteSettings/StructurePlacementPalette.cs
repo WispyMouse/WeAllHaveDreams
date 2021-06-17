@@ -25,7 +25,7 @@ public class StructurePlacementPalette : PaletteSettings
     /// <inheritdoc />
     public override Sprite GetButtonSprite()
     {
-        return StructureLibrary.GetStructureSprite(RepresentedStructure.Appearance, null);
+        return StructureLibrary.GetStructureSprite(RepresentedStructure.Appearance, (int?)null);
     }
 
     /// <inheritdoc />

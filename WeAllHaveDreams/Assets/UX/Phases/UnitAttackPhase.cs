@@ -40,7 +40,7 @@ public class UnitAttackPhase : InputGameplayPhase
         }
 
         MapStructure onStructure;
-        if ((onStructure = WorldContextInstance.StructureHolder.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
+        if ((onStructure = WorldContextInstance.StructureHolder.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.MyPlayerSide))
         {
             DebugTextLog.AddTextToLog("Press 'C' to capture this structure", DebugTextLogChannel.DebugOperationInputInstructions);
         }
@@ -84,7 +84,7 @@ public class UnitAttackPhase : InputGameplayPhase
         nextPhase = this;
 
         // If we click on an ally, select them
-        if (mob.PlayerSideIndex == TurnManager.CurrentPlayer.PlayerSideIndex)
+        if (mob.MyPlayerSide == TurnManager.CurrentPlayer)
         {
             nextPhase = UnitMovementPhaseInstance.UnitSelected(mob);
             return true;
@@ -114,7 +114,7 @@ public class UnitAttackPhase : InputGameplayPhase
         if (Input.GetKeyDown(KeyCode.C))
         {
             MapStructure onStructure;
-            if ((onStructure = WorldContextInstance.StructureHolder.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.PlayerSideIndex))
+            if ((onStructure = WorldContextInstance.StructureHolder.StructureOnPoint(selectedUnit.Position)) != null && onStructure.IsNotOwnedByMyTeam(selectedUnit.MyPlayerSide))
             {
                 nextPhase = InputResolutionPhaseInstance.ResolveThis(new MobCapturesStructurePlayerInput(selectedUnit, onStructure), UnitMovementPhaseInstance.UnitSelected(selectedUnit));
                 return true;

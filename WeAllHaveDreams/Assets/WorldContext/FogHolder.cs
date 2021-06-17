@@ -16,7 +16,7 @@ public class FogHolder : MonoBehaviour
     public Tile VisibleTile;
 
     public HashSet<MapCoordinates> AllTiles { get; private set; } = new HashSet<MapCoordinates>();
-    public Dictionary<int, TeamVisibility> TeamVisibilityData = new Dictionary<int, TeamVisibility>();
+    public Dictionary<PlayerSide, TeamVisibility> TeamVisibilityData = new Dictionary<PlayerSide, TeamVisibility>();
 
     Configuration.FogVisibilityConfigurations fogVisibilityConfigurations { get; set; }
 
@@ -55,7 +55,7 @@ public class FogHolder : MonoBehaviour
         var visibleTiles = new HashSet<MapCoordinates>();
         var hasBeenTiles = new HashSet<MapCoordinates>();
 
-        foreach (int player in TeamVisibilityData.Keys)
+        foreach (PlayerSide player in TeamVisibilityData.Keys)
         {
             if (fogVisibilityConfigurations.ShouldShowMapView(player))
             {
@@ -89,13 +89,13 @@ public class FogHolder : MonoBehaviour
 
     public void UpdateVisibilityForPlayers()
     {
-        foreach (PlayerSide curPlayer in TurnManager.GetPlayers())
+        foreach (PlayerSide curPlayer in FactionHolder.GetPlayers())
         {
-            UpdateVisibilityForPlayer(curPlayer.PlayerSideIndex);
+            UpdateVisibilityForPlayer(curPlayer);
         }
     }
 
-    public void UpdateVisibilityForPlayer(int player)
+    public void UpdateVisibilityForPlayer(PlayerSide player)
     {
         TeamVisibility assignedVisibility;
 
@@ -119,7 +119,7 @@ public class FogHolder : MonoBehaviour
             assignedVisibility.IncorporateVisibleTiles(thisMobsVisibleTiles);
         }
 
-        foreach (MapStructure curStructure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => structure.PlayerSideIndex == player))
+        foreach (MapStructure curStructure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => structure.MyPlayerSide == player))
         {
             HashSet<MapCoordinates> thisStructureVisibleTiles = CalculateVisibleTiles(curStructure);
             assignedVisibility.IncorporateVisibleTiles(thisStructureVisibleTiles);
@@ -207,7 +207,7 @@ public class FogHolder : MonoBehaviour
     public void ClearAllTiles()
     {
         AllTiles = new HashSet<MapCoordinates>();
-        TeamVisibilityData = new Dictionary<int, TeamVisibility>();
+        TeamVisibilityData = new Dictionary<PlayerSide, TeamVisibility>();
         FogTileMap.ClearAllTiles();
     }
 
@@ -227,7 +227,7 @@ public class FogHolder : MonoBehaviour
         }
     }
 
-    public bool PointIsVisibleToPlayer(MapCoordinates point, int player)
+    public bool PointIsVisibleToPlayer(MapCoordinates point, PlayerSide player)
     {
         return TeamVisibilityData[player].VisibleCoordinates.Contains(point);
     }
@@ -239,11 +239,11 @@ public class FogHolder : MonoBehaviour
             case FogTurnHandlingEnum.ShowAllMap:
                 return true;
             case FogTurnHandlingEnum.ShowAllVisibility:
-                return TurnManager.GetPlayers().Any(player => PointIsVisibleToPlayer(point, player.PlayerSideIndex));
+                return FactionHolder.GetPlayers().Any(player => PointIsVisibleToPlayer(point, player));
             case FogTurnHandlingEnum.SwitchEachTurn:
-                return PointIsVisibleToPlayer(point, TurnManager.CurrentPlayer.PlayerSideIndex);
+                return PointIsVisibleToPlayer(point, TurnManager.CurrentPlayer);
             case FogTurnHandlingEnum.StayOnOnePlayer:
-                return PointIsVisibleToPlayer(point, fogVisibilityConfigurations.FactionToShowFogFor);
+                return PointIsVisibleToPlayer(point, FactionHolder.GetPlayer(fogVisibilityConfigurations.FactionToShowFogFor));
             default:
                 DebugTextLog.AddTextToLog($"Unrecognized FogVisibilityConfiguration for PointIsVisibleToCurrentPerspective");
                 return false;

@@ -41,11 +41,11 @@ public class OwnershipSetAction : MapEditorInput
 
         if (structure = context.StructureHolder.StructureOnPoint(position))
         {
-            PreviousValue = structure.PlayerSideIndex;
+            PreviousValue = structure.MyPlayerSide?.PlayerSideIndex;
         }
         else if (mob = context.MobHolder.MobOnPoint(position))
         {
-            PreviousValue = mob.PlayerSideIndex;
+            PreviousValue = mob.MyPlayerSide?.PlayerSideIndex;
         }
     }
 

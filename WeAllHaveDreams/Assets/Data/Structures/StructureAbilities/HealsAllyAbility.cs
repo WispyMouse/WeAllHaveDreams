@@ -11,7 +11,7 @@ public class HealsAllyAbility : StructureConfigurationAbility
             return;
         }
 
-        if (structure.PlayerSideIndex != standingOn.PlayerSideIndex)
+        if (structure.MyPlayerSide != standingOn.MyPlayerSide)
         {
             return;
         }

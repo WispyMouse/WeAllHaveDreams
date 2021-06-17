@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WorldContext : SingletonBase<WorldContext>
@@ -75,8 +76,19 @@ public class WorldContext : SingletonBase<WorldContext>
         return newRealm;
     }
 
+    public void SetOwnership(MapCoordinates position, int? playerSideIndex)
+    {
+        PlayerSide onSide = null;
 
-    public void SetOwnership(MapCoordinates position, int? value)
+        if (playerSideIndex.HasValue)
+        {
+            onSide = FactionHolder.GetPlayer(playerSideIndex.Value);
+        }
+
+        SetOwnership(position, onSide);
+    }
+
+    public void SetOwnership(MapCoordinates position, PlayerSide value)
     {
         MapStructure structure;
         if (structure = StructureHolder.StructureOnPoint(position))
@@ -87,13 +99,13 @@ public class WorldContext : SingletonBase<WorldContext>
         MapMob mob;
         if (mob = MobHolder.MobOnPoint(position))
         {
-            if (!value.HasValue)
+            if (value == null)
             {
                 DebugTextLog.AddTextToLog("Tried to set Mob ownership to null. Mobs cannot be unowned.", DebugTextLogChannel.RuntimeError);
             }
             else
             {
-                mob.SetOwnership(value.Value);
+                mob.SetOwnership(value);
             }
         }
     }

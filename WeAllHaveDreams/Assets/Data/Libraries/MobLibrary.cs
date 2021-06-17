@@ -46,6 +46,16 @@ public class MobLibrary : SingletonBase<MobLibrary>
         return null;
     }
 
+    public static Sprite GetMobSprite(string appearance, PlayerSide side)
+    {
+        if (side == null)
+        {
+            return null;
+        }
+
+        return GetMobSprite(appearance, side.PlayerSideIndex);
+    }
+
     public static Sprite GetMobSprite(string appearance, int side)
     {
         // TODO HACK: This is a temporary holdover spot so we don't need to figure out graphics loading

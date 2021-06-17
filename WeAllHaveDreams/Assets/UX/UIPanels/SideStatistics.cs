@@ -12,7 +12,7 @@ public class SideStatistics : MonoBehaviour
     {
         StringBuilder textString = new StringBuilder();
 
-        foreach (PlayerSide side in TurnManager.GetPlayers())
+        foreach (PlayerSide side in FactionHolder.GetPlayers())
         {
             textString.Append($"<sidename> // {side.PlayerSideIndex} // {side.TotalResources}");
             textString.AppendLine("");

@@ -25,14 +25,14 @@ namespace Configuration
             return $"Mode: {FogTurnHandlingMode} // Faction: {FactionToShowFogFor} // Initial Darkness: {CoverMapInDarknessInitially} // Update Visibility Only After Settling: {UpdateVisibilityOnlyAfterSettling}";
         }
 
-        public bool ShouldShowMapView(int player)
+        public bool ShouldShowMapView(PlayerSide player)
         {
             switch (FogTurnHandlingMode)
             {
                 case FogTurnHandlingEnum.StayOnOnePlayer:
-                    return player == FactionToShowFogFor;
+                    return player.PlayerSideIndex == FactionToShowFogFor;
                 case FogTurnHandlingEnum.SwitchEachTurn:
-                    return player == TurnManager.CurrentPlayer.PlayerSideIndex;
+                    return player == TurnManager.CurrentPlayer;
                 case FogTurnHandlingEnum.ShowAllVisibility:
                 case FogTurnHandlingEnum.ShowAllMap:
                     return true;

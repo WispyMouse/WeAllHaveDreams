@@ -11,10 +11,10 @@ public class StructureHolder : MonoBehaviour
 
     public void SetStructure(StructureMapData data)
     {
-        SetStructure(data.Position, StructureLibrary.GetStructure(data.StructureName), data.Ownership);
+        SetStructure(data.Position, StructureLibrary.GetStructure(data.StructureName), FactionHolder.GetPlayer(data.Ownership));
     }
 
-    public void SetStructure(MapCoordinates position, MapStructure toSet, int? faction)
+    public void SetStructure(MapCoordinates position, MapStructure toSet, PlayerSide player)
     {
         RemoveStructure(position);
 
@@ -25,7 +25,7 @@ public class StructureHolder : MonoBehaviour
             ActiveStructures.Add(toSet);
         }
 
-        SetOwnership(position, faction);
+        SetOwnership(position, player);
     }
 
     public void RemoveStructure(MapCoordinates position)
@@ -60,13 +60,13 @@ public class StructureHolder : MonoBehaviour
         ActiveStructures = new List<MapStructure>();
     }
 
-    public void SetOwnership(MapCoordinates position, int? team)
+    public void SetOwnership(MapCoordinates position, PlayerSide player)
     {
         MapStructure structureOnPoint = StructureOnPoint(position);
 
         if (structureOnPoint != null)
         {
-            structureOnPoint.SetOwnership(team);
+            structureOnPoint.SetOwnership(player);
         }
     }
 

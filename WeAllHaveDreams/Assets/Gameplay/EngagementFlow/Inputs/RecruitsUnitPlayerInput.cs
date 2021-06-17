@@ -30,7 +30,7 @@ public class RecruitsUnitPlayerInput : PlayerInput
     {
         DebugTextLog.AddTextToLog($"Recruiting {MobToRecruit} at {Builder.Position.ToString()}", DebugTextLogChannel.Verbose);
         TurnManager.CurrentPlayer.TotalResources -= Cost;
-        worldContext.MobHolder.CreateNewUnit(Builder.Position, MobLibrary.GetMob(MobToRecruit), Builder.PlayerSideIndex.Value);
+        worldContext.MobHolder.CreateNewUnit(Builder.Position, MobLibrary.GetMob(MobToRecruit), Builder.MyPlayerSide);
         yield return TurnManager.ResolveEffects();
     }
 }

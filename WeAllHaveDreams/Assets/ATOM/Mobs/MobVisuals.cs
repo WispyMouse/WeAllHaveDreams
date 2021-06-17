@@ -50,12 +50,15 @@ public class MobVisuals : MonoBehaviour
         SettleReminderOrdering();
         SetSpriteColor(toDisplay);
 
-        if (LastAppearance != toDisplay.Configuration.Appearance || LastSideIndex != toDisplay.PlayerSideIndex)
+        if (LastAppearance != toDisplay.Configuration.Appearance || LastSideIndex != toDisplay.MyPlayerSide.PlayerSideIndex)
         {
-            Renderer.sprite = MobLibrary.GetMobSprite(toDisplay.Configuration.Appearance, toDisplay.PlayerSideIndex);
+            if (toDisplay.MyPlayerSide != null)
+            {
+                Renderer.sprite = MobLibrary.GetMobSprite(toDisplay.Configuration.Appearance, toDisplay.MyPlayerSide);
 
-            LastAppearance = toDisplay.Configuration.Appearance;
-            LastSideIndex = toDisplay.PlayerSideIndex;
+                LastAppearance = toDisplay.Configuration.Appearance;
+                LastSideIndex = toDisplay.MyPlayerSide.PlayerSideIndex;
+            }
         }
     }
 
@@ -92,7 +95,7 @@ public class MobVisuals : MonoBehaviour
 
     void SetSpriteColor(MapMob toDisplay)
     {
-        if (toDisplay.IsExhausted && TurnManager.GameIsInProgress && (TurnManager.CurrentPlayer != null && TurnManager.CurrentPlayer.PlayerSideIndex == toDisplay.PlayerSideIndex))
+        if (toDisplay.IsExhausted && TurnManager.GameIsInProgress && (TurnManager.CurrentPlayer != null && TurnManager.CurrentPlayer == toDisplay.MyPlayerSide))
         {
             Renderer.color = ExhaustedColor;
         }

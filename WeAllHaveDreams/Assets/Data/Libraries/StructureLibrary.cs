@@ -64,6 +64,11 @@ public class StructureLibrary : SingletonBase<StructureLibrary>
         return Singleton.Configurations;
     }
 
+    public static Sprite GetStructureSprite(string appearance, PlayerSide player)
+    {
+        return GetStructureSprite(appearance, player?.PlayerSideIndex);
+    }
+
     public static Sprite GetStructureSprite(string appearance, int? side)
     {
         // TODO HACK: This is a temporary holdover spot so we don't need to figure out graphics loading

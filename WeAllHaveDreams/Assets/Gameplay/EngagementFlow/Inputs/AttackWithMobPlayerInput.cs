@@ -46,11 +46,32 @@ public class AttackWithMobInput : PlayerInput
             return false;
         }
 
-        if (MoveTo.HasValue && MoveTo.Value != Attacking.Position)
+        if (MoveTo.HasValue && MoveTo.Value != Attacking.Position && !Attacking.CanMove)
         {
             return false;
         }
 
         return true;
+    }
+
+    // TODO: These should move to somewhere that GameplayAnimationHolder can also reference, since the logic is similar
+    public decimal ProjectedAttackerHitpoints(WorldContext context)
+    {
+        decimal defenderHitpoints = ProjectedDefenderHitpoints(context);
+        if (defenderHitpoints == 0)
+        {
+            return Attacking.HitPoints;
+        }
+
+        decimal returnDamage = context.MobHolder.ProjectedDamages(Target, Attacking, defenderHitpoints);
+        decimal resultingHitpoints = System.Math.Max(0, Target.HitPoints - returnDamage);
+        return resultingHitpoints;
+    }
+
+    public decimal ProjectedDefenderHitpoints(WorldContext context)
+    {
+        decimal offensiveDamage = context.MobHolder.ProjectedDamages(Attacking, Target);
+        decimal resultingHitpoints = System.Math.Max(0, Target.HitPoints - offensiveDamage);
+        return resultingHitpoints;
     }
 }

@@ -351,7 +351,7 @@ public class GameMap
 
         MapMob mobOnPoint;
 
-        if ((mobOnPoint = worldContext.MobHolder.MobOnPoint(to)) != null && mobOnPoint.PlayerSideIndex != moving.PlayerSideIndex)
+        if ((mobOnPoint = worldContext.MobHolder.MobOnPoint(to)) != null && mobOnPoint.MyPlayerSide != moving.MyPlayerSide)
         {
             return false;
         }

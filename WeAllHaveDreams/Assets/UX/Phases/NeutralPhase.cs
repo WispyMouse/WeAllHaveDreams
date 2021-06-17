@@ -12,7 +12,7 @@ public class NeutralPhase : InputGameplayPhase
         nextPhase = this;
 
         // If they're not on our team, there's nothing to do.
-        if (mob.PlayerSideIndex != TurnManager.CurrentPlayer.PlayerSideIndex)
+        if (mob.MyPlayerSide != TurnManager.CurrentPlayer)
         {
             return false;
         }
@@ -26,7 +26,7 @@ public class NeutralPhase : InputGameplayPhase
         nextPhase = this;
 
         // If they're not on our team, there's nothing to do.
-        if (structure.PlayerSideIndex != TurnManager.CurrentPlayer.PlayerSideIndex)
+        if (structure.MyPlayerSide != TurnManager.CurrentPlayer)
         {
             return false;
         }

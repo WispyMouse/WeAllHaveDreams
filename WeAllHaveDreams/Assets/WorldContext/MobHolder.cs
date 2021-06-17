@@ -16,9 +16,9 @@ public class MobHolder : MonoBehaviour
         LoadAllMobsFromScene();
     }
 
-    public IEnumerable<MapMob> MobsOnTeam(int teamIndex)
+    public IEnumerable<MapMob> MobsOnTeam(PlayerSide side)
     {
-        return ActiveMobs.Where(mob => mob.PlayerSideIndex == teamIndex);
+        return ActiveMobs.Where(mob => mob.MyPlayerSide == side);
     }
 
     public void LoadAllMobsFromScene()
@@ -129,16 +129,16 @@ public class MobHolder : MonoBehaviour
         return newMob;
     }
 
-    public void CreateNewUnit(MapCoordinates location, MapMob prefab, int teamIndex)
+    public void CreateNewUnit(MapCoordinates location, MapMob prefab, PlayerSide playerSide)
     {
         MapMob newMob = CreateNewUnit(location, prefab);
-        newMob.SetOwnership(teamIndex);
+        newMob.SetOwnership(playerSide);
         newMob.CalculateStandingStatAdjustments(WorldContextInstance.FeatureHolder.FeatureOnPoint(location));
     }
 
     public void CreateNewUnit(MobMapData data)
     {
-        CreateNewUnit(data.Position, MobLibrary.GetMob(data.MobName), data.Ownership);
+        CreateNewUnit(data.Position, MobLibrary.GetMob(data.MobName), FactionHolder.GetPlayer(data.Ownership));
     }
 
     public void ClearAllMobs()

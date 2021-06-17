@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 public class MapStructure : MapObject
 {
-    public int? PlayerSideIndex;
+    public PlayerSide MyPlayerSide;
 
     public StructureConfiguration Configuration { get; set; }
 
@@ -34,16 +34,16 @@ public class MapStructure : MapObject
 
     public UnityEvent<MapStructure> StructureUpdated;
     
-    public void SetOwnership(int? side)
+    public void SetOwnership(PlayerSide side)
     {
-        this.PlayerSideIndex = side;
+        this.MyPlayerSide = side;
         CurCapturePoints = MaxCapturePoints;
         StructureUpdated.Invoke(this);
     }
 
-    public bool IsNotOwnedByMyTeam(int myTeam)
+    public bool IsNotOwnedByMyTeam(PlayerSide myTeam)
     {
-        return PlayerSideIndex != myTeam;
+        return MyPlayerSide != myTeam;
     }
 
     public void ProceedCapture(MapMob capturing)
@@ -60,7 +60,7 @@ public class MapStructure : MapObject
 
     protected virtual void CompleteCapture(MapMob capturing)
     {
-        SetOwnership(capturing.PlayerSideIndex);
+        SetOwnership(capturing.MyPlayerSide);
         DebugTextLog.AddTextToLog("Base captured!", DebugTextLogChannel.Gameplay);
 
         foreach (StructureConfigurationAbility structureAbility in Abilities)
@@ -86,7 +86,7 @@ public class MapStructure : MapObject
 
     public StructureMapData GetMapData()
     {
-        return new StructureMapData() { Position = this.Position, Ownership = PlayerSideIndex, StructureName = StructureName };
+        return new StructureMapData() { Position = this.Position, Ownership = MyPlayerSide.PlayerSideIndex, StructureName = StructureName };
     }
 
     public void LoadFromConfiguration(Configuration.StructureConfiguration configuration)

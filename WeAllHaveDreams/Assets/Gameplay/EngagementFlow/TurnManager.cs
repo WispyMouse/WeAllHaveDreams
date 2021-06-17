@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,7 @@ public class TurnManager : SingletonBase<TurnManager>
 {
     public static bool GameIsInProgress { get; set; } = false;
 
-    int playerIndex { get; set; }
-    SortedDictionary<int, PlayerSide> playerSides = new SortedDictionary<int, PlayerSide>();
-
-    public static PlayerSide CurrentPlayer => Singleton.playerSides[Singleton.playerIndex];
+    public static PlayerSide CurrentPlayer { get; set; }
 
     // TEMPORARY: This should not be here! But, it is the easiest place to insert for now.
     public Camera MainCamera;
@@ -26,12 +24,6 @@ public class TurnManager : SingletonBase<TurnManager>
 
     public void GameplayReady()
     {
-        // TEMPORARY: Hardcode the sides
-        PlayerSide humanControlledPlayerSide = new PlayerSide() { Name = "Human Player", PlayerSideIndex = 0, HumanControlled = true, TotalResources = 100 };
-        playerSides.Add(humanControlledPlayerSide.PlayerSideIndex, humanControlledPlayerSide);
-
-        PlayerSide aiControlledPlayerSide = new PlayerSide() { Name = "AI Player", PlayerSideIndex = 1, HumanControlled = false, TotalResources = 100 };
-        playerSides.Add(aiControlledPlayerSide.PlayerSideIndex, aiControlledPlayerSide);
         AIInputPhaseControllerInstance.LoadSettings();
 
         WorldContextInstance.FogHolder.Initialize();
@@ -39,15 +31,15 @@ public class TurnManager : SingletonBase<TurnManager>
 
         GameIsInProgress = true;
 
-        StartCoroutine(StartTurnOfPlayerAtIndex(humanControlledPlayerSide.PlayerSideIndex));
+        StartCoroutine(StartTurnOfPlayer(FactionHolder.GetFirstPlayer()));
     }
 
-    IEnumerator StartTurnOfPlayerAtIndex(int index)
+    IEnumerator StartTurnOfPlayer(PlayerSide player)
     {
-        playerIndex = index;
+        CurrentPlayer = player;
         DebugTextLog.AddTextToLog($"START OF TURN: {CurrentPlayer.Name}, engage!");
 
-        foreach (MapStructure structure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => structure.PlayerSideIndex == index))
+        foreach (MapStructure structure in WorldContextInstance.StructureHolder.ActiveStructures.Where(structure => structure.MyPlayerSide == CurrentPlayer))
         {
             CurrentPlayer.TotalResources += structure.ContributedResourcesPerTurn;
         }
@@ -73,27 +65,18 @@ public class TurnManager : SingletonBase<TurnManager>
 
     public static void PassTurnToNextPlayer()
     {
-        foreach (MapMob curMob in Singleton.WorldContextInstance.MobHolder.MobsOnTeam(CurrentPlayer.PlayerSideIndex))
+        foreach (MapMob curMob in Singleton.WorldContextInstance.MobHolder.MobsOnTeam(CurrentPlayer))
         {
             curMob.ClearForEndOfTurn();
         }
 
-        IEnumerable<int> laterSides = Singleton.playerSides.Keys.Where(side => side > Singleton.playerIndex);
-
-        if (laterSides.Any())
-        {
-            Singleton.StartCoroutine(Singleton.StartTurnOfPlayerAtIndex(laterSides.First()));
-        }
-        else
-        {
-            Singleton.StartCoroutine(Singleton.StartTurnOfPlayerAtIndex(Singleton.playerSides.Keys.Min()));
-        }
+        Singleton.StartCoroutine(Singleton.StartTurnOfPlayer(FactionHolder.GetNextPlayer(CurrentPlayer)));
     }
 
     public static IEnumerator ResolveStartOfTurnEffects()
     {
         // HACK: For now, ask each Feature under each of our Mobs if they have a start of turn effect
-        foreach (MapMob curMob in Singleton.WorldContextInstance.MobHolder.MobsOnTeam(CurrentPlayer.PlayerSideIndex))
+        foreach (MapMob curMob in Singleton.WorldContextInstance.MobHolder.MobsOnTeam(CurrentPlayer))
         {
             MapFeature onFeature = Singleton.WorldContextInstance.FeatureHolder.FeatureOnPoint(curMob.Position);
 
@@ -142,9 +125,9 @@ public class TurnManager : SingletonBase<TurnManager>
         yield break;
     }
 
-    public static void VictoryIsDeclared(int winner)
+    public static void VictoryIsDeclared(PlayerSide winner)
     {
-        DebugTextLog.AddTextToLog($"The winner is side #{winner}!");
+        DebugTextLog.AddTextToLog($"The winner is side #{winner.PlayerSideIndex}!");
         StopAllInputs();
     }
 
@@ -153,10 +136,5 @@ public class TurnManager : SingletonBase<TurnManager>
         Singleton.AIInputPhaseControllerInstance.StopAllInputs();
         Singleton.PlayerInputPhaseControllerInstance.StopAllInputs();
         GameIsInProgress = false;
-    }
-
-    public static IEnumerable<PlayerSide> GetPlayers()
-    {
-        return Singleton.playerSides.Values;
     }
 }

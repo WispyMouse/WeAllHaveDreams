@@ -18,7 +18,7 @@ public class StructureVisuals : MonoBehaviour
 
     void SetOwnership(MapStructure updated)
     {
-        Renderer.sprite = StructureLibrary.GetStructureSprite(updated.Configuration.Appearance, updated.PlayerSideIndex);
+        Renderer.sprite = StructureLibrary.GetStructureSprite(updated.Configuration.Appearance, updated.MyPlayerSide);
     }
 
     void SetCapturePoints(MapStructure updated)
