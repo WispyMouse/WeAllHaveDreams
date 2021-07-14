@@ -49,7 +49,10 @@ namespace AI
 
                     GambitExecutionPlan plan = new GambitExecutionPlan(
                         new List<PlayerInput>() { thisAttackInput },
-                        new List<GambitCost>() { new MobActionCost(thisMob, checkMove: standingCoordinate != thisMob.Position, checkAttack: true) },
+                        new List<GambitCost>()
+                        {
+                            new MobActionCost(thisMob, standingCoordinate, checkMove: standingCoordinate != thisMob.Position, checkAttack: true)
+                        },
                         new List<GambitUtility>()
                         {
                             new MobDamaged(thisMob.MyPlayerSide, thisMob, thisMob.HitPoints, thisAttackInput.ProjectedAttackerHitpoints(worldContextInstance)),

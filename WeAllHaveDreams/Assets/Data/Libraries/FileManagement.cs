@@ -33,7 +33,7 @@ public class FileManagement : SingletonBase<FileManagement>
         string serializedRealm = Newtonsoft.Json.JsonConvert.SerializeObject(toSave);
         string savePath = Path.Combine(MapFolderPath, $"{toSave.Name}{MapFileSuffix}");
 
-        using (FileStream stream = new FileStream(savePath, FileMode.OpenOrCreate))
+        using (FileStream stream = new FileStream(savePath, FileMode.Create))
         {
             byte[] dataBuffer = Encoding.UTF8.GetBytes(serializedRealm);
             yield return ThreadDoctor.YieldTask(stream.WriteAsync(dataBuffer, 0, dataBuffer.Length));

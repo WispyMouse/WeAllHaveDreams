@@ -4,12 +4,16 @@ using UnityEngine;
 
 public abstract class InputGameplayPhase : MonoBehaviour
 {
+    public PlayerInputPhaseController PlayerInputPhaseControllerInstance;
+
     const int NumbersCount = 10;
     const int ZeroOverride = 9; // Indicates the index of commands should map to KeyCode.Alpha0
     const int AlphabeticalCount = 25; // Excluding Z
 
     public virtual IEnumerator EnterPhase()
     {
+        PlayerInputPhaseControllerInstance.MobSelected.Invoke(null);
+
         yield return new WaitForEndOfFrame();
     }
 

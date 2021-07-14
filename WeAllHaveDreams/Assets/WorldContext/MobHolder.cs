@@ -79,10 +79,7 @@ public class MobHolder : MonoBehaviour
         if (defense == null)
         {
             GameplayTile tile = WorldContextInstance.MapHolder.GetGameplayTile(defending.Position);
-            defense = tile.Configuration?.Defenses?
-                .OrderByDescending(def => def.Priority)
-                .Where(def => def.TagsApply(defending.Tags))
-                .FirstOrDefault();
+            defense = tile.DefensiveAttribute(defending);
         }
 
         if (defense != null)

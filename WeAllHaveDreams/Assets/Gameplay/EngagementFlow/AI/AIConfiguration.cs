@@ -26,5 +26,10 @@ namespace Configuration
         /// When a unit would be damaged, this value is multiplied by their resource cost to determine the score of the action.
         /// </summary>
         public float UnitDamageMultiplier;
+
+        /// <summary>
+        /// When a Gambit would move a unit, this value is multiplied by the number of tiles that were moved to determine the score of the action.
+        /// </summary>
+        public float MovedDistanceMultiplier;
     }
 }

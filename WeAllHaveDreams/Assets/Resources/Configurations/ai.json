@@ -2,5 +2,6 @@
   "ConfigurationType": "Configuration.AIConfiguration",
   "UnitExhaustionCostMultiplier": 0.1,
   "UnitDefeatMultiplier": 1.0,
-  "UnitDamageMultiplier": 1.0
+  "UnitDamageMultiplier": 1.0,
+  "MovedDistanceMultiplier": 0.001
 }

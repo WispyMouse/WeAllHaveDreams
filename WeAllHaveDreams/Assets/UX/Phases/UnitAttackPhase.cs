@@ -21,6 +21,9 @@ public class UnitAttackPhase : InputGameplayPhase
     {
         selectedUnit = unit;
         firstValidAbility = null;
+
+        PlayerInputPhaseControllerInstance.MobSelected.Invoke(unit);
+
         return this;
     }
 

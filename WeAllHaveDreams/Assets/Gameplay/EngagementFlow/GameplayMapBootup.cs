@@ -40,6 +40,8 @@ public class GameplayMapBootup : MapBootup
 
     protected override IEnumerator Startup()
     {
+        LocationInput.SetTileCursorVisibility(true);
+
         TurnManagerInstance.GameplayReady();
 
         DebugTextLog.AddTextToLog("Press M to enter Map Editor mode", DebugTextLogChannel.DebugOperationInputInstructions);

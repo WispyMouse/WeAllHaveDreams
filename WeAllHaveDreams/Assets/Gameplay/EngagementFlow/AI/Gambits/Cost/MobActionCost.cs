@@ -14,9 +14,12 @@ namespace AI
         bool checkAttack { get; set; }
         bool checkCapture { get; set; }
 
-        public MobActionCost(MapMob toCheck, bool checkMove = false, bool checkAttack = false, bool checkCapture = false)
+        MapCoordinates movedTo { get; set; }
+
+        public MobActionCost(MapMob toCheck, MapCoordinates movedTo, bool checkMove = false, bool checkAttack = false, bool checkCapture = false)
         {
             this.checkedMob = toCheck;
+            this.movedTo = movedTo;
             this.checkMove = checkMove;
             this.checkAttack = checkAttack;
             this.checkCapture = checkCapture;
@@ -50,7 +53,15 @@ namespace AI
 
         public override float GetMagnitude(AIConfiguration aiConfiguration)
         {
-            return (float)checkedMob.CurrentAttackPower * aiConfiguration.UnitExhaustionCostMultiplier;
+            int distanceMoved = 0;
+
+            if (movedTo != null)
+            {
+                distanceMoved = Math.Abs(checkedMob.Position.X - movedTo.X) + Math.Abs(checkedMob.Position.Y - movedTo.Y);
+            }
+
+            return (float)checkedMob.CurrentAttackPower * aiConfiguration.UnitExhaustionCostMultiplier
+               + (float)distanceMoved * aiConfiguration.MovedDistanceMultiplier;
         }
     }
 }

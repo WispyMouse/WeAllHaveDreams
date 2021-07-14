@@ -51,6 +51,26 @@ public class GameplayTile : Tile
         return chosenAttribute;
     }
 
+    public DefensiveAttributes DefensiveAttribute(MapMob forMob)
+    {
+        // If we have no attributes, then return null to indicate there is no modification
+        if (Configuration.Defenses == null || !Configuration.Defenses.Any())
+        {
+            return null;
+        }
+        DefensiveAttributes chosenAttribute = null;
+
+        foreach (DefensiveAttributes defense in Configuration.Defenses.OrderByDescending(move => move.Priority))
+        {
+            if (defense.TagsApply(forMob.Tags))
+            {
+                return defense;
+            }
+        }
+
+        return chosenAttribute;
+    }
+
     HashSet<NeighborDirection> GetNeighborsDirectionsWithSameTile(MapCoordinates position, ITilemap tilemap)
     {
         HashSet<NeighborDirection> occuppiedNeighbors = new HashSet<NeighborDirection>();

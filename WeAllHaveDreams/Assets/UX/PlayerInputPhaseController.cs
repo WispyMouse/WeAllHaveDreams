@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Handles the Human Player's input to the game during the main game phase.
@@ -14,6 +15,8 @@ public class PlayerInputPhaseController : MonoBehaviour
     public InputGameplayPhase StartingPhase;
     InputGameplayPhase currentPhase { get; set; }
     InputGameplayPhase nextPhase;
+
+    public UnityEvent<MapMob> MobSelected;
 
     Coroutine phaseHandler { get; set; }
     bool shouldRefresh { get; set; }
